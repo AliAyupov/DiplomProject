@@ -1,4 +1,7 @@
 from rest_framework import viewsets, status
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -49,21 +52,21 @@ class StudentProgressApiView(viewsets.ModelViewSet):
     queryset = StudentProgress.objects.all()
     serializer_class = StudentProgressSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
 
 class ShopItemApiView(viewsets.ModelViewSet):
     queryset = ShopItem.objects.all()
     serializer_class = ShopItemSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
 
 class StudentInventoryApiView(viewsets.ModelViewSet):
     queryset = StudentInventory.objects.all()
     serializer_class = StudentInventorySerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class EnrollmentApiView(viewsets.ModelViewSet):
@@ -83,5 +86,60 @@ class CourseCreaterApiView(viewsets.ViewSet):
         serializer = CourseSerializer(user_courses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def create(self, request):
+        serializer = CourseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(creator=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        try:
+            course = Course.objects.get(pk=pk, creator=request.user)
+            if course.creator != request.user:
+                raise PermissionDenied()
+        except Course.DoesNotExist:
+            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CourseSerializer(course, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        try:
+            course = Course.objects.get(pk=pk, creator=request.user)
+            if course.creator != request.user:
+                raise PermissionDenied()
+        except Course.DoesNotExist:
+            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        course.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def retrieve(self, request, pk=None):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        try:
+            course = Course.objects.get(pk=pk, creator=request.user)
+        except Course.DoesNotExist:
+            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CourseSerializer(course)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# по jwt токену отображение студентов принадлежащих определенному курсу http://127.0.0.1:8000/api/progress/?course_id=1
+class StudentOnTheCourseApiView(viewsets.ViewSet):
+    serializer_class = StudentProgressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        # Получаем идентификатор курса из параметров запроса
+        course_id = request.query_params.get('course_id')
+        if not course_id:
+            return Response({'error': 'Course ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Получаем все записи в таблице StudentProgress для указанного курса
+        student_progress = StudentProgress.objects.filter(course_id=course_id)
+        serializer = self.serializer_class(student_progress, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

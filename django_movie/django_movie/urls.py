@@ -25,7 +25,7 @@ from rest_framework_simplejwt.views import (
 )
 from courses.views import CustomUserApiView, CourseApiView, ModuleApiView, LessonApiView, \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
-    CourseCreaterApiView
+    CourseCreaterApiView, StudentOnTheCourseApiView
 
 router = routers.DefaultRouter()
 router.register(r'api/custom-users', CustomUserApiView)
@@ -38,6 +38,7 @@ router.register(r'api/shop-items', ShopItemApiView)
 router.register(r'api/student-inventory', StudentInventoryApiView)
 router.register(r'api/enrollment', EnrollmentApiView)
 router.register(r'api/user-courses', CourseCreaterApiView, basename='user-courses')
+router.register(r'api/progress', StudentOnTheCourseApiView, basename='progress')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
