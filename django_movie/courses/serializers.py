@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory
+from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, Enrollment
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -47,4 +47,10 @@ class ShopItemSerializer(serializers.ModelSerializer):
 class StudentInventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentInventory
+        fields = '__all__'
+
+
+class EnrollmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
         fields = '__all__'

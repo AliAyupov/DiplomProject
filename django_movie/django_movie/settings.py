@@ -116,7 +116,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
+AUTH_USER_MODEL = 'courses.CustomUser'
 STATIC_URL = 'static/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [STATIC_DIR]
@@ -192,5 +192,9 @@ DJOSER = {
     'ACTIVATION_URL': 'auth/activate/{uid}/{token}/',
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
     'PASSWORD_RESET_CONFIRM_URL': 'auth/reset/confirm/{uid}/{token}/',
-    'TOKEN_MODEL': None
+    'SERIALIZERS': {
+        'user': 'courses.serializers.CustomUserSerializer',  # Кастомный сериализатор пользователя
+        'token_create': 'djoser.serializers.TokenCreateSerializer',  # Стандартный сериализатор создания токена
+    },
+    'USER_MODEL': 'courses.CustomUser',  # Кастомная модель пользователя
 }

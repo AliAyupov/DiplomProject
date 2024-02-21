@@ -3,7 +3,12 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    role = models.CharField(max_length=50)
+    ROLE_CHOICES = (
+        ('student', 'Студент'),
+        ('tutor', 'Тьютор'),
+        ('producer', 'Продюсер'),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
@@ -30,8 +35,9 @@ class CustomUser(AbstractUser):
 class Course(models.Model):
     course_name = models.CharField(max_length=255)
     description = models.TextField()
-    teacher_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='courses_taught')
-    creator_id = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.CASCADE, related_name='courses_creator')
+    teacher = models.ManyToManyField(CustomUser, related_name='courses_taught')
+    creator = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.CASCADE,
+                                   related_name='courses_creator')
 
     class Meta:
         verbose_name = "Курс"
@@ -76,7 +82,7 @@ class StudentProgress(models.Model):
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='progress')
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     completed_lessons = models.IntegerField(default=0)
-    completion_time = models.DurationField(null=True, blank=True)
+    completion_time = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Прогресс студента"
@@ -100,3 +106,19 @@ class StudentInventory(models.Model):
     class Meta:
         verbose_name = "Инвентарь студента"
         verbose_name_plural = "Инвентари студентов"
+
+
+class Enrollment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    STATUS_CHOICES = (
+        ('pending', 'Ожидает подтверждения'),
+        ('approved', 'Подтверждена'),
+        ('rejected', 'Отклонена'),
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    date_enrolled = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Запрос на обучение"
+        verbose_name_plural = "Запросы на обучение"
