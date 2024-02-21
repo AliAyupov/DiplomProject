@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/django_movie/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +45,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\aliay\PycharmProjects\Project\django_movie" />
       <recent name="C:\Users\aliay\PycharmProjects\Project\django_movie\courses" />
     </key>
   </component>

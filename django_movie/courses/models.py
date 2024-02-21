@@ -1,8 +1,5 @@
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-
 
 
 class CustomUser(AbstractUser):
@@ -34,6 +31,7 @@ class Course(models.Model):
     course_name = models.CharField(max_length=255)
     description = models.TextField()
     teacher_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='courses_taught')
+    creator_id = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.CASCADE, related_name='courses_creator')
 
     class Meta:
         verbose_name = "Курс"
@@ -65,7 +63,7 @@ class StudentHomework(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='homework')
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='homework_submissions')
     submission_date = models.DateTimeField(auto_now_add=True)
-    homework_content = models.FileField(upload_to='homework_files/')
+    homework_content = models.JSONField()
     submission_status = models.CharField(max_length=50)
     grade = models.IntegerField(null=True, blank=True)
 
