@@ -57,7 +57,7 @@ class Module(models.Model):
 class Lesson(models.Model):
     lesson_name = models.CharField(max_length=255)
     description = models.TextField()
-    content = models.FileField(upload_to='lesson_files/')
+    content = models.JSONField(blank=True, null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='lessons')
 
     class Meta:
@@ -66,10 +66,11 @@ class Lesson(models.Model):
 
 
 class StudentHomework(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='homework_course')
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='homework')
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='homework_submissions')
     submission_date = models.DateTimeField(auto_now_add=True)
-    homework_content = models.JSONField()
+    homework_content = models.FileField(upload_to='homework_files/')
     submission_status = models.CharField(max_length=50)
     grade = models.IntegerField(null=True, blank=True)
 
