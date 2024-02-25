@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
     Enrollment
-from .permissions import IsTutor, IsStudent, IsProducer
+from .permissions import IsTutor, IsStudent, IsProducer, IsProducerOrTutor
 from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerializer, LessonSerializer, \
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
     EnrollmentSerializer
@@ -72,7 +72,7 @@ class StudentInventoryApiView(viewsets.ModelViewSet):
 
 
 class EnrollmentApiView(viewsets.ModelViewSet):
-    permission_classes_by_action = {'create': [IsStudent], 'get_queryset': [IsProducer]}
+    permission_classes_by_action = {'create': [IsAuthenticated, IsStudent], 'get_queryset': [IsAuthenticated, IsProducer]}
     serializer_class = EnrollmentSerializer
 
     def get_queryset(self):
@@ -124,7 +124,7 @@ class EnrollmentApiView(viewsets.ModelViewSet):
 
 # по jwt токену отображение принадлежащих курсов
 class CourseCreaterApiView(viewsets.ViewSet):
-    permissions_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProducerOrTutor]
 
     def list(self, request):
         user_id = request.user.id
@@ -177,12 +177,23 @@ class CourseCreaterApiView(viewsets.ViewSet):
 # по jwt токену отображение студентов принадлежащих определенному курсу http://127.0.0.1:8000/api/progress/?course_id=1
 class StudentOnTheCourseApiView(viewsets.ViewSet):
     serializer_class = StudentProgressSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProducerOrTutor]
 
     def list(self, request):
         course_id = request.query_params.get('course_id')
+
         if not course_id:
             return Response({'error': 'Выберите нужный курс'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user_id = self.request.user.id
+
+        # Проверяем, является ли пользователь создателем курса
+        try:
+            course = Course.objects.get(pk=course_id)
+            if course.creator_id != user_id:
+                return Response({'error': 'нет доступа'}, status=status.HTTP_403_FORBIDDEN)
+        except Course.DoesNotExist:
+            raise Response({'error': 'не существует'}, status=status.HTTP_404_NOT_FOUND)
 
         student_progress = StudentProgress.objects.filter(course_id=course_id)
         serializer = self.serializer_class(student_progress, many=True)
@@ -190,15 +201,17 @@ class StudentOnTheCourseApiView(viewsets.ViewSet):
 
 
 class AllUsersOnTheCourseApiView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProducerOrTutor]
 
     def list(self, request):
         course_id = request.query_params.get('course_id')
         if not course_id:
             return Response({'error': 'Выберите нужный курс'}, status=status.HTTP_400_BAD_REQUEST)
-
+        user_id = self.request.user.id
         try:
             course = Course.objects.get(pk=course_id)
+            if course.creator_id != user_id:
+                return Response({'error': 'нет доступа'}, status=status.HTTP_403_FORBIDDEN)
         except Course.DoesNotExist:
             return Response({'error': 'Курс не найден'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -221,15 +234,17 @@ class AllUsersOnTheCourseApiView(viewsets.ViewSet):
 
 # вывод всех домашек относящихся к определенному курсу
 class AllHomeworkOnTheCourseApiView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProducerOrTutor]
 
     def list(self, request):
         course_id = request.query_params.get('course_id')
         if not course_id:
             return Response({'error': 'Курс не выбран'}, status=status.HTTP_400_BAD_REQUEST)
-
+        user_id = self.request.user.id
         try:
             course = Course.objects.get(pk=course_id)
+            if course.creator_id != user_id:
+                return Response({'error': 'Нет доступа'}, status=status.HTTP_403_FORBIDDEN)
         except Course.DoesNotExist:
             return Response({'error': 'Курс не найден'}, status=status.HTTP_404_NOT_FOUND)
 

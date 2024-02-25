@@ -14,3 +14,7 @@ class IsTutor(BasePermission):
 class IsProducer(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == 'producer'
+
+class IsProducerOrTutor(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role in ['producer', 'tutor']
