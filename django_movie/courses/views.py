@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from rest_framework import viewsets, status, authentication
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
@@ -9,81 +9,97 @@ from rest_framework.response import Response
 
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
     Enrollment
-from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsTutor, IsStudent, IsProducer
 from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerializer, LessonSerializer, \
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
     EnrollmentSerializer
 
 
 class CustomUserApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class CourseApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class ModuleApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class LessonApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class StudentHomeworkApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = StudentHomework.objects.all()
     serializer_class = StudentHomeworkSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class StudentProgressApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = StudentProgress.objects.all()
     serializer_class = StudentProgressSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class ShopItemApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = ShopItem.objects.all()
     serializer_class = ShopItemSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAuthenticated]
 
 
 class StudentInventoryApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
     queryset = StudentInventory.objects.all()
     serializer_class = StudentInventorySerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    permission_classes = [IsAdminOrReadOnly]
 
 
 class EnrollmentApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes_by_action = {'create': [IsStudent], 'get_queryset': [IsProducer]}
     serializer_class = EnrollmentSerializer
 
     def get_queryset(self):
-        course =self.request.query_params.get('course')
+
+        user_id = self.request.user.id
+
+        # Получаем id курса из параметров запроса
+        course_id = self.request.query_params.get('course')
+
+        # Проверяем, является ли пользователь создателем курса
+        try:
+            course = Course.objects.get(pk=course_id)
+            if course.creator_id != user_id:
+                return Response({'error': 'нет доступа'}, status=status.HTTP_403_FORBIDDEN)
+        except Course.DoesNotExist:
+            raise Response({'error': 'не существует'}, status=status.HTTP_404_NOT_FOUND)
         queryset = Enrollment.objects.filter(course=course)
         return queryset
+
     #
     def list(self, request):
         queryset = self.get_queryset()
+        if not queryset.exists():
+            raise NotFound("No data available")
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
     # Запрос на обучение
     def create(self, request):
         # Получаем данные из запроса формата form-data
@@ -108,7 +124,7 @@ class EnrollmentApiView(viewsets.ModelViewSet):
 
 # по jwt токену отображение принадлежащих курсов
 class CourseCreaterApiView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+    permissions_classes = [IsAuthenticated]
 
     def list(self, request):
         user_id = request.user.id
@@ -202,6 +218,7 @@ class AllUsersOnTheCourseApiView(viewsets.ViewSet):
 
         return Response(students_data, status=status.HTTP_200_OK)
 
+
 # вывод всех домашек относящихся к определенному курсу
 class AllHomeworkOnTheCourseApiView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -222,5 +239,3 @@ class AllHomeworkOnTheCourseApiView(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # отправление запроса на запись в курс
-
-
