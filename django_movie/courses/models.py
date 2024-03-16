@@ -26,6 +26,7 @@ class CustomUser(AbstractUser):
         related_name='custom_user_set',
         related_query_name='user',
     )
+    email = models.EmailField(unique=True, blank=False)
 
     class Meta:
         verbose_name = "Пользователь"
