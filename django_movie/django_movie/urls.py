@@ -50,9 +50,9 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.jwt')),
-    path('api/logout/blacklist', BlacklistRefreshView.as_view(), name="blacklist"),
+    path('api/logout/blacklist/', BlacklistRefreshView.as_view(), name="blacklist"),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
 

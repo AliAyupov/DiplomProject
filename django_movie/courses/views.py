@@ -1,12 +1,16 @@
 from django.db import IntegrityError
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+from requests import Request
 from rest_framework import viewsets, status, authentication
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
@@ -257,10 +261,16 @@ class AllHomeworkOnTheCourseApiView(viewsets.ViewSet):
 
 
 class BlacklistRefreshView(APIView):
-    def post(self, request):
-        try:
-            refresh_token = request.data['refresh_token']
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        permission_classes = [AllowAny]
+        authentication_classes = ()
+
+        def post(self, request):
+
+            try:
+                refresh_token = request.data["refresh_token"]
+                print("Received refresh token:", refresh_token)
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+                return Response(status=status.HTTP_205_RESET_CONTENT)
+            except Exception as e:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
