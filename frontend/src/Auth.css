@@ -1,0 +1,34 @@
+.MuiAvatar-fallback {
+    background: transparent;
+}
+
+.MuiOutlinedInput-input {
+    background: transparent;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    background: transparent;
+}
+label#password-label {
+    background-color: transparent;
+}
+label#username-label {
+    background: transparent;
+}
+
+span.MuiTouchRipple-root {
+    background: transparent;
+}
+span.MuiButton-label {
+    background: transparent;
+}
+
+.makeStyles-paper-1 {
+    margin-bottom: 64px;
+}
+span.MuiFormLabel-asterisk.MuiInputLabel-asterisk {
+    background: transparent;
+}
+main.MuiContainer-root.MuiContainer-maxWidthXs {
+    margin-bottom: 64px;
+}

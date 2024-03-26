@@ -39,7 +39,7 @@ class Course(models.Model):
     teacher = models.ManyToManyField(CustomUser, related_name='courses_taught')
     creator = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.CASCADE,
                                    related_name='courses_creator')
-
+    picture = models.ImageField(upload_to='course_files/', null=True, blank=True)
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
@@ -95,6 +95,7 @@ class ShopItem(models.Model):
     name = models.CharField(max_length=255)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
+    picture = models.ImageField(upload_to='shop_files/', null=True, blank=True)
 
     class Meta:
         verbose_name = "Вещь в магазине"
@@ -124,3 +125,14 @@ class Enrollment(models.Model):
     class Meta:
         verbose_name = "Запрос на обучение"
         verbose_name_plural = "Запросы на обучение"
+
+    class StudentAchievement(models.Model):
+        achievements_name = models.CharField(max_length=255)
+        achievements_description = models.TextField()
+        student_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='achievements')
+        achievements_date = models.DateField()
+        picture = models.ImageField(upload_to='achievement_pictures/', null=True, blank=True)
+
+        class Meta:
+            verbose_name = "Достижение студента"
+            verbose_name_plural = "Достижения студентов"

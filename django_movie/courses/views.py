@@ -29,10 +29,9 @@ class CustomUserApiView(viewsets.ModelViewSet):
 
 
 class CourseApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsProducer]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+    http_method_names = ['get']
 
 
 class ModuleApiView(viewsets.ModelViewSet):

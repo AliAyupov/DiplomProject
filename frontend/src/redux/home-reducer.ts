@@ -11,9 +11,6 @@ interface State {
 
 const initialState: State = {
     courses: [
-          {id:1, name:"name", photo:"photo"},
-        {id:2, name:"name", photo:"photo"},
-        {id:3, name:"name", photo:"photo"}
     ]
 }
 

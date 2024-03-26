@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axiosInstance from '../http/axios';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 //MaterialUI
+
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -156,9 +158,9 @@ export default function SignIn() {
 				</Link>
 			  </Grid>
 			  <Grid item>
-				<Link href="#" variant="body2">
+				<NavLink to="/register">
 				  {"У вас нет аккаунта? Регистрация"}
-				</Link>
+				</NavLink>
 			  </Grid>
 			</Grid>
 		  </form>

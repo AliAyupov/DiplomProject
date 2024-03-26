@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../http/axios';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function LogOut() {
 	const navigate = useNavigate();
 
