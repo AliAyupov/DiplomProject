@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import mount from '../../img/mount.png';
 import mony from '../../img/mony.jpg';
 import course from '../../img/course.png';
-import CoursePage from "../Course/CoursePage";
 import axiosInstance from '../../http/axios';
 
 interface Course {
@@ -12,22 +11,34 @@ interface Course {
 
 interface Props {
     courses: Course[];
-    setCourses: (courses: Course[]) => void;
+    pageSize: number;
+    totalCoursesCount: number;
+    currentPage: number;
+    onPageChanged: (pageNumber: number) => void;
 }
 
-const Home: React.FC<Props> = ({ courses, setCourses }) => {
-    useEffect(() => {
-        // Выполнить запрос к серверу при монтировании компонента
-        axiosInstance.get('/courses/')
-            .then(response => {
-                console.log(response);
-                // Получить данные из ответа и установить их в состояние курсов
-                setCourses(response.data.results);
-            })
-            .catch(error => {
-                console.error('Ошибка при загрузке курсов:', error);
-            });
-    }, []);
+const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged }) => {
+    const onNextPageClicked = () => {
+        if (currentPage < Math.ceil(totalCoursesCount / pageSize)) {
+            const nextPage = currentPage + 1;
+            onPageChanged(nextPage);
+        }
+    }
+
+    const onPreviousPageClicked = () => {
+        if (currentPage > 1) {
+            const previousPage = currentPage - 1;
+            onPageChanged(previousPage);
+        }
+    }
+
+    let pagesCount = Math.ceil(totalCoursesCount / pageSize);
+    let pages = [];
+
+    for (let i = 1; i <= pagesCount; i++) {
+        pages.push(i);
+    }
+
     return (
         <><main>
             <div className="wrapper">
@@ -62,15 +73,23 @@ const Home: React.FC<Props> = ({ courses, setCourses }) => {
                 <div className="wrapper-text">Рекомендации для Вас</div>
                 <div className="grid">
                     {courses && courses.map(c => (
-                    <div className="grid__item" key={c.id}>
-                        <div className="card">
-                            <div className="card__image">
-                                <img src={course} alt="" className="image-course" />
+                        <div className="grid__item" key={c.id}>
+                            <div className="card">
+                                <div className="card__image">
+                                    <img src={course} alt="" className="image-course" />
+                                </div>
+                                <div className="card__title">{c.course_name}</div>
                             </div>
-                            <div className="card__title">{c.course_name}</div>
                         </div>
-                    </div>
-                     ))}
+                    ))}
+                </div>
+                <div className="pagination">
+                    <span className="pagination__link" onClick={onPreviousPageClicked}>&laquo;</span>
+                    {pages.map(p => (
+                        <span key={p} className={`pagination__link ${currentPage === p ? 'pagination__link__active' : ''}`}
+                            onClick={() => { onPageChanged(p) }}>{p}</span>
+                    ))}
+                    <span className="pagination__link" onClick={onNextPageClicked}>&raquo;</span>
                 </div>
             </div>
         </main></>
