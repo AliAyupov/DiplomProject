@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import mount from '../../img/mount.png';
 import mony from '../../img/mony.jpg';
 import course from '../../img/course.png';
-import axiosInstance from '../../http/axios';
+import Preloader from "../common/preloader/Preloader";
+import { NavLink } from "react-router-dom";
 
 interface Course {
     id: number;
@@ -15,9 +16,10 @@ interface Props {
     totalCoursesCount: number;
     currentPage: number;
     onPageChanged: (pageNumber: number) => void;
+    isFetching: boolean;
 }
 
-const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged }) => {
+const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching }) => {
     const onNextPageClicked = () => {
         if (currentPage < Math.ceil(totalCoursesCount / pageSize)) {
             const nextPage = currentPage + 1;
@@ -71,23 +73,26 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                     </div>
                 </section>
                 <div className="wrapper-text">Рекомендации для Вас</div>
+                {isFetching ? <Preloader key="unique_preloader_key"/> : null}
                 <div className="grid">
                     {courses && courses.map(c => (
-                        <div className="grid__item" key={c.id}>
-                            <div className="card">
-                                <div className="card__image">
-                                    <img src={course} alt="" className="image-course" />
+                        <NavLink to={`/course/${c.id}`}>
+                            <div className="grid__item" key={c.id}>
+                                <div className="card">
+                                    <div className="card__image">
+                                        <img src={course} alt="" className="image-course" />
+                                    </div>
+                                    <div className="card__title">{c.course_name}</div>
                                 </div>
-                                <div className="card__title">{c.course_name}</div>
                             </div>
-                        </div>
+                        </NavLink>
                     ))}
                 </div>
                 <div className="pagination">
                     <span className="pagination__link" onClick={onPreviousPageClicked}>&laquo;</span>
                     {pages.map(p => (
-                        <span key={p} className={`pagination__link ${currentPage === p ? 'pagination__link__active' : ''}`}
-                            onClick={() => { onPageChanged(p) }}>{p}</span>
+                            <span key={p} className={`pagination__link ${currentPage === p ? 'pagination__link__active' : ''}`}
+                                onClick={() => { onPageChanged(p) }}>{p}</span>
                     ))}
                     <span className="pagination__link" onClick={onNextPageClicked}>&raquo;</span>
                 </div>

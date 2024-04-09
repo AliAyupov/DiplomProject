@@ -7,10 +7,11 @@ import Login from './components/login';
 import Logout from './components/logout';
 import HomeContainer from './components/Home/HomeContainer';
 import Courses from './components/Courses/Courses';
-import Course from './components/Course/CoursePage';
+import Course from './components/Course/CoursePageContainer';
 import LessonsPage from './components/Course/LessonsPage';
 import ProfilePage from './components/Profile/ProfilePage';
 import LeaderboardPage from './components/Course/LeaderboardPage';
+import { setModules } from './redux/home-reducer';
 const App: React.FC = () => {
   return (
       <Routes>
@@ -19,7 +20,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/courses" element={<Courses />} />
-        <Route path="/course" element={<Course />} />
+        <Route path="/course/:id" element={<Course/>} />
         <Route path="/lessons" element={<LessonsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/leaders" element={<LeaderboardPage/>}/>

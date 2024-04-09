@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import axiosInstance from '../../http/axios';
 import Home from "./Home";
-import Preloader from "../common/preloader/Preloader";
 interface Course {
     id: number;
     course_name: string;
@@ -31,23 +30,21 @@ const HomeApiComponent: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetch
             .catch(error => {
                 console.error('Ошибка при загрузке курсов:', error);
             });
-    }, [currentPage, pageSize]);
+    }, [currentPage, pageSize, toogleIsFetching]);
 
     const onPageChanged = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     }
-
+    
     return (
         <>
-            {isFetching ? 
-            <Preloader/>
-             : null}
             <Home
                 courses={courses}
                 pageSize={pageSize}
                 totalCoursesCount={totalCoursesCount}
                 currentPage={currentPage}
-                onPageChanged={onPageChanged}
+                onPageChanged={onPageChanged} 
+                isFetching={isFetching}
             />
         </>
     );

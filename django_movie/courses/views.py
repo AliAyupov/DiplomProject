@@ -36,13 +36,6 @@ class CourseApiView(viewsets.ModelViewSet):
     http_method_names = ['get']
 
 
-class ModuleApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsProducer]
-    queryset = Module.objects.all()
-    serializer_class = ModuleSerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-
-
 class LessonApiView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsProducer]
     queryset = Lesson.objects.all()
@@ -275,3 +268,22 @@ class BlacklistRefreshView(APIView):
                 return Response(status=status.HTTP_205_RESET_CONTENT)
             except Exception as e:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ModuleApiView(viewsets.ModelViewSet):
+    serializer_class = ModuleSerializer
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+
+    def get_queryset(self):
+        # Получаем id курса из параметров запроса
+        course_id = self.request.query_params.get('course_id')
+
+        # Получаем только модули, принадлежащие курсу с указанным ID
+        queryset = Module.objects.filter(course_id=course_id)
+        return queryset
+
+    def list(self, request):
+        # Получаем только модули, принадлежащие курсу с указанным ID
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -31,7 +31,6 @@ from courses.views import CustomUserApiView, CourseApiView, ModuleApiView, Lesso
 router = routers.DefaultRouter()
 router.register(r'api/custom-users', CustomUserApiView)
 router.register(r'api/courses', CourseApiView)
-router.register(r'api/modules', ModuleApiView)
 router.register(r'api/lessons', LessonApiView)
 router.register(r'api/student-homeworks', StudentHomeworkApiView)
 router.register(r'api/student-progress', StudentProgressApiView)
@@ -42,7 +41,7 @@ router.register(r'api/user-courses', CourseCreaterApiView, basename='user-course
 router.register(r'api/progress', StudentOnTheCourseApiView, basename='progress')
 router.register(r'api/users-course', AllUsersOnTheCourseApiView, basename='users-course')
 router.register(r'api/homework-course', AllHomeworkOnTheCourseApiView, basename='homework-course')
-
+router.register(r'api/modules', ModuleApiView, basename='module')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
