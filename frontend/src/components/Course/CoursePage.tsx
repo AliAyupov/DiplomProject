@@ -10,18 +10,21 @@ interface Course {
     course_name: string;
     description: string;
     picture: string;
+    totalLessonsCount: number;
 }
 interface Module {
     id: number;
     module_name: string;
+   
 }
 interface Props {
     course: Course[];
     modules: Module[];
+    modulesCount: number;
+    lessonsCount:number;
 }
 
-const CoursePage: React.FC<Props> = ({ course, modules}) => {
-    console.log(modules)
+const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCount}) => {
     
     return (
         <main>
@@ -56,8 +59,8 @@ const CoursePage: React.FC<Props> = ({ course, modules}) => {
                         <section>
                             <img src={item.picture} alt={item.course_name} className="wrapper-img-c" />
                             <div className="mob-text">
-                                <p>Уроков: 49</p>
-                                <p>Модулей: 10</p>
+                                <p>Уроков: { lessonsCount}</p>
+                                <p>Модулей: {modulesCount}</p>
                             </div>
                             <div className="grid-absolut-c">
                                 <div className="image-title image-title-up">{item.course_name}</div>

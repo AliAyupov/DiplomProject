@@ -11,7 +11,6 @@ import Course from './components/Course/CoursePageContainer';
 import LessonsPage from './components/Course/LessonsPage';
 import ProfilePage from './components/Profile/ProfilePage';
 import LeaderboardPage from './components/Course/LeaderboardPage';
-import { setModules } from './redux/home-reducer';
 const App: React.FC = () => {
   return (
       <Routes>

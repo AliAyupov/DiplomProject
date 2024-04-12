@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux'; 
 import axiosInstance from '../http/axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 //MaterialUI
@@ -15,6 +16,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { setUserData } from '../redux/auth-reducer';
+
+
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -38,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const initialFormData = Object.freeze({
 	  username: '',
 	  password: '',
@@ -79,10 +84,12 @@ export default function SignIn() {
 		  password: formData.password,
 		})
 		.then((res) => {
+		  console.log(res);
 		  localStorage.setItem('access_token', res.data.access);
 		  localStorage.setItem('refresh_token', res.data.refresh);
 		  axiosInstance.defaults.headers['Authorization'] =
 			'Bearer ' + localStorage.getItem('access_token');
+		  dispatch(setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, true)); 
 		  navigate('/');
 		})
 		.catch((error) => {
@@ -97,7 +104,7 @@ export default function SignIn() {
 			}
 		});
 	};
-  
+
 	const classes = useStyles();
   
 	return (

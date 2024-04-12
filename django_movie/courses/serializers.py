@@ -15,9 +15,11 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class ModuleSerializer(serializers.ModelSerializer):
+    lessons_count = serializers.IntegerField()
+
     class Meta:
         model = Module
-        fields = '__all__'
+        fields = ['id', 'module_name', 'lessons_count']
 
 
 class LessonSerializer(serializers.ModelSerializer):

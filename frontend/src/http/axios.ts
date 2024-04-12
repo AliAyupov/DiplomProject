@@ -5,7 +5,7 @@ const baseURL = 'http://127.0.0.1:8000/api/';
 const axiosInstance = axios.create({
   baseURL: baseURL,
   headers: {
-    'HTTP_AUTHORIZATION': localStorage.getItem('access_token')
+    'Authorization': localStorage.getItem('access_token')
       ? 'Bearer ' + localStorage.getItem('access_token')
       : null,
     'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     if (typeof error.response === 'undefined') {
       alert(
-        'Произошла ошибка сервера/сети. '
+        'Произошла ошибка сервера/сети.'
       );
       return Promise.reject(error);
     }
@@ -39,23 +39,21 @@ axiosInstance.interceptors.response.use(
       error.response.statusText === 'Unauthorized'
     ) {
       const refreshToken = localStorage.getItem('refresh_token');
-
       if (refreshToken) {
         const tokenParts = JSON.parse(atob(refreshToken.split('.')[1]));
 
         const now = Math.ceil(Date.now() / 1000);
+        
         console.log(tokenParts.exp);
 
         if (tokenParts.exp > now) {
-          return axiosInstance
-            .post('/token/refresh/', { refresh: refreshToken })
+          return axiosInstance.post('/token/refresh/', { refresh: refreshToken })
             .then((response) => {
               localStorage.setItem('access_token', response.data.access);
-              localStorage.setItem('refresh_token', response.data.refresh);
 
-              axiosInstance.defaults.headers['HTTP_AUTHORIZATION'] =
+              axiosInstance.defaults.headers['Authorization'] =
                 'Bearer ' + response.data.access;
-              originalRequest.headers['HTTP_AUTHORIZATION'] =
+              originalRequest.headers['Authorization'] =
                 'Bearer ' + response.data.access;
 
               return axiosInstance(originalRequest);

@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 from requests import Request
@@ -275,15 +276,11 @@ class ModuleApiView(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
     def get_queryset(self):
-        # Получаем id курса из параметров запроса
         course_id = self.request.query_params.get('course_id')
-
-        # Получаем только модули, принадлежащие курсу с указанным ID
         queryset = Module.objects.filter(course_id=course_id)
         return queryset
 
     def list(self, request):
-        # Получаем только модули, принадлежащие курсу с указанным ID
-        queryset = self.get_queryset()
+        queryset = self.get_queryset().annotate(lessons_count=Count('lessons'))
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

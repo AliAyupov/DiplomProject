@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
+    picture = models.ImageField(upload_to='user_photo/', null=False, blank=True)
     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',

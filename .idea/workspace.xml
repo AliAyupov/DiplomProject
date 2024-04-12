@@ -6,17 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/django_movie/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/django_movie/django_movie/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Home/Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Home/HomeApiComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Home/HomeApiComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Home/HomeContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Home/HomeContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/common/preloader/Preloader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/common/preloader/Preloader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/logout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/logout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/http/axios.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/http/axios.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/redux/redux-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/redux-store.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,10 +59,14 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/aliay/PycharmProjects/Project/django_movie/media/user_photo&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\aliay\PycharmProjects\Project\django_movie\media\user_photo" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\aliay\PycharmProjects\Project\django_movie" />
       <recent name="C:\Users\aliay\PycharmProjects\Project\django_movie\courses" />

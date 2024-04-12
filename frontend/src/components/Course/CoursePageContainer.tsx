@@ -11,10 +11,13 @@ interface Course {
     course_name: string;
     description: string;
     picture: string;
+    totalLessonsCount: number;
+    lessonsCount: number;
 }
 interface Module {
     id: number;
     module_name: string;
+    lessons_count:number;
 }
 
 interface Props {
@@ -22,15 +25,21 @@ interface Props {
     setModules: (modules: Module[]) => void;
     course: Course[];
     modules: Module[];
+    modulesCount: number;
+    lessonsCount: number; 
 }
 const mapStateToProps = (state: any) => {
     return {
         course: state.homePage.course,
-        modules: state.homePage.modules
+        modules: state.homePage.modules,
+        modulesCount: state.homePage.modulesCount,
+        lessonsCount: state.homePage.lessonsCount,
     };
 }
 const CoursePageContainer: React.FC<Props> = ({  course, modules, setCourse, setModules }) => {
     const [isLoading, setIsLoading] = useState(true);
+    const [modulesCount, setModulesCount] = useState(0);
+    const [lessonsCount, setLessonsCount] = useState(0);
     const { id } = useParams<{ id: string }>();
     useEffect(() => {
         const fetchCourse = async () => {
@@ -39,6 +48,9 @@ const CoursePageContainer: React.FC<Props> = ({  course, modules, setCourse, set
                 setCourse(response.data);
                 const modulesResponse = await axiosInstance.get(`/modules/?course_id=${id}`);
                 setModules(modulesResponse.data);
+                const totalLessonsCount = modulesResponse.data.reduce((total: number, module: Module) => total + module.lessons_count, 0);
+                setModulesCount(modulesResponse.data.length);
+                setLessonsCount(totalLessonsCount);
             } catch (error) {
                 console.error('Ошибка при загрузке курса:', error);
             } finally {
@@ -47,13 +59,13 @@ const CoursePageContainer: React.FC<Props> = ({  course, modules, setCourse, set
         };
 
         fetchCourse();
-    }, [setCourse, setModules]);
+    }, [id, setCourse, setModules, setLessonsCount]);
 
     if (isLoading) {
         return <Preloader/>;
     }
     return (
-        <CoursePage course={course} modules={modules}/>
+        <CoursePage course={course} modules={modules} modulesCount={modulesCount} lessonsCount={lessonsCount}/>
     );
 }
 

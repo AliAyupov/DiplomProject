@@ -76,8 +76,8 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                 {isFetching ? <Preloader key="unique_preloader_key"/> : null}
                 <div className="grid">
                     {courses && courses.map(c => (
-                        <NavLink to={`/course/${c.id}`}>
-                            <div className="grid__item" key={c.id}>
+                        <NavLink key={c.id} to={`/course/${c.id}`}>
+                            <div className="grid__item">
                                 <div className="card">
                                     <div className="card__image">
                                         <img src={course} alt="" className="image-course" />
