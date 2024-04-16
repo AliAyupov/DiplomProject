@@ -8,6 +8,59 @@
 .grid__item {
     cursor: pointer;
 }
+.border-form{
+    border: 1px solid rgb(167 167 167) !important;
+}
+input[type="file"][name="picture"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .file-container {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .file-button {
+    display: inline-block;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #6058ff;
+    color: #fff;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .form-label {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #888;
+  }
+  .validation-error {
+    color: red; 
+    font-size: 12px; 
+  }
+  .error-message{
+    font-size: 9px;
+    color: red;
+  }
+  .error-input {
+    border-color: red !important; 
+  }
+  .file-button:hover {
+    background-color: #e9e9e9;
+  }
+  .file-button:active {
+    background-color: #ddd;
+  }
+  .file-button:focus {
+    outline: none;
+    border-color: #66afe9;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
+  }
+  
+  
 @media screen and (min-width: 993px) {
     b{
         background: transparent;
@@ -16,11 +69,29 @@
     .off{
         display: block;
     }
+    .item-button__reg {
+        cursor: pointer;
+    }
+    
+    
     *{
         font-family: "Inter", sans-serif;
         background-color: #F7FAFC;
         margin: 0;
         padding: 0;
+    }
+    .item-button__exit {
+        font-size: 14px;
+        color: #F7FAFC;
+        font-weight: 600;
+        padding: 13px 14px;
+        border-radius: 12px;
+        background-color: #e51a3f;
+        margin: 0 20px;
+    }
+    
+    .item-button__comp{
+        display: block;
     }
     hr{
         width: 100%;
@@ -40,7 +111,13 @@
         margin-right: auto;
         margin-left: 35px;
     }
-
+    img.profile-picture {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
+        border-radius: 20px;
+    }
     .header_menu{
         display: flex;
         font-weight: 500;
@@ -481,6 +558,11 @@
     .leaderboard__cell--name {
         margin-left: -60px;
     }
+    .item-button__reg {
+        cursor: pointer;
+    }
+    
+    
     .btn_start{
         color: white;
         padding: 10px;
@@ -566,7 +648,22 @@
         display: flex;
         font-weight: 500;
     }
-
+    .item-button__exit {
+        font-size: 14px;
+        color: #F7FAFC;
+        font-weight: 600;
+        padding: 13px 14px;
+        border-radius: 12px;
+        background-color: #e51a3f;
+        margin: 0 20px;
+    }
+    img.profile-picture {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
+        border-radius: 20px;
+    }
     a{
         text-decoration: none;
     }
@@ -603,6 +700,7 @@
         background-color: #E8EBF2;
         margin: 0 35px 0 5px;
         border: 0px;
+        cursor: pointer;
     }
     .wrapper {
         max-width: 900px;
@@ -1046,6 +1144,9 @@
         margin: 0;
         padding: 0;
     }
+    .item-button__comp{
+        display: none;
+    }
     hr{
         width: 100%;
         border: none; /* Убираем границу для браузера Firefox */
@@ -1082,7 +1183,13 @@
     .mobile-menu {
         display: none; 
     }
-    
+    img.profile-picture {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
+        border-radius: 20px;
+    }
     .mobile-menu.open {
         display: flex; 
         flex-direction: column;
@@ -1595,6 +1702,13 @@
         justify-content: space-between;
         align-items: center;
         height: 70px;
+    }
+    img.profile-picture {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
+        border-radius: 20px;
     }
      section{
         position: relative;

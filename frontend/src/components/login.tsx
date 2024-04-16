@@ -89,7 +89,7 @@ export default function SignIn() {
 		  localStorage.setItem('refresh_token', res.data.refresh);
 		  axiosInstance.defaults.headers['Authorization'] =
 			'Bearer ' + localStorage.getItem('access_token');
-		  dispatch(setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, true)); 
+		  dispatch(setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, true, null)); 
 		  navigate('/');
 		})
 		.catch((error) => {

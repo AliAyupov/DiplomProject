@@ -23,13 +23,12 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView, TokenVerifyView,
 )
-from courses.views import CustomUserApiView, CourseApiView, ModuleApiView, LessonApiView, \
+from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView, \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView
 
 
 router = routers.DefaultRouter()
-router.register(r'api/custom-users', CustomUserApiView)
 router.register(r'api/courses', CourseApiView)
 router.register(r'api/lessons', LessonApiView)
 router.register(r'api/student-homeworks', StudentHomeworkApiView)
@@ -45,6 +44,7 @@ router.register(r'api/modules', ModuleApiView, basename='module')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/custom-users/<int:user_id>/', CustomUserDetailView.as_view()),
     path('api-auth/', include('rest_framework.urls')),
     path('', include(router.urls)),
     path('api/auth/', include('djoser.urls')),

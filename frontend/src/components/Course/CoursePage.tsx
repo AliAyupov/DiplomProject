@@ -25,7 +25,7 @@ interface Props {
 }
 
 const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCount}) => {
-    
+    const baseUrl = 'http://localhost:8000';
     return (
         <main>
             <div className="screen">

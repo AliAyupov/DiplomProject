@@ -4,6 +4,7 @@ import Home from "./Home";
 interface Course {
     id: number;
     course_name: string;
+    picture: string;
 }
 
 interface Props {

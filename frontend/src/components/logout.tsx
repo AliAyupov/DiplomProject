@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import axiosInstance from '../http/axios';
 import { useDispatch } from 'react-redux'; 
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ export default function LogOut() {
 		axiosInstance.defaults.headers['Authorization'] = null;
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');
-        dispatch(setUserData("", "", "", "", false));
+        dispatch(setUserData("", "", "", "", false, null));
 		navigate('/login');
 	});
 	return <div>Logout</div>;

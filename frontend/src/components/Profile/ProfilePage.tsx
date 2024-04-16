@@ -3,18 +3,136 @@ import myProfileIcon from '../../img/myprofile.svg';
 import myDosIcon from '../../img/mydos.svg';
 import myPersIcon from '../../img/mypers.svg';
 import shopIcon from '../../img/shop.svg';
-import portretImage from '../../img/portret.png';
 import courseImage from '../../img/course.png';
+import axiosInstance from '../../http/axios';
+import ava from '../../img/ava.png';
+import { useDispatch } from 'react-redux'; 
+import { setUserData } from '../../redux/auth-reducer';
 
-const ProfilePage: React.FC = () => {
-    // Состояние для отслеживания активной вкладки
+interface UserData {
+    id: string;
+    username: string;
+    picture: string;
+    balance: string;
+    experience: string;
+    level: string;
+    email: string;
+    first_name: string;
+    role:string;
+    password: string;
+}
+
+interface Props {
+    isAuthenticated: boolean;
+    userData: UserData;
+    updateUserData: (userData: UserData) => void;
+    
+}
+
+const ProfilePage: React.FC<Props> = ({ isAuthenticated, userData, updateUserData}) => {
     const [activeTab, setActiveTab] = useState('profile');
+    const [editing, setEditing] = useState(false);
+    const [editedUserData, setEditedUserData] = useState<UserData>({ ...userData });
+    const [pictureFile, setImageFile] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState<string>('');
+    const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({}); 
 
-    // Функция для обновления активной вкладки
+	const dispatch = useDispatch();
+
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
     };
 
+    const handleEditButtonClick = () => {
+        setEditing(true);
+         setEditedUserData({ ...userData });
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setErrors({ ...errors, [name]: '' });
+        setEditedUserData({ ...editedUserData, [name]: value });
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const selectedFile = event.target.files[0];
+            setImageFile(selectedFile);
+            const imageUrl = `/media/user_photo/${selectedFile.name}`; 
+            setImageUrl(imageUrl);
+            const url = URL.createObjectURL(selectedFile);
+            setPreviewImageUrl(url);
+        }
+    };
+
+    const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            if (!validateEmail(editedUserData.email)) {
+                setErrors({ ...errors, email: 'Введите корректный email' });
+                return;
+            }
+            if (editedUserData.username.length < 4) {
+                setErrors({ ...errors, username: 'Логин должен содержать не менее 4 символов' });
+                return;
+            }
+    
+            const formData = new FormData();
+            formData.append('username', editedUserData.username);
+            formData.append('email', editedUserData.email);
+            formData.append('first_name', editedUserData.first_name);
+            formData.append('password', editedUserData.password)
+            formData.append('is_active', '1');
+            
+            if (pictureFile) {
+                formData.append('picture', pictureFile);
+            }
+
+            const response = await axiosInstance.put(`custom-users/${editedUserData.id}/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.status === 200) {
+                const updatedUserData = { ...editedUserData };
+                if (pictureFile) {
+                    updatedUserData.picture = imageUrl;
+                }
+                dispatch(setUserData(updatedUserData.email, updatedUserData.id, updatedUserData.username, updatedUserData.picture, true, null)); 
+                updateUserData(updatedUserData);
+                setEditing(false);
+            }
+            else {
+                console.error('Ошибка при обновлении данных пользователя');
+            }
+        }  catch (error:any) {
+            if (error.response && error.response.data) {
+                if (
+                  error.response.status === 400 &&
+                  error.response.data &&
+                  error.response.data.username 
+                ) {
+                setErrors({ ...errors, username: 'Пользователь с таким именем уже существует' });
+                }
+                if (
+                  error.response.status === 400 &&
+                  error.response.data &&
+                  error.response.data.email 
+                ) {
+                setErrors({ ...errors, email: 'Пользователь с такой почтой уже существует' });
+                }
+              } else {
+                console.error('Ошибка при регистрации:', error);
+              }
+        }
+    };
+    const validateEmail = (email: string): boolean => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    const baseUrl = 'http://localhost:8000';
     return (
         <main>
             <div className="screen">
@@ -40,33 +158,85 @@ const ProfilePage: React.FC = () => {
                         </ul>
                     </div>
                 </div>
+                {userData && (
                 <div className="screen__content">
                     {activeTab === 'profile' && (
-                        <>
+                    <>
                     <div className="in-process">
+                        
+                         {editing ? (
+                            <form onSubmit={handleFormSubmit} encType="multipart/form-data" className='form'>
+                                <div className="profile-items">
+                                    {previewImageUrl ? (
+                                        <img src={previewImageUrl} alt="Preview" className="items-img" />
+                                    ) : (
+                                        userData.picture ? (
+                                            <img src={`${baseUrl}${userData.picture}`} alt="Course Image" className="items-img" />
+                                        ) : (
+                                            <img src={ava} alt="Default Profile" className="items-img" />
+                                        )
+                                    )}
+                                    <div className="course-details">
+    <div>
+        <p>
+            <label htmlFor="first_name" className="form-label">Имя</label>
+        </p>  
+        <input type="text" name="first_name" className="form-input border-form" value={editedUserData.first_name} onChange={handleInputChange} />
+        
+        {/* Ошибка для имени */}
+        {errors.first_name && <p className="error-message">{errors.first_name}</p>}
+        
+        <p>  
+            <label htmlFor="email" className="form-label">Email*</label>
+        </p>  
+        <input type="email" name="email" className={`form-input border-form ${errors.email ? 'error-input' : ''}`} value={editedUserData.email} onChange={handleInputChange} />
+        
+        {errors.email && <p className="error-message">{errors.email}</p>}
+        
+        <p>  
+            <label htmlFor="username" className="form-label">Логин*</label>
+        </p>  
+        <input type="text" name="username" className={`form-input border-form ${errors.username ? 'error-input' : ''}`} value={editedUserData.username} onChange={handleInputChange} />
+        
+        {errors.username && <p className="error-message">{errors.username}</p>}
+        
+        <div className="file-container">
+            <input type="file" name="picture" id="file-input" className="file-input" onChange={handleFileChange} accept="image/*"/>
+            <label htmlFor="file-input" className="file-button">Загрузить новое изображение</label>
+        </div>
+    </div>
+    <button type="submit" className="item-button__reg btn__height">Сохранить</button>
+</div>
+                                </div>
+                            </form>
+                        ) : (
                         <div className="in-process__item">
                             <div className="profile-items">
-                                <img src={portretImage} alt="Course Image" className="items-img" />
+                                    {userData.picture ? (
+                                    <img src={`${baseUrl}${userData.picture}`} alt="Course Image" className="items-img" />
+                                    ) : (
+                                    <img src={ava} alt="Default Profile" className="items-img" />
+                                    )}
                                 <div className="course-details">
                                     <div>
-                                        <h2 className="details-text">Али Аюпов</h2>
-                                        <p className="details-mail">ali.ayupov.2017@mail.ru</p>
-                                        <p className="details-mail">Студент</p>
+                                        <h2 className="details-text">{userData.first_name}</h2>
+                                        <p className="details-mail">{userData.email}</p>
+                                        <p className="details-mail">{userData.role}</p>
                                     </div>
-                                    <button className="item-button__reg btn__height">Редактировать</button>
+                                    <button className="item-button__reg btn__height" onClick={handleEditButtonClick}>Редактировать</button>
                                 </div>
                             </div>
                             <div className="margin"></div>
                             <div className="grid">
+                            
                                 <div className="grid__item">
-                                    <div className="item-block__element item-background">Уровень <h1 className="text__big">15</h1></div>
-                                </div>
-                                <div className="grid__item">
-                                    <div className="item-block__element item-background">Опыт <h1 className="text__big">150/300</h1></div>
-                                </div>
-                                <div className="grid__item">
-                                    <div className="item-block__element item-background">Баланс <h1 className="text__big">200</h1></div>
-                                </div>
+                                                <div className="item-block__element item-background">Уровень <h1 className="text__big">{userData.level}</h1></div>
+                                            </div><div className="grid__item">
+                                                    <div className="item-block__element item-background">Опыт <h1 className="text__big">{userData.experience}/300</h1></div>
+                                                </div><div className="grid__item">
+                                                    <div className="item-block__element item-background">Баланс <h1 className="text__big">{userData.balance}</h1></div>
+                                                </div>
+                            
                             </div>
                             <div className="margin"></div>
                             <div className="progress-text">50%</div>
@@ -75,6 +245,8 @@ const ProfilePage: React.FC = () => {
                             </div>
                             <div className="progress-module">1/2</div>
                         </div>
+                        )}
+                        
                     </div>
                     </>
                     )}
@@ -106,7 +278,7 @@ const ProfilePage: React.FC = () => {
                         </div>
                     )}  
                 </div>
-
+                )}
             </div>
     </main>
 );

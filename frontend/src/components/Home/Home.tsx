@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 interface Course {
     id: number;
     course_name: string;
+    picture: string;
 }
 
 interface Props {
@@ -80,7 +81,7 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                             <div className="grid__item">
                                 <div className="card">
                                     <div className="card__image">
-                                        <img src={course} alt="" className="image-course" />
+                                        <img src={c.picture} alt="" className="image-course" />
                                     </div>
                                     <div className="card__title">{c.course_name}</div>
                                 </div>

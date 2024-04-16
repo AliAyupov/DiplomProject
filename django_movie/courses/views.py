@@ -23,12 +23,27 @@ from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerialize
     EnrollmentSerializer
 
 
-class CustomUserApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsProducer]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+class CustomUserDetailView(APIView):
+    def get_object(self, user_id):
+        try:
+            return CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            raise Http404
+    def get(self, request, user_id):
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            serializer = CustomUserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
+    def put(self, request, user_id):
+        user = self.get_object(user_id)
+        serializer = CustomUserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CourseApiView(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
