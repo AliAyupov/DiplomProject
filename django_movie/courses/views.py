@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 from requests import Request
@@ -51,12 +51,25 @@ class CourseApiView(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     http_method_names = ['get']
 
+    @action(detail=False, methods=['get'], url_path='search')
+    def search_courses(self, request):
+        query = request.query_params.get('query')
+
+        if not query:
+            return Response({'error': 'Query parameter "query" is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = Course.objects.filter(Q(course_name__iregex=query) | Q(description__iregex=query))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class LessonApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsProducer]
-    queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+
+    def get_queryset(self):
+        module_id = self.kwargs.get('module_id')
+        return Lesson.objects.filter(module_id=module_id)
 
 
 class StudentHomeworkApiView(viewsets.ModelViewSet):

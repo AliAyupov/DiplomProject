@@ -4,7 +4,6 @@ import menu from '../../img/menu.svg'
 import ava from '../../img/ava.png'
 
 import { NavLink} from 'react-router-dom';
-import HeaderContainer from './HeaderContainer';
 
 interface Props {
     isAuthenticated: boolean;
@@ -58,10 +57,10 @@ const Header: React.FC<Props> = ({ isAuthenticated, picture}) => {
         <div id="mobile-menu" className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
                 <NavLink to="/" className="link-menu header-menu__font link-menu__active" onClick={closeMobileMenu}>Главная</NavLink>
                 <NavLink to="/courses" className="link-menu header-menu__font" onClick={closeMobileMenu}>Курсы</NavLink>
-                <a href="#" className="link-menu header-menu__font" onClick={closeMobileMenu}>О платформе</a>
+                <NavLink to="/mycourses" className="link-menu header-menu__font" onClick={closeMobileMenu}>О платформе</NavLink>
                 <a href="#" className="link-menu header-menu__font" onClick={closeMobileMenu}>Возможности</a>
                 {isAuthenticated ? (
-                <><NavLink to="/logout" className="item-button__exit btn__height"
+                <><NavLink to="/logout" className="item-button__exit btn__height btn__height_exit"
                 onClick={closeMobileMenu}>Выйти</NavLink></>
                 ) : (
                 <><NavLink to="/login" className="item-button__enter-m btn__height" onClick={closeMobileMenu}>Вход</NavLink>

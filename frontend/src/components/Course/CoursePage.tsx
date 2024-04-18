@@ -4,6 +4,7 @@ import mydos from '../../img/mydos.svg';
 import mypers from '../../img/mypers.svg';
 import shop from '../../img/shop.svg';
 import module from '../../img/module.png';
+import { NavLink } from 'react-router-dom';
 
 interface Course {
     id: number;
@@ -79,6 +80,7 @@ const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCou
                         {modules && modules.length > 0 ? (
                             modules.map((moduleItem, index) => (
                                 <div key={moduleItem.id} className="in-process__item">
+                                    <NavLink  to={`/modules/${moduleItem.id}`}>
                                     <div className="course">
                                         <img src={module} alt="Course Image" className="module__image" />
                                         <div className="course-details">
@@ -89,6 +91,7 @@ const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCou
                                             <button className="btn btn-c">Перейти</button>
                                         </div>
                                     </div>
+                                    </NavLink>
                                 </div>
                             ))
                         ) : (

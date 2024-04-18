@@ -3,6 +3,7 @@ import homeReducer from "./home-reducer";
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from "./auth-reducer";
 
+export type RootState = ReturnType<typeof reducers>;
 
 let reducers = combineReducers({
     homePage: homeReducer,

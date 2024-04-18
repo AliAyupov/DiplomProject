@@ -1,15 +1,60 @@
 import React, { useState } from 'react';
 import course from '../../img/course.png';
+import Preloader from '../common/preloader/Preloader';
+import { NavLink } from 'react-router-dom';
 
-const Courses: React.FC = () => {
-    // Состояние для активной вкладки
+interface Course {
+    id: number;
+    course_name: string;
+    picture: string;
+}
+
+interface Props {
+    courses: Course[];
+    pageSize: number;
+    totalCoursesCount: number;
+    currentPage: number;
+    onPageChanged: (pageNumber: number) => void;
+    isFetching: boolean;
+    onSearch: (query: string) => void;
+}
+
+const CoursesPage: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch}) => {
     const [activeTab, setActiveTab] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
 
-    // Функция для изменения активной вкладки
+    const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const query = e.target.value;
+        setSearchQuery(query);
+        onSearch(query);
+    };
+
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };
+    const onNextPageClicked = () => {
+        if (currentPage < Math.ceil(totalCoursesCount / pageSize)) {
+            const nextPage = currentPage + 1;
+            onPageChanged(nextPage);
+        }
+    }
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault(); 
+    };
+    const onPreviousPageClicked = () => {
+        if (currentPage > 1) {
+            const previousPage = currentPage - 1;
+            onPageChanged(previousPage);
+        }
+    }
 
+    let pagesCount = Math.ceil(totalCoursesCount / pageSize);
+    let pages = [];
+
+    for (let i = 1; i <= pagesCount; i++) {
+        pages.push(i);
+    }
     return (
         <main>
             <div className="wrapper">
@@ -17,8 +62,15 @@ const Courses: React.FC = () => {
                     СПИСОК КУРСОВ
                 </div>
                 <div className="wrapper-search">
-                    <form action="search.php" className="wrapper-search__form" method="get">
-                        <input type="text" name="search" className="wrapper-input" placeholder="Поиск..." />
+                    <form onSubmit={handleFormSubmit} action="search.php" className="wrapper-search__form" method="get">
+                        <input 
+                        type="text" 
+                        name="search" 
+                        className="wrapper-input" 
+                        placeholder="Поиск..." 
+                        value={searchQuery} 
+                        onChange={handleSearchChange} 
+                        />
                     </form>
                 </div>
                 <div className="grid grid-courses">
@@ -43,21 +95,29 @@ const Courses: React.FC = () => {
                 </div>
                 {activeTab === 'all' && (
                     <>
-                        <div className="wrapper-text">
-                            Рекомендации для Вас
-                        </div>
+                        <div className="wrapper-text">Все курсы</div>
+                        {isFetching ? <Preloader key="unique_preloader_key"/> : null}
                         <div className="grid">
-                            <div className="grid__item">
-                                <div className="card">
-                                    <div className="card__image">
-                                        <img src={course} alt="" className="image-course" />
+                            {courses && courses.map(c => (
+                                <NavLink key={c.id} to={`/course/${c.id}`}>
+                                    <div className="grid__item">
+                                        <div className="card">
+                                            <div className="card__image">
+                                                <img src={c.picture} alt="" className="image-course" />
+                                            </div>
+                                            <div className="card__title">{c.course_name}</div>
+                                        </div>
                                     </div>
-                                    <div className="card__title">
-                                        Название продукта вдруг
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Другие карточки */}
+                                </NavLink>
+                            ))}
+                        </div>
+                        <div className="pagination">
+                            <span className="pagination__link" onClick={onPreviousPageClicked}>&laquo;</span>
+                            {pages.map(p => (
+                                    <span key={p} className={`pagination__link ${currentPage === p ? 'pagination__link__active' : ''}`}
+                                        onClick={() => { onPageChanged(p) }}>{p}</span>
+                            ))}
+                            <span className="pagination__link" onClick={onNextPageClicked}>&raquo;</span>
                         </div>
                     </>
                 )}
@@ -95,4 +155,4 @@ const Courses: React.FC = () => {
     );
 }
 
-export default Courses;  
+export default CoursesPage;

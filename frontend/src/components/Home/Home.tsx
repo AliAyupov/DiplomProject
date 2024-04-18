@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import mount from '../../img/mount.png';
 import mony from '../../img/mony.jpg';
-import course from '../../img/course.png';
 import Preloader from "../common/preloader/Preloader";
 import { NavLink } from "react-router-dom";
 
@@ -18,9 +17,21 @@ interface Props {
     currentPage: number;
     onPageChanged: (pageNumber: number) => void;
     isFetching: boolean;
+    onSearch: (query: string) => void;
 }
 
-const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching }) => {
+const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch }) => {
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const query = e.target.value;
+        setSearchQuery(query);
+        onSearch(query);
+    };
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault(); 
+    };
     const onNextPageClicked = () => {
         if (currentPage < Math.ceil(totalCoursesCount / pageSize)) {
             const nextPage = currentPage + 1;
@@ -60,12 +71,14 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                             <b>проекты и зарабатывайте на своей экспертизе</b>
                         </div>
                         <div className="wrapper-form">
-                            <form className="form" action="search.php" method="get">
+                            <form onSubmit={handleFormSubmit} className="form" action="search.php" method="get">
                                 <input
                                     type="text"
                                     name="search"
                                     className="form-input"
-                                    placeholder="Поиск..." />
+                                    placeholder="Поиск..."
+                                    value={searchQuery} 
+                                    onChange={handleSearchChange}  />
                                 <button type="submit" className="form-button">
                                     Поиск
                                 </button>

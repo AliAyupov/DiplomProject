@@ -30,7 +30,6 @@ from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, Le
 
 router = routers.DefaultRouter()
 router.register(r'api/courses', CourseApiView)
-router.register(r'api/lessons', LessonApiView)
 router.register(r'api/student-homeworks', StudentHomeworkApiView)
 router.register(r'api/student-progress', StudentProgressApiView)
 router.register(r'api/shop-items', ShopItemApiView)
@@ -45,7 +44,9 @@ router.register(r'api/modules', ModuleApiView, basename='module')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/custom-users/<int:user_id>/', CustomUserDetailView.as_view()),
+    path('api/modules/<int:module_id>/lessons/', LessonApiView.as_view({'get': 'list'}), name='module-lessons'),
     path('api-auth/', include('rest_framework.urls')),
+    path('api/courses/search/', CourseApiView.as_view({'get': 'search_courses'}), name='search_courses'),
     path('', include(router.urls)),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.jwt')),

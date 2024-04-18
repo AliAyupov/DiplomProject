@@ -1,6 +1,10 @@
+import { connect } from "react-redux";
+import { setCourses, setCurrentPage, setTotalCourses, togglePreloader } from "../../redux/home-reducer";
 import React, { useEffect, useState } from "react";
-import axiosInstance from '../../http/axios';
-import Home from "./Home";
+import axiosInstance from "../../http/axios";
+import CoursesPage from "./CoursesPage"
+
+
 interface Course {
     id: number;
     course_name: string;
@@ -13,7 +17,7 @@ interface Props {
     toogleIsFetching: (isFetching: boolean) => void;
 }
 
-const HomeApiComponent: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetching }) => {
+const MyCoursesContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetching }) => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [totalCoursesCount, setTotalCoursesCount] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -54,9 +58,10 @@ const HomeApiComponent: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetch
         setCurrentPage(1);
     }
     
+    
     return (
         <>
-            <Home
+            <CoursesPage
                 courses={courses}
                 pageSize={pageSize}
                 totalCoursesCount={totalCoursesCount}
@@ -68,5 +73,15 @@ const HomeApiComponent: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetch
         </>
     );
 }
+let mapStateToProps = (state: any) => {
+    return {
+        courses: state.homePage.courses,
+        pageSize : state.homePage.pageSize,
+        totalCoursesCount : state.homePage.totalCoursesCount,
+        currentPage: state.homePage.currentPage,
+        isFetching: state.homePage.isFetching
+    }
+}
 
-export default HomeApiComponent;
+export default connect(mapStateToProps, { setCourses, setCurrentPage, setTotalCourses, toogleIsFetching:togglePreloader
+}) (MyCoursesContainer);

@@ -1,7 +1,16 @@
 import React from 'react';
 import learnImage from '../../img/learn.png';
 
-const LessonsPage: React.FC = () => {
+interface Lesson {
+    id: string;
+    image: string;
+    lesson_name: string;
+}
+interface Props{
+    lessons: Lesson[];
+}
+
+const LessonsPage:  React.FC<Props> = ({lessons}) => {
     return (
         <main>
             <div className="wrapper">
@@ -16,45 +25,24 @@ const LessonsPage: React.FC = () => {
                 <div className="wrapper-text">
                     Уроки
                 </div>
-                <div className="in-process__item">
-                    <div className="course">
-                        <img src={learnImage} alt="Course Image" className="module__image" />
-                        <div className="course-details">
-                            <div>
-                                <h2 className="course-title">1 УРОК: КАК ПРАВИЛЬНО СМОТРЕТЬ В СТЕНУ</h2>
-                                <p className="modules-progress">1h 30min</p>
+                {lessons.length > 0 ? (
+                    lessons.map(item => (
+                        <div key={item.id} className="in-process__item">
+                            <div className="course">
+                                <img src={learnImage} alt="Course Image" className="module__image" />
+                                <div className="course-details">
+                                    <div>
+                                        <h2 className="course-title">{item.lesson_name}</h2>
+                                        <p className="modules-progress">1h 12m</p>
+                                    </div>
+                                    <button className="btn btn-c">Начать</button>
+                                </div>
                             </div>
-                            <button className="btn btn-c">Начать</button>
                         </div>
-                    </div>
-                </div>
-                <hr />
-                <div className="in-process__item">
-                    <div className="course">
-                        <img src={learnImage} alt="Course Image" className="module__image" />
-                        <div className="course-details">
-                            <div>
-                                <h2 className="course-title">1 УРОК: КАК ПРАВИЛЬНО СМОТРЕТЬ В СТЕНУ</h2>
-                                <p className="modules-progress">1h 30min</p>
-                            </div>
-                            <button className="btn btn-c">Начать</button>
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <div className="in-process__item">
-                    <div className="course">
-                        <img src={learnImage} alt="Course Image" className="module__image" />
-                        <div className="course-details">
-                            <div>
-                                <h2 className="course-title">1 УРОК: КАК ПРАВИЛЬНО СМОТРЕТЬ В СТЕНУ</h2>
-                                <p className="modules-progress">1h 30min</p>
-                            </div>
-                            <button className="btn btn-c">Начать</button>
-                        </div>
-                    </div>
-                </div>
-                <hr />
+                    ))
+                ) : (
+                    <p>Уроков нет</p>
+                )}
             </div>
         </main>
     );

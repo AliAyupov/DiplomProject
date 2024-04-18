@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axiosInstance from '../http/axios';
-import { NavLink, useNavigate } from 'react-router-dom';
-// Material UI
+import { NavLink} from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useDispatch} from 'react-redux'; 
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { setUserData } from '../redux/auth-reducer';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,13 +34,18 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  select: { 
+    minWidth: '200px',
+  },
 }));
 
 export default function SignUp() {
-  const navigate = useNavigate();
+	const dispatch = useDispatch();
   const classes = useStyles();
-
-  // Состояние для формы и ошибок
+  const [userId, setUserId] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false); 
+  const [selectedRole, setSelectedRole] = useState('');
+  
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -49,8 +56,29 @@ export default function SignUp() {
     username: '',
     password: '',
   });
-
-  // Функция обновления состояния формы
+  const handleChangeSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedRole(event.target.value as string);
+  };
+  const handleChooseRole = async () => {
+    const foData = new FormData();
+    foData.append('role', selectedRole);
+    foData.append('username', formData.username);
+    foData.append('email', formData.email);
+    foData.append('password', formData.password);
+    foData.append('is_active', '1');
+    
+    try {
+      const response = await axiosInstance.put(`custom-users/${userId}/`, foData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      console.log('Пользователь успешно обновлен:', response.data);
+    } catch (error) {
+      console.error('Ошибка при обновлении пользователя:', error);
+    }
+  };
   const handleChange = (e: { target: { name: any; value: string; }; }) => {
     setFormData({
       ...formData,
@@ -58,14 +86,11 @@ export default function SignUp() {
     });
   };
 
-  // Функция валидации формы и отправки данных
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    // Проверка валидности формы
     const isValid = validateForm();
 
-    // Если форма валидна, отправляем данные
     if (isValid) {
       axiosInstance
         .post('auth/users/', {
@@ -74,7 +99,24 @@ export default function SignUp() {
           password: formData.password,
         })
         .then((res) => {
-          navigate('/');
+          setUserId(res.data.id);
+          setRegistrationSuccess(true);
+      axiosInstance
+        .post('token/', {
+          username: formData.username,
+          password: formData.password,
+        })
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem('access_token', res.data.access);
+          localStorage.setItem('refresh_token', res.data.refresh);
+          axiosInstance.defaults.headers['Authorization'] =
+            'Bearer ' + localStorage.getItem('access_token');
+          dispatch(setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, true, null)); 
+          })
+          .catch((error) => {
+            console.error('Ошибка при входе:', error);
+          });
         })
         .catch((error) => {
           if (error.response && error.response.data) {
@@ -104,8 +146,6 @@ export default function SignUp() {
         });
     }
   };
-
-  // Функция валидации формы
   const validateForm = () => {
     let errors:any = {};
     let isValid = true;
@@ -117,7 +157,7 @@ export default function SignUp() {
       errors.email = 'Такой почты не существует';
       isValid = false;
     } else {
-      errors.email = ''; // Очищаем ошибку, если email валиден
+      errors.email = ''; 
     }
 
     if (!formData.username) {
@@ -127,7 +167,7 @@ export default function SignUp() {
       errors.username = 'Имя пользователя должно быть не менее 5-ех символов в длину';
       isValid = false;
     } else {
-      errors.username = ''; // Очищаем ошибку, если username заполнен
+      errors.username = ''; 
     }
 
     if (!formData.password) {
@@ -140,10 +180,10 @@ export default function SignUp() {
       errors.password = 'Пароль должен содержать цифру';
       isValid = false;
     } else {
-      errors.password = ''; // Очищаем ошибку, если password заполнен
+      errors.password = '';
     }
 
-    setFormErrors(errors); // Обновляем состояние ошибок
+    setFormErrors(errors);
     return isValid;
   };
 
@@ -151,10 +191,42 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+        
         <Avatar className={classes.avatar}></Avatar>
         <Typography component="h1" variant="h5">
           Регистрация
         </Typography>
+        {registrationSuccess ? (
+          <div className="role_selector">
+            <Typography variant="h6">Поздравляем, вы успешно зарегистрированы!</Typography>
+            <FormControl style={{ minWidth: "200px" }}>
+            <InputLabel htmlFor="role-select">Роль</InputLabel>
+            <Select
+              className={classes.select}
+              value={selectedRole}
+              onChange={handleChangeSelect}
+              inputProps={{ name: "role", id: "role-select" }}
+            >
+              <MenuItem value="" disabled>
+                Выберите роль
+              </MenuItem>
+              <MenuItem value="student">Студент</MenuItem>
+              <MenuItem value="tutor">Тьютор</MenuItem>
+              <MenuItem value="producer">Продюсер</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleChooseRole}
+          >
+            Выбрать роль
+          </Button>
+          </div>
+        ) : 
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -177,14 +249,15 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="username"
-                label="Имя пользователя"
+                label="Логин"
                 name="username"
                 autoComplete="username"
                 onChange={handleChange}
                 error={!!formErrors.username}
                 helperText={formErrors.username}
               />
-            </Grid>
+              </Grid>
+              
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -224,7 +297,8 @@ export default function SignUp() {
               </NavLink>
             </Grid>
           </Grid>
-        </form>
+        </form> 
+        }
       </div>
     </Container>
   );

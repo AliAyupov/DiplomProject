@@ -82,7 +82,7 @@ const ProfilePage: React.FC<Props> = ({ isAuthenticated, userData, updateUserDat
             formData.append('username', editedUserData.username);
             formData.append('email', editedUserData.email);
             formData.append('first_name', editedUserData.first_name);
-            formData.append('password', editedUserData.password)
+            formData.append('password', editedUserData.password);
             formData.append('is_active', '1');
             
             if (pictureFile) {
@@ -166,7 +166,7 @@ const ProfilePage: React.FC<Props> = ({ isAuthenticated, userData, updateUserDat
                         
                          {editing ? (
                             <form onSubmit={handleFormSubmit} encType="multipart/form-data" className='form'>
-                                <div className="profile-items">
+                                <div className="profile-items profile-items-p">
                                     {previewImageUrl ? (
                                         <img src={previewImageUrl} alt="Preview" className="items-img" />
                                     ) : (
@@ -176,54 +176,54 @@ const ProfilePage: React.FC<Props> = ({ isAuthenticated, userData, updateUserDat
                                             <img src={ava} alt="Default Profile" className="items-img" />
                                         )
                                     )}
-                                    <div className="course-details">
-    <div>
-        <p>
-            <label htmlFor="first_name" className="form-label">Имя</label>
-        </p>  
-        <input type="text" name="first_name" className="form-input border-form" value={editedUserData.first_name} onChange={handleInputChange} />
-        
-        {/* Ошибка для имени */}
-        {errors.first_name && <p className="error-message">{errors.first_name}</p>}
-        
-        <p>  
-            <label htmlFor="email" className="form-label">Email*</label>
-        </p>  
-        <input type="email" name="email" className={`form-input border-form ${errors.email ? 'error-input' : ''}`} value={editedUserData.email} onChange={handleInputChange} />
-        
-        {errors.email && <p className="error-message">{errors.email}</p>}
-        
-        <p>  
-            <label htmlFor="username" className="form-label">Логин*</label>
-        </p>  
-        <input type="text" name="username" className={`form-input border-form ${errors.username ? 'error-input' : ''}`} value={editedUserData.username} onChange={handleInputChange} />
-        
-        {errors.username && <p className="error-message">{errors.username}</p>}
-        
-        <div className="file-container">
-            <input type="file" name="picture" id="file-input" className="file-input" onChange={handleFileChange} accept="image/*"/>
-            <label htmlFor="file-input" className="file-button">Загрузить новое изображение</label>
-        </div>
-    </div>
-    <button type="submit" className="item-button__reg btn__height">Сохранить</button>
-</div>
+                                    <div className="course-details course-details-wrap">
+                                        <div>
+                                            <p>
+                                                <label htmlFor="first_name" className="form-label ">Имя</label>
+                                            </p>  
+                                            <input type="text" name="first_name" className="form-input form-input-p border-form" value={editedUserData.first_name} onChange={handleInputChange} />
+                                            
+                                            {/* Ошибка для имени */}
+                                            {errors.first_name && <p className="error-message">{errors.first_name}</p>}
+                                            
+                                            <p>  
+                                                <label htmlFor="email" className="form-label">Email*</label>
+                                            </p>  
+                                            <input type="email" name="email" className={`form-input form-input-p border-form ${errors.email ? 'error-input' : ''}`} value={editedUserData.email} onChange={handleInputChange} />
+                                            
+                                            {errors.email && <p className="error-message">{errors.email}</p>}
+                                            
+                                            <p>  
+                                                <label htmlFor="username" className="form-label">Логин*</label>
+                                            </p>  
+                                            <input type="text" name="username" className={`form-input form-input-p border-form ${errors.username ? 'error-input' : ''}`} value={editedUserData.username} onChange={handleInputChange} />
+                                            
+                                            {errors.username && <p className="error-message">{errors.username}</p>}
+                                            
+                                            <div className="file-container">
+                                                <input type="file" name="picture" id="file-input" className="file-input form-input-p" onChange={handleFileChange} accept="image/*"/>
+                                                <label htmlFor="file-input" className="file-button">Загрузить новое изображение</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" className="item-button__reg btn__height btn__height_save">Сохранить</button>
+                                    </div>
                                 </div>
                             </form>
                         ) : (
                         <div className="in-process__item">
-                            <div className="profile-items">
+                            <div className="profile-items profile-items-p">
                                     {userData.picture ? (
                                     <img src={`${baseUrl}${userData.picture}`} alt="Course Image" className="items-img" />
                                     ) : (
                                     <img src={ava} alt="Default Profile" className="items-img" />
                                     )}
-                                <div className="course-details">
+                                <div className="course-details course-details-wrap">
                                     <div>
                                         <h2 className="details-text">{userData.first_name}</h2>
                                         <p className="details-mail">{userData.email}</p>
                                         <p className="details-mail">{userData.role}</p>
                                     </div>
-                                    <button className="item-button__reg btn__height" onClick={handleEditButtonClick}>Редактировать</button>
+                                    <button className="item-button__reg btn__height btn__height_edit" onClick={handleEditButtonClick}>Редактировать</button>
                                 </div>
                             </div>
                             <div className="margin"></div>

@@ -6,7 +6,13 @@ const SET_COURSE = 'SET_COURSE';
 const SET_MODULES = 'SET_MODULES';
 const SET_MODULES_COUNT = 'SET_MODULES_COUNT';
 const SET_LESSONS_COUNT = 'SET_LESSONS_COUNT';
+const SET_LESSONS = 'SET_LESSONS';
 
+interface Lesson {
+    id: string;
+    image: string;
+    lesson_name:string;
+}
 interface Action {
     type: string;
     courses: any;
@@ -17,6 +23,7 @@ interface Action {
     modules: any;
     modulesCount: number;
     lessonsCount: number;
+    lessons: Lesson[];
 }
 
 interface State {
@@ -29,6 +36,7 @@ interface State {
     course: any;
     modulesCount: number;
     lessonsCount: number;
+    lessons: Lesson[]; 
 }
 
 const initialState: State = {
@@ -40,7 +48,8 @@ const initialState: State = {
     currentPage: 1,
     isFetching: false,
     course: null,
-    lessonsCount: 0
+    lessonsCount: 0,
+    lessons: [],
 }
 
 const homeReducer = (state: State = initialState, action: Action): State => {
@@ -60,7 +69,9 @@ const homeReducer = (state: State = initialState, action: Action): State => {
         case SET_MODULES_COUNT:
             return {...state, modulesCount: action.modulesCount}; 
         case SET_LESSONS_COUNT:
-            return { ...state, lessonsCount: action.lessonsCount };     
+            return { ...state, lessonsCount: action.lessonsCount }; 
+        case SET_LESSONS:
+            return { ...state, lessons: action.lessons };    
         default:
             return state;
     }
@@ -74,5 +85,6 @@ export const setCourse = (course:any) => ({type: SET_COURSE, course});
 export const setModules = (modules: any) => ({ type: SET_MODULES, modules });
 export const setModulesCount = (modulesCount: number) => ({ type: SET_MODULES_COUNT, modulesCount });
 export const setLessonsCount = (lessonsCount: number) => ({ type: SET_LESSONS_COUNT, lessonsCount });
+export const setLessons = (lessons: Lesson[]) => ({ type: SET_LESSONS, lessons });
 
 export default homeReducer;
