@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../http/axios";
 import CoursesPage from "./CoursesPage"
 
-
 interface Course {
     id: number;
     course_name: string;

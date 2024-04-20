@@ -5,6 +5,24 @@
 .wrapper__title_c{
     cursor: pointer;
 }
+textarea {
+    resize: none;
+}
+.form-input-up{
+    background: transparent;
+    border: 0px;
+    color: white;
+    font-family: Cakra;
+}
+.form-input-desc{
+    background: transparent;
+    border: 0px;
+    color: white;
+}
+.wrapper__title_my {
+    display: flex;
+    align-items: center;
+}
 .grid__item {
     cursor: pointer;
 }
@@ -62,19 +80,38 @@ input[type="file"][name="picture"] {
   .role_selector{
     text-align: center;
   }
+  .button__create{
+    padding: 10px 20px;
+    background-color: #1A5CE5;
+    color: #fff;
+    border: 0;
+    border-radius: 18px;
+    margin-left: 25px;
+    cursor: pointer;
+  }
   
 @media screen and (min-width: 993px) {
     b{
         background: transparent;
         font-weight: 500;
     }
+    .button__create{
+        font-size: 16px;
+        }
     .off{
         display: block;
     }
     .item-button__reg {
         cursor: pointer;
     }
-    
+    .form-input-up{
+        font-size: 35px;
+        width: 80%;
+    }
+    .form-input-desc{
+        font-size: 20px;
+        width: 80%;
+    }
     
     *{
         font-family: "Inter", sans-serif;
@@ -234,7 +271,7 @@ input[type="file"][name="picture"] {
     }
 
     .form-input {
-        width: 100%;
+        width: 468px !important;
         padding: 10px;
         border: 1px solid transparent;
         border-radius: 12px;
@@ -606,8 +643,19 @@ input[type="file"][name="picture"] {
         background: transparent;
         font-weight: 500;
     }
+    .button__create{
+        font-size: 14px;
+        }
     .off{
         display: block;
+    }
+    .form-input-up{
+        font-size: 25px;
+        width: 80%;
+    }
+    .form-input-desc{
+        font-size: 14px;
+        width: 80%;
     }
     *{
         font-family: "Inter", sans-serif;
@@ -780,7 +828,7 @@ input[type="file"][name="picture"] {
         display: none;
     }
     .form-input {
-        width: 100%;
+        width: 345px;
         padding: 10px;
         border: 1px solid transparent;
         border-radius: 12px;
@@ -1140,10 +1188,21 @@ input[type="file"][name="picture"] {
         background: transparent;
         font-weight: 500;
     }
+    .button__create{
+        font-size: 14px;
+    }
     .off{
         display: none !important;
     }
 
+    .form-input-up{
+        font-size: 26px !important;
+        width: 80% !important;
+    }
+    .form-input-desc{
+        font-size: 14px !important;
+        width: 80% !important;
+    }
     *{
         font-family: "Inter", sans-serif;
         background-color: #F7FAFC;
@@ -1331,7 +1390,7 @@ input[type="file"][name="picture"] {
         display: none;
     }
     .form-input {
-        width: 100%;
+        width: 345px !important;
         padding: 6px;
         border: 1px solid transparent;
         border-radius: 12px;
@@ -1690,6 +1749,10 @@ input[type="file"][name="picture"] {
         background: transparent;
         font-weight: 500;
     }
+    .button__create{
+        font-size: 14px;
+    }
+    
     *{
         font-family: "Inter", sans-serif;
         background-color: #F7FAFC;
@@ -1916,7 +1979,15 @@ input[type="file"][name="picture"] {
         object-fit: cover;
         border-radius: 12px;
     }
-
+    .form-input-up{
+        font-size: 22px !important;
+        width: 295px !important;
+    }
+    .form-input-desc{
+        display: block;
+        font-size: 10px !important;
+        width: 100% !important;
+    }
     .card__title {
         margin-top: 8px;
         font-family: "Inter", sans-serif;
@@ -2244,9 +2315,19 @@ input[type="file"][name="picture"] {
     }
     .image-subtitle-up{
         display:none;
+        
+    }
+    .image-subtitle-block{
+        margin-left: 20px;
+        display:block;
+        
     }
     .wrapper__title_c{
         display: block;
+    }
+    .wrapper__title_my {
+        display: flex;
+        align-items: center;
     }
     .grid-courses{
         grid-template-columns: repeat(3, 1fr);
@@ -2260,6 +2341,9 @@ input[type="file"][name="picture"] {
     }
     .item-button__enter{
         display: none;
+    }
+    .button__create{
+        font-size: 12px;
     }
     .item-button__reg{
         display: none;
@@ -2807,6 +2891,18 @@ input[type="file"][name="picture"] {
         position: static;
         background: transparent;
     }
+    .grid-absolut-create{
+        position: absolute;
+    }
+    .form-input-up{
+        font-size: 15px !important;
+        width: 100% !important;
+    }
+    .form-input-desc{
+        display: block;
+        font-size: 8px !important;
+        width: 200px !important;
+    }
     .wrapper-img-c {
         width: 100%;
         position: relative;
@@ -2834,14 +2930,33 @@ input[type="file"][name="picture"] {
     .wrapper__title_c{
         display: block;
     }
+    
+    .wrapper__title_my {
+        display: flex;
+        align-items: center;
+    }
     .grid-courses{
         grid-template-columns: repeat(3, 1fr);
+    }
+    .image-subtitle-block{
+        display:block;
+        
+    }
+    .image-subtitle-create{
+        background: transparent;
     }
 }
 p{background: transparent;}
 .z-imd {
     z-index: 1;
 }
+.white-text {
+    color: white;
+  }
+  
+  .gray-text {
+    color: #999; 
+  }
 @keyframes fadeInFromNone {
     0% {
       display: none;
@@ -2894,4 +3009,11 @@ p{background: transparent;}
   .fetching__img {
     height: 50px;
     width: 50px;
+  }
+  .form-create{
+      display: block;
+  }
+  .btn_save{
+    margin-top: 15px;
+    text-align: center;
   }

@@ -16,7 +16,7 @@ export default function LogOut() {
 		axiosInstance.defaults.headers['Authorization'] = null;
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');
-        dispatch(setUserData("", "", "", "", false, null));
+        dispatch(setUserData('', '', '', '','', false, null));
 		navigate('/login');
 	});
 	return <div>Logout</div>;

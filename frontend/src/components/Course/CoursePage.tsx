@@ -56,23 +56,23 @@ const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCou
                         <div className="wrapper__title">
                             {item.course_name}
                         </div>
-                        <div className="margin"></div>
-                        <section>
-                            <img src={item.picture} alt={item.course_name} className="wrapper-img-c" />
-                            <div className="mob-text">
-                                <p>Уроков: { lessonsCount}</p>
-                                <p>Модулей: {modulesCount}</p>
+                    <div className="margin"></div>
+                    <section>
+                        <img src={item.picture} alt={item.course_name} className="wrapper-img-c" />
+                        <div className="mob-text">
+                            <p>Уроков: { lessonsCount}</p>
+                            <p>Модулей: {modulesCount}</p>
+                        </div>
+                        <div className="grid-absolut-c">
+                            <div className="image-title image-title-up">{item.course_name}</div>
+                            <div className="image-subtitle image-subtitle-up">
+                                {item.description}
                             </div>
-                            <div className="grid-absolut-c">
-                                <div className="image-title image-title-up">{item.course_name}</div>
-                                <div className="image-subtitle image-subtitle-up">
-                                   {item.description}
-                                </div>
-                                <div className="btn_start btn_start-up">
-                                    <button type="submit" className="btn btn-start">Начать обучение</button>
-                                </div>
+                            <div className="btn_start btn_start-up">
+                                <button type="submit" className="btn btn-start">Начать обучение</button>
                             </div>
-                        </section>
+                        </div>
+                    </section>
 
                         <div className="wrapper-text">
                             Модули

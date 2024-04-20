@@ -35,11 +35,11 @@ class CustomUser(AbstractUser):
 
 
 class Course(models.Model):
-    course_name = models.CharField(max_length=255)
-    description = models.TextField()
-    teacher = models.ManyToManyField(CustomUser, related_name='courses_taught')
+    course_name = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    teacher = models.ManyToManyField(CustomUser, related_name='courses_taught', blank=True)
     creator = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.CASCADE,
-                                   related_name='courses_creator')
+                                related_name='courses_created')
     picture = models.ImageField(upload_to='course_files/', null=True, blank=True)
     class Meta:
         verbose_name = "Курс"

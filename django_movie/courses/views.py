@@ -49,7 +49,7 @@ class CourseApiView(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    http_method_names = ['get']
+    http_method_names = ['get', 'post', 'put', 'delete']
 
     @action(detail=False, methods=['get'], url_path='search')
     def search_courses(self, request):
@@ -62,6 +62,26 @@ class CourseApiView(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(creator=request.user)  # Assuming the creator field needs to be set to the current user
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class LessonApiView(viewsets.ModelViewSet):
     serializer_class = LessonSerializer
@@ -152,36 +172,26 @@ class EnrollmentApiView(viewsets.ModelViewSet):
 
 
 # по jwt токену отображение принадлежащих курсов
-class CourseCreaterApiView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated, IsProducerOrTutor]
+class CourseCreaterApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsProducer]
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
 
-    def list(self, request):
-        user_id = request.user.id
-        user_courses = Course.objects.filter(creator_id=user_id)
-        serializer = CourseSerializer(user_courses, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
 
-    def create(self, request):
-        serializer = CourseSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(creator=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        return self.queryset.filter(creator=self.request.user)
 
-    def update(self, request, pk=None):
-        try:
-            course = Course.objects.get(pk=pk, creator=request.user)
-            if course.creator != request.user:
-                raise PermissionDenied()
-        except Course.DoesNotExist:
-            return Response({'error': 'Такого курса нет'}, status=status.HTTP_404_NOT_FOUND)
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-        serializer = CourseSerializer(course, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
     def destroy(self, request, pk=None):
         try:
             course = Course.objects.get(pk=pk, creator=request.user)
@@ -202,6 +212,46 @@ class CourseCreaterApiView(viewsets.ViewSet):
         serializer = CourseSerializer(course)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class CourseTeacherApiView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsTutor]
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(teacher=self.request.user)
+
+    def get_queryset(self):
+        return self.queryset.filter(teacher=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def destroy(self, request, pk=None):
+        try:
+            course = Course.objects.get(pk=pk, teacher=request.user)
+            if course.teacher != request.user:
+                raise PermissionDenied()
+        except Course.DoesNotExist:
+            return Response({'error': 'Такого курса нет'}, status=status.HTTP_404_NOT_FOUND)
+
+        course.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def retrieve(self, request, pk=None):
+        try:
+            course = Course.objects.get(pk=pk, teacher=request.user)
+        except Course.DoesNotExist:
+            return Response({'error': 'Такого курса нет'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CourseSerializer(course)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # по jwt токену отображение студентов принадлежащих определенному курсу http://127.0.0.1:8000/api/progress/?course_id=1
 class StudentOnTheCourseApiView(viewsets.ViewSet):

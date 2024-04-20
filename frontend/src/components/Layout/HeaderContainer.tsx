@@ -7,7 +7,7 @@ import { setUserData } from '../../redux/auth-reducer';
 interface Props {
   isAuthenticated: boolean;
   picture:string;
-  setUserData: (email: string, id: string, login: string, picture: string, isAuthenticated: boolean, userData:any) => void;
+  setUserData: (email: string, id: string, login: string, picture: string, role:string, isAuthenticated: boolean, userData:any) => void;
 }
 
 
@@ -19,21 +19,21 @@ const HeaderContainer: React.FC<Props> = ({ isAuthenticated, setUserData, pictur
           if (accessToken) {
             const responseUser = await axiosInstance.get('auth/users/me/');
             const userData = responseUser.data;
-            const { email, id, username } = userData;
+            const { email, id, username} = userData;
 
             const userId = userData.id;
 
             const responseUserProfile = await axiosInstance.get(`custom-users/${userId}/`);
             const userProfileData = responseUserProfile.data;
-            const { picture } = userProfileData;
-            setUserData(email, id, username, picture, true, null);
+            const { picture, role } = userProfileData;
+            setUserData(email, id, username, picture, role, true, userProfileData);
         
           } else {
-            setUserData('', '','', '', false, null);
+            setUserData('', '','', '', '', false, null);
           }
         } catch (error) {
           console.error('Ошибка при получении данных пользователя:', error);
-          setUserData('', '','', '', false, null);
+          setUserData('', '','', '','', false, null);
         }
       };
   

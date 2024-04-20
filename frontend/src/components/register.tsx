@@ -11,8 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useDispatch} from 'react-redux'; 
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { NoAuthorization } from './hoc/NoAuthRedirect';
+import { connect } from 'react-redux';
 import { setUserData } from '../redux/auth-reducer';
 
 
@@ -39,8 +40,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
-	const dispatch = useDispatch();
+interface UserData {
+  id: string;
+  username: string;
+  picture: string;
+  balance: string;
+  experience: string;
+  level: string;
+  email: string;
+  first_name: string;
+  role:string;
+  password: string;
+}
+
+interface Props {
+  userData: UserData;
+  setUserData: (email: string, id: string, login: string, picture: string, role:string, isAuthenticated: boolean, userData:any) => void;
+}
+
+const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
   const classes = useStyles();
   const [userId, setUserId] = useState("");
   const [registrationSuccess, setRegistrationSuccess] = useState(false); 
@@ -112,7 +130,7 @@ export default function SignUp() {
           localStorage.setItem('refresh_token', res.data.refresh);
           axiosInstance.defaults.headers['Authorization'] =
             'Bearer ' + localStorage.getItem('access_token');
-          dispatch(setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, true, null)); 
+          setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, res.data.role, true, null); 
           })
           .catch((error) => {
             console.error('Ошибка при входе:', error);
@@ -303,3 +321,12 @@ export default function SignUp() {
     </Container>
   );
 }
+const mapStateToProps = (state: any) => ({
+  userData: state.auth.userData,
+  setUserData: state.auth.setUserData,
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+const SingInNoAuthorization = NoAuthorization(SignUp);
+
+export default connect(mapStateToProps,{setUserData})(SingInNoAuthorization);

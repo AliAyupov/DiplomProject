@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'; 
+import { connect} from 'react-redux'; 
 import axiosInstance from '../http/axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 //MaterialUI
@@ -17,8 +17,25 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { setUserData } from '../redux/auth-reducer';
+import { NoAuthorization } from './hoc/NoAuthRedirect';
 
+interface UserData {
+    id: string;
+    username: string;
+    picture: string;
+    balance: string;
+    experience: string;
+    level: string;
+    email: string;
+    first_name: string;
+    role:string;
+    password: string;
 
+}
+interface Props {
+    userData: UserData;
+    setUserData: (email: string, id: string, login: string, picture: string, role:string, isAuthenticated: boolean, userData:any) => void;
+}
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -40,9 +57,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignIn() {
+const SignIn: React.FC<Props>=({setUserData, userData}) => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const initialFormData = Object.freeze({
 	  username: '',
 	  password: '',
@@ -54,6 +70,7 @@ export default function SignIn() {
 	  password: '',
 	});
   
+	
 	const handleChange = (e: { target: { name: any; value: string; }; }) => {
 	  updateFormData({
 		...formData,
@@ -83,16 +100,26 @@ export default function SignIn() {
 		  username: formData.username,
 		  password: formData.password,
 		})
-		.then((res) => {
-		  console.log(res);
+		.then(async (res) => {
+
 		  localStorage.setItem('access_token', res.data.access);
 		  localStorage.setItem('refresh_token', res.data.refresh);
 		  axiosInstance.defaults.headers['Authorization'] =
 			'Bearer ' + localStorage.getItem('access_token');
-		  dispatch(setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, true, null)); 
+			if (localStorage.getItem('access_token')) {
+                const responseUser = await axiosInstance.get('auth/users/me/');
+                const userData = responseUser.data;
+                const { email, id, username} = userData;
+                const userId = userData.id;
+                const responseUserProfile = await axiosInstance.get(`custom-users/${userId}/`);
+                const userProfileData: UserData = responseUserProfile.data;
+                setUserData(email, id, username, userProfileData.picture, userProfileData.role, true, userProfileData);
+              } else {
+                setUserData('', '','', '','', false, null);
+              }
 		  navigate('/');
 		})
-		.catch((error) => {
+		.catch((error:any) => {
 			if (error.response && error.response.status === 401 && error.response.data.detail === "No active account found with the given credentials") {
 			  setErrors(prevErrors => ({
 				...prevErrors,
@@ -175,3 +202,14 @@ export default function SignIn() {
 	  </Container>
 	);
   }
+
+  const mapStateToProps = (state: any) => ({
+    userData: state.auth.userData,
+	setUserData: state.auth.setUserData,
+    isAuthenticated: state.auth.isAuthenticated
+	});
+
+
+const SingInNoAuthorization = NoAuthorization(SignIn);
+
+export default connect(mapStateToProps,{setUserData})(SingInNoAuthorization)

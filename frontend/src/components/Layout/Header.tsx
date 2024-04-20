@@ -31,8 +31,8 @@ const Header: React.FC<Props> = ({ isAuthenticated, picture}) => {
             <div className="header_menu">
                 <NavLink to="/" className="link-menu header-menu__font">Главная</NavLink>
                 <NavLink to="/courses" className="link-menu header-menu__font">Курсы</NavLink>
-                <a href="#" className="link-menu header-menu__font">О платформе</a>
-                <a href="#" className="link-menu header-menu__font">Возможности</a>
+                <NavLink to="/courses/my" className="link-menu header-menu__font">О платформе</NavLink>
+                <NavLink to="/profile" className="link-menu header-menu__font">Возможности</NavLink>
             </div>
             
             <div className="header_button">
@@ -57,7 +57,7 @@ const Header: React.FC<Props> = ({ isAuthenticated, picture}) => {
         <div id="mobile-menu" className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
                 <NavLink to="/" className="link-menu header-menu__font link-menu__active" onClick={closeMobileMenu}>Главная</NavLink>
                 <NavLink to="/courses" className="link-menu header-menu__font" onClick={closeMobileMenu}>Курсы</NavLink>
-                <NavLink to="/mycourses" className="link-menu header-menu__font" onClick={closeMobileMenu}>О платформе</NavLink>
+                <NavLink to="/courses/my" className="link-menu header-menu__font" onClick={closeMobileMenu}>О платформе</NavLink>
                 <a href="#" className="link-menu header-menu__font" onClick={closeMobileMenu}>Возможности</a>
                 {isAuthenticated ? (
                 <><NavLink to="/logout" className="item-button__exit btn__height btn__height_exit"

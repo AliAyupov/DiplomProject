@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import course from '../../img/course.png';
+import React from 'react';
 import Preloader from '../common/preloader/Preloader';
 import { NavLink } from 'react-router-dom';
 
@@ -8,7 +7,9 @@ interface Course {
     course_name: string;
     picture: string;
 }
-
+interface UserData {
+    role:string;
+}
 interface Props {
     courses: Course[];
     pageSize: number;
@@ -16,11 +17,12 @@ interface Props {
     currentPage: number;
     onPageChanged: (pageNumber: number) => void;
     isFetching: boolean;
+    userData:UserData;
     onSearch: (query: string) => void;
 }
 
-const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch}) => {
-   
+const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch, userData}) => {
+    const baseUrl = 'http://localhost:8000';
     let pagesCount = Math.ceil(totalCoursesCount / pageSize);
     let pages = [];
 
@@ -30,13 +32,18 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
     return (
     <main>
         <div className="wrapper">
-            <div className="wrapper__title wrapper__title_c">
+            <div className="wrapper-text"></div>
+            <div className="wrapper__title wrapper__title_my">
                 МОИ КУРСЫ
+                {userData.role === 'producer' ? 
+                <NavLink to='/course/create'>
+                    <button type="submit" className="button__create">+</button>
+                </NavLink> : null}
             </div>
-            <div className="wrapper-text">Все курсы</div>
+            <div className="wrapper-text"></div>
             {isFetching ? <Preloader key="unique_preloader_key"/> : null}
             <div className="grid">
-                {courses && courses.map(c => (
+                {Array.isArray(courses) && courses.map(c => (
                     <NavLink key={c.id} to={`/course/${c.id}`}>
                         <div className="grid__item">
                             <div className="card">

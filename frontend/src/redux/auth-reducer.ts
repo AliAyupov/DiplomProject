@@ -52,9 +52,9 @@ const authReducer = (state: AuthState = initialState, action: Action): AuthState
   }
 };
 
-export const setUserData = (email: string, id: string, login: string, picture: string, isAuthenticated: boolean, userData: any) => ({
+export const setUserData = (email: string, id: string, login: string, picture: string, role:string, isAuthenticated: boolean, userData: any) => ({
     type: SET_USER_DATA,
-    data: { email, id, login, picture, isAuthenticated, userData }, 
+    data: { email, id, login, picture, role, isAuthenticated, userData }, 
   });
 
 export const updateUserData = (userData: UserData) => ({
