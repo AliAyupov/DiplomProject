@@ -15,8 +15,7 @@ interface Course {
 }
 interface Module {
     id: number;
-    module_name: string;
-   
+    module_name: string; 
 }
 interface Props {
     course: Course[];

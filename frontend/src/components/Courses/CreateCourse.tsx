@@ -1,63 +1,51 @@
-import { SetStateAction, useState } from 'react';
-import none from '../../img/none.png'
+import { useState } from 'react';
+import none from '../../img/balvan-foto.jpg';
+
 
 interface Props {
-    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleFormSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     previewImageUrl: string | null;
     errors: { [key: string]: string };
+    setCourseName:(courseName: string) => void;
+    setCourseDescription:(description: string) => void;
+    setImages: (picture: string) => void;
+    courseName: string;
+    description: string;
+    picture:string;
 }
 
 const CreateCourse: React.FC<Props> = ({
-    handleInputChange,
-    handleFileChange,
     handleFormSubmit,
+    handleFileChange,
+    errors,
+    setCourseName,
+    setCourseDescription,
+    setImages,
+    courseName,
+    description,
     previewImageUrl,
-    errors
 }) => {
     const baseUrl = 'http://localhost:8000';
-
-    const [name, setName] = useState('');
-    const [nameFocused, setNameFocused] = useState(false);
     const defaultName = 'Введите название курса';
-
-    const handleNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
-        setName(event.target.value);
-    };
-
-    const handleNameFocus = () => {
-        setNameFocused(true);
-    };
-
-    const handleNameBlur = () => {
-        setNameFocused(false);
-        if (!name.trim()) {
-            setName('');
-        }
-    };
-
-    const [description, setDescription] = useState('');
-    const [descriptionFocused, setDescriptionFocused] = useState(false);
     const defaultDescription = 'Введите описание курса';
+    const [nameFocused, setNameFocused] = useState(false);
+    const [descriptionFocused, setDescriptionFocused] = useState(false);
 
-    const handleDescriptionChange = (event: { target: { value: SetStateAction<string>; }; }) => {
-        setDescription(event.target.value);
+    const handleNameChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setCourseName(event.target.value);
     };
 
-    const handleDescriptionFocus = () => {
-        setDescriptionFocused(true);
+    const handleNameFocus = () => setNameFocused(true);
+    const handleNameBlur = () => setNameFocused(false);
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setCourseDescription(event.target.value);
     };
-
-    const handleDescriptionBlur = () => {
-        setDescriptionFocused(false);
-        if (!description.trim()) {
-            setDescription('');
-        }
-    };
-
+    const handleDescriptionFocus = () => setDescriptionFocused(true);
+    const handleDescriptionBlur = () => setDescriptionFocused(false);
+    
     return (      
-            <><div className="wrapper">
+            <><div className="wrapper"> 
                 <div className="margin"></div>
                 <section>
                 <form onSubmit={handleFormSubmit} encType="multipart/form-data" className='form form-create'>
@@ -69,13 +57,13 @@ const CreateCourse: React.FC<Props> = ({
                     <div className="grid-absolut-c grid-absolut-create">
                         <div className="image-title image-title-up">
                         <textarea
-                                name="name"
-                                className={`form-input form-input-p form-input-up ${nameFocused || name ? 'white-text' : 'gray-text'}`}
-                                value={name}
+                                name="courseName"
+                                className={`form-input form-input-p form-input-up ${nameFocused || courseName ? 'white-text' : 'gray-text'}`}
+                                value={courseName}
                                 onChange={handleNameChange}
                                 onFocus={handleNameFocus}
                                 onBlur={handleNameBlur}
-                                placeholder={nameFocused || name ? '' : defaultName}
+                                placeholder={nameFocused || courseName ? '' : defaultName}
                                 rows={3}
                                 maxLength={69} 
                             />
@@ -94,14 +82,12 @@ const CreateCourse: React.FC<Props> = ({
                             />
                             {errors.description && <p className="error-message">{errors.description}</p>}
                         </div>
-                        <div className="btn_start btn_start-up">
-                        <input type="file" name="picture" id="file-input" className="file-input form-input-p" onChange={handleFileChange} accept="image/*" />
-                            <label htmlFor="file-input" className="file-button">Загрузить новое изображение</label>
-                            
+                        <div className="btn_start btn_start-up btn_start-create">
+                            <input type="file" name="picture" id="file-input" className="file-input form-input-p" onChange={handleFileChange} accept="image/*" />
+                            <label htmlFor="file-input" className="file-button file-button-create">Загрузить новое изображение</label>   
                         </div>
-                        
                     </div>
-                    <div className='btn_save'><button type="submit" className="btn">Создать</button></div>
+                    <div className='btn_save'><button type="submit" className="btn">Сохранить</button></div>
                 </form>
             </section>
         </div>  

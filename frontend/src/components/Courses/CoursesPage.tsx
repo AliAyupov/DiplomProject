@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import course from '../../img/course.png';
 import Preloader from '../common/preloader/Preloader';
 import { NavLink } from 'react-router-dom';
+import none from '../../img/balvan-foto.jpg';
 
 interface Course {
     id: number;
@@ -103,7 +104,9 @@ const CoursesPage: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, cu
                                     <div className="grid__item">
                                         <div className="card">
                                             <div className="card__image">
-                                                <img src={c.picture} alt="" className="image-course" />
+                                                {c.picture? 
+                                                <img src={c.picture} alt="course" className="image-course"/> : <img src={none} alt="Изображение отсутствует" className="image-course" />}
+                                                
                                             </div>
                                             <div className="card__title">{c.course_name}</div>
                                         </div>

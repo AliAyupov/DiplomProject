@@ -7,6 +7,10 @@ const SET_MODULES = 'SET_MODULES';
 const SET_MODULES_COUNT = 'SET_MODULES_COUNT';
 const SET_LESSONS_COUNT = 'SET_LESSONS_COUNT';
 const SET_LESSONS = 'SET_LESSONS';
+const SET_COURSE_NAME = 'SET_COURSE_NAME';
+const SET_COURSE_DESCRIPTION = 'SET_COURSE_DESCRIPTION';
+const SET_IMAGES = 'SET_IMAGES';
+
 
 interface Lesson {
     id: string;
@@ -14,6 +18,9 @@ interface Lesson {
     lesson_name:string;
 }
 interface Action {
+    courseName: string;
+    description: string;
+    picture: string;
     type: string;
     courses: any;
     currentPage: number;
@@ -37,6 +44,9 @@ interface State {
     modulesCount: number;
     lessonsCount: number;
     lessons: Lesson[]; 
+    courseName: string; 
+    description: string;
+    picture: string;
 }
 
 const initialState: State = {
@@ -50,6 +60,9 @@ const initialState: State = {
     course: null,
     lessonsCount: 0,
     lessons: [],
+    courseName: '', 
+    description: '',
+    picture: '',
 }
 
 const homeReducer = (state: State = initialState, action: Action): State => {
@@ -71,7 +84,13 @@ const homeReducer = (state: State = initialState, action: Action): State => {
         case SET_LESSONS_COUNT:
             return { ...state, lessonsCount: action.lessonsCount }; 
         case SET_LESSONS:
-            return { ...state, lessons: action.lessons };    
+            return { ...state, lessons: action.lessons }; 
+        case SET_COURSE_NAME:
+            return {...state, courseName: action.courseName }; 
+        case SET_COURSE_DESCRIPTION:
+            return {...state, description: action.description };   
+        case SET_IMAGES:
+            return {...state, picture: action.picture};
         default:
             return state;
     }
@@ -86,5 +105,8 @@ export const setModules = (modules: any) => ({ type: SET_MODULES, modules });
 export const setModulesCount = (modulesCount: number) => ({ type: SET_MODULES_COUNT, modulesCount });
 export const setLessonsCount = (lessonsCount: number) => ({ type: SET_LESSONS_COUNT, lessonsCount });
 export const setLessons = (lessons: Lesson[]) => ({ type: SET_LESSONS, lessons });
+export const setCourseName = (courseName: string) => ({ type: SET_COURSE_NAME, courseName });
+export const setCourseDescription = (description: string) => ({ type: SET_COURSE_DESCRIPTION, description });
+export const setImages = (picture: string) => ({ type: SET_IMAGES, picture: picture });
 
 export default homeReducer;

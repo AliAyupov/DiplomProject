@@ -1,6 +1,7 @@
 import React from 'react';
 import Preloader from '../common/preloader/Preloader';
 import { NavLink } from 'react-router-dom';
+import none from '../../img/balvan-foto.jpg';
 
 interface Course {
     id: number;
@@ -34,12 +35,16 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
         <div className="wrapper">
             <div className="wrapper-text"></div>
             <div className="wrapper__title wrapper__title_my">
-                МОИ КУРСЫ
+                {userData.role === 'producer'? <abbr title="Здесь представлены курсы, созданные вами">МОИ КУРСЫ</abbr> : 
+                userData.role === 'tutor'? <abbr title='Здесь представлены курсы, в которых вы тьютор'>МОИ КУРСЫ</abbr> : 
+                <abbr className="Здесь представленны курсы, в которых вы участник">МОИ КУРСЫ</abbr>}
+                
                 {userData.role === 'producer' ? 
                 <NavLink to='/course/create'>
                     <button type="submit" className="button__create">+</button>
                 </NavLink> : null}
             </div>
+            
             <div className="wrapper-text"></div>
             {isFetching ? <Preloader key="unique_preloader_key"/> : null}
             <div className="grid">
@@ -48,7 +53,7 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
                         <div className="grid__item">
                             <div className="card">
                                 <div className="card__image">
-                                    <img src={c.picture} alt="" className="image-course" />
+                                    {c.picture? <img src={c.picture} alt="" className="image-course"/> : <img src={none} alt="" className="image-course"/>}
                                 </div>
                                 <div className="card__title">{c.course_name}</div>
                             </div>

@@ -3,6 +3,7 @@ import mount from '../../img/mount.png';
 import mony from '../../img/mony.jpg';
 import Preloader from "../common/preloader/Preloader";
 import { NavLink } from "react-router-dom";
+import none from '../../img/balvan-foto.jpg';
 
 interface Course {
     id: number;
@@ -94,7 +95,8 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                             <div className="grid__item">
                                 <div className="card">
                                     <div className="card__image">
-                                        <img src={c.picture} alt="" className="image-course" />
+                                        {c.picture? <img src={c.picture} alt="" className="image-course"/> :
+                                        <img src={none} alt="" className="image-course" />}
                                     </div>
                                     <div className="card__title">{c.course_name}</div>
                                 </div>
