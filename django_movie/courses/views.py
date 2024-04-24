@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -20,7 +20,7 @@ from .models import CustomUser, Course, Module, Lesson, StudentHomework, Student
 from .permissions import IsTutor, IsStudent, IsProducer, IsProducerOrTutor
 from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerializer, LessonSerializer, \
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
-    EnrollmentSerializer
+    EnrollmentSerializer, ModuleTheSerializer
 
 
 class CustomUserDetailView(APIView):
@@ -127,11 +127,7 @@ class EnrollmentApiView(viewsets.ModelViewSet):
     def get_queryset(self):
 
         user_id = self.request.user.id
-
-        # Получаем id курса из параметров запроса
         course_id = self.request.query_params.get('course')
-
-        # Проверяем, является ли пользователь создателем курса
         try:
             course = Course.objects.get(pk=course_id)
             if course.creator_id != user_id:
@@ -362,3 +358,21 @@ class ModuleApiView(viewsets.ModelViewSet):
         queryset = self.get_queryset().annotate(lessons_count=Count('lessons'))
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            with transaction.atomic():
+                module = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ModuleCreateAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ModuleTheSerializer(data=request.data)
+        if serializer.is_valid():
+            module = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

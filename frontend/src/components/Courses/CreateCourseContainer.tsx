@@ -4,6 +4,7 @@ import { useState } from "react";
 import axiosInstance from "../../http/axios";
 import { setCourseName, setCourseDescription, setImages } from '../../redux/home-reducer';
 import { useNavigate } from "react-router-dom";
+import { withAuthorization } from "../hoc/AuthRedirect";
 
 interface Props {
     setCourseName: (courseName: string) => void;
@@ -57,7 +58,7 @@ const CreateCourseContainer: React.FC<Props> = ({ setCourseName, setCourseDescri
         if (event.target.files && event.target.files.length > 0) {
             const selectedFile = event.target.files[0];
             setImageFile(selectedFile);
-            const imageUrl = `/media/user_photo/${selectedFile.name}`;
+            const imageUrl = `/media/course_files/${selectedFile.name}`;
             setImageUrl(imageUrl);
             const url = URL.createObjectURL(selectedFile);
             setPreviewImageUrl(url);
@@ -68,8 +69,8 @@ const CreateCourseContainer: React.FC<Props> = ({ setCourseName, setCourseDescri
             handleFormSubmit={handleFormSubmit}
             previewImageUrl={previewImageUrl}
             errors={errors}
-            courseName={courseName}
-            description={description}
+            courseNameCreate={courseName}
+            descriptionCreate={description}
             setCourseName={setCourseName}
             setCourseDescription={setCourseDescription}
             setImages={setImages}
@@ -83,6 +84,8 @@ const mapStateToProps = (state: any) => ({
     courseName:  state.homePage.courseName,
     description:  state.homePage.description,
     picture: state.homePage.picture,
+    isAuthenticated: state.auth.isAuthenticated,
+    userData: state.auth.userData,
 });
 
 const mapDispatchToProps = {
@@ -91,4 +94,8 @@ const mapDispatchToProps = {
     setImages,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (CreateCourseContainer);
+
+
+const CreateCourseContainerWithAuthorization = withAuthorization(CreateCourseContainer);
+
+export default connect(mapStateToProps, mapDispatchToProps) (CreateCourseContainerWithAuthorization);

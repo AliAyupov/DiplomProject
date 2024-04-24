@@ -3,6 +3,7 @@ import { setCourses, setCurrentPage, setTotalCourses, togglePreloader } from "..
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../http/axios";
 import MyCourses from "./MyCourses";
+import { setCourseName, setCourseDescription, setImages } from '../../redux/home-reducer';
 import { withAuthorization } from "../hoc/AuthRedirect";
 
 interface Course {
@@ -16,6 +17,10 @@ interface UserData {
 }
 
 interface Props {
+    
+    setCourseName: (courseName: string) => void;
+    setCourseDescription: (description: string) => void;
+    setImages: (picture: string) => void;
     pageSize: number;
     isFetching: boolean;
     userData: UserData;
@@ -58,6 +63,8 @@ const MyCoursesContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsFet
         setSearchQuery(query);
         setCurrentPage(1);
     }
+    const newCr = () => {
+    }
     
     return (
         <>
@@ -70,6 +77,7 @@ const MyCoursesContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsFet
             isFetching={isFetching}
             onSearch={handleSearch}
             userData={userData}
+            newCr={newCr}
          />
         </>
     );
@@ -89,5 +97,12 @@ let mapStateToProps = (state: any) => {
 
 const MyCoursesContainerWithAuthorization = withAuthorization(MyCoursesContainer);
 
-export default connect(mapStateToProps, { setCourses, setCurrentPage, setTotalCourses, toogleIsFetching:togglePreloader
+export default connect(mapStateToProps, { 
+    setCourses,
+    setCurrentPage, 
+    setTotalCourses, 
+    toogleIsFetching:togglePreloader,
+    setCourseName,
+    setCourseDescription,
+    setImages,
 }) (MyCoursesContainerWithAuthorization);

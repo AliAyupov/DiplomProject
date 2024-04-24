@@ -6,13 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/CoursesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/CoursesPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEditContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEditContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/CreateCourse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/CreateCourse.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/CreateCourseContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/CreateCourseContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/MyCourses.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/MyCourses.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Home/Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/MyCoursesContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/MyCoursesContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

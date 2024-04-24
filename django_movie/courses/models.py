@@ -48,7 +48,7 @@ class Course(models.Model):
 
 class Module(models.Model):
     module_name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
 
     class Meta:

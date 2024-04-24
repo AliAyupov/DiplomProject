@@ -26,7 +26,7 @@ from rest_framework_simplejwt.views import (
 from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView, \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView, \
-    CourseTeacherApiView
+    CourseTeacherApiView, ModuleCreateAPIView
 
 
 router = routers.DefaultRouter()
@@ -45,6 +45,7 @@ router.register(r'api/modules', ModuleApiView, basename='module')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/modules/as', ModuleCreateAPIView.as_view(), name='module-create'),
     path('api/custom-users/<int:user_id>/', CustomUserDetailView.as_view()),
     path('api/modules/<int:module_id>/lessons/', LessonApiView.as_view({'get': 'list'}), name='module-lessons'),
     path('api-auth/', include('rest_framework.urls')),

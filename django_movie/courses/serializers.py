@@ -15,12 +15,16 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class ModuleSerializer(serializers.ModelSerializer):
-    lessons_count = serializers.IntegerField()
-
+    lessons_count = serializers.IntegerField(required=False)
     class Meta:
         model = Module
         fields = ['id', 'module_name', 'lessons_count']
 
+
+class ModuleTheSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = '__all__'
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,6 +57,10 @@ class StudentInventorySerializer(serializers.ModelSerializer):
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
+    course_id = serializers.IntegerField(source='course.id', read_only=True)
+
     class Meta:
         model = Enrollment
-        fields = '__all__'
+        fields = ('id', 'user_id', 'user', 'course_id', 'status')

@@ -2,10 +2,11 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../http/axios";
 import { setCourseName, setCourseDescription, setImages } from '../../redux/home-reducer';
-import {setCourse, setModules} from '../../redux/home-reducer';
+import {setCourse, setModules, setModule} from '../../redux/home-reducer';
 import CoursePageEdit from "./CoursePageEdit";
 import { useParams } from "react-router-dom";
 import Preloader from "../common/preloader/Preloader";
+import { withAuthorization } from "../hoc/AuthRedirect";
 
 interface Course {
     id: number;
@@ -13,13 +14,16 @@ interface Course {
     description: string;
     picture: string;
     totalLessonsCount: number;
+    creator: number;
+    teacher: number[];
 }
 interface Module {
     id: number;
     module_name: string;
-    lessons_count:number;
+    lessons_count: number;
 }
 interface UserData {
+    id: number;
     role:string;
 }
 interface Props {
@@ -31,11 +35,13 @@ interface Props {
     modules: Module[];
     setCourse: (course: Course) => void;
     setModules: (modules: Module[]) => void;
+    setModule: (moduleName: string) => void;
     setImages: (picture: string) => void;
     setCourseName:(courseName: string) => void;
     setCourseDescription:(description: string) => void;
     modulesCount: number;
     lessonsCount:number;
+    moduleName: string;
 }
 
 
@@ -47,7 +53,9 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
     course, 
     setCourseDescription, 
     setImages, 
+    setModule,
     picture, 
+    moduleName,
     modules, 
     userData }) => {
     
@@ -96,8 +104,28 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             setPreviewImageUrl(imageUrl);
             setImages(imageUrl);
             updateCourseDetails(selectedFile, imageUrl);
-            
         }
+    };
+
+    const handleFormSubmit = async (moduleName: string) => {
+        const formData = new FormData();
+        formData.append('module_name', moduleName);
+        formData.append('course', `${id}`);
+        try {
+            const response = await axiosInstance.post('/modules/as', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            
+            if (response.status === 201) {
+                console.log('Модуль успешно создан', response.data);
+                setModule(response.data); 
+            } else {
+                console.error('Произошла какая-то ошибка при создании модуля', response.status);
+            }
+        } catch (error) {
+            console.error('Ошибка при создании', error);
+        }
+    
     };
     
     const updateCourseDetails = async (file: File | null , imageUrl: string) => {
@@ -136,6 +164,7 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             description={description}
             handleFileChange={handleFileChange}
             userData={userData}
+            handleFormSubmit={handleFormSubmit}
             />   
     )
 }
@@ -149,12 +178,16 @@ const mapStateToProps = (state: any) => ({
     modulesCount: state.homePage.modulesCount,
     lessonsCount: state.homePage.lessonsCount,
     userData: state.auth.userData,
+    moduleName: state.homePage.module,
+    isAuthenticated: state.auth.isAuthenticated,
 });
 
+const CoursePageEditContainerWithAuthorization = withAuthorization(CoursePageEditContainer);
 
 export default connect(mapStateToProps, {
     setCourse, 
+    setModule,
     setModules,
     setImages,
     setCourseName, 
-    setCourseDescription}) (CoursePageEditContainer);
+    setCourseDescription}) (CoursePageEditContainerWithAuthorization);

@@ -10,7 +10,8 @@ const SET_LESSONS = 'SET_LESSONS';
 const SET_COURSE_NAME = 'SET_COURSE_NAME';
 const SET_COURSE_DESCRIPTION = 'SET_COURSE_DESCRIPTION';
 const SET_IMAGES = 'SET_IMAGES';
-
+const SET_MODULE = 'SET_MODULE';
+const SET_ENROLL = 'SET_ENROLL';
 
 interface Lesson {
     id: string;
@@ -27,10 +28,12 @@ interface Action {
     totalCoursesCount: number;
     isFetching: boolean;
     course: any;
+    module:any;
     modules: any;
     modulesCount: number;
     lessonsCount: number;
     lessons: Lesson[];
+    enrollments: any;
 }
 
 interface State {
@@ -41,23 +44,27 @@ interface State {
     currentPage: number;
     isFetching: boolean;
     course: any;
+    module: any;
     modulesCount: number;
     lessonsCount: number;
     lessons: Lesson[]; 
     courseName: string; 
     description: string;
     picture: string;
+    enrollments: any[]; 
 }
 
 const initialState: State = {
     courses: [],
     modules: [],
+    enrollments: [],
     pageSize: 6,
     totalCoursesCount: 0,
     modulesCount: 0, 
     currentPage: 1,
     isFetching: false,
     course: null,
+    module:null,
     lessonsCount: 0,
     lessons: [],
     courseName: '', 
@@ -91,6 +98,10 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return {...state, description: action.description };   
         case SET_IMAGES:
             return {...state, picture: action.picture};
+        case SET_MODULE:
+            return {...state, modules: [...state.modules, action.module]};
+        case SET_ENROLL:
+            return { ...state, enrollments: action.enrollments };
         default:
             return state;
     }
@@ -108,5 +119,10 @@ export const setLessons = (lessons: Lesson[]) => ({ type: SET_LESSONS, lessons }
 export const setCourseName = (courseName: string) => ({ type: SET_COURSE_NAME, courseName });
 export const setCourseDescription = (description: string) => ({ type: SET_COURSE_DESCRIPTION, description });
 export const setImages = (picture: string) => ({ type: SET_IMAGES, picture: picture });
+export const setModule = (module: any) => ({ type: SET_MODULE, module });
+export const setEnroll = (enrollments: any[]) => ({
+    type: SET_ENROLL,
+    enrollments
+});
 
 export default homeReducer;

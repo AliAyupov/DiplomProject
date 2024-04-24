@@ -20,9 +20,10 @@ interface Props {
     isFetching: boolean;
     userData:UserData;
     onSearch: (query: string) => void;
+    newCr:() => void;
 }
 
-const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch, userData}) => {
+const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch, userData, newCr}) => {
     const baseUrl = 'http://localhost:8000';
     let pagesCount = Math.ceil(totalCoursesCount / pageSize);
     let pages = [];
@@ -41,7 +42,7 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
                 
                 {userData.role === 'producer' ? 
                 <NavLink to='/course/create'>
-                    <button type="submit" className="button__create">+</button>
+                    <button type="submit"  className="button__create">+</button>
                 </NavLink> : null}
             </div>
             
@@ -49,7 +50,7 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
             {isFetching ? <Preloader key="unique_preloader_key"/> : null}
             <div className="grid">
                 {Array.isArray(courses) && courses.map(c => (
-                    <NavLink key={c.id} to={`/course/${c.id}`}>
+                    <NavLink key={c.id} to={userData.role === 'producer' || userData.role === 'tutor' ? `/course/edit/${c.id}` : `/course/${c.id}`}>
                         <div className="grid__item">
                             <div className="card">
                                 <div className="card__image">

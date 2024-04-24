@@ -10,8 +10,8 @@ interface Props {
     setCourseName:(courseName: string) => void;
     setCourseDescription:(description: string) => void;
     setImages: (picture: string) => void;
-    courseName: string;
-    description: string;
+    courseNameCreate: string;
+    descriptionCreate: string;
     picture:string;
 }
 
@@ -22,8 +22,8 @@ const CreateCourse: React.FC<Props> = ({
     setCourseName,
     setCourseDescription,
     setImages,
-    courseName,
-    description,
+    courseNameCreate,
+    descriptionCreate,
     previewImageUrl,
 }) => {
     const baseUrl = 'http://localhost:8000';
@@ -31,15 +31,18 @@ const CreateCourse: React.FC<Props> = ({
     const defaultDescription = 'Введите описание курса';
     const [nameFocused, setNameFocused] = useState(false);
     const [descriptionFocused, setDescriptionFocused] = useState(false);
-
+    const [localCourseName, setLocalCourseName] = useState('');
+    const [localDescription, setLocalDescription] = useState('');
     const handleNameChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setLocalCourseName(event.target.value);
         setCourseName(event.target.value);
     };
 
     const handleNameFocus = () => setNameFocused(true);
     const handleNameBlur = () => setNameFocused(false);
     const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setCourseDescription(event.target.value);
+        setLocalDescription(event.target.value);
+        setCourseDescription(event.target.value)
     };
     const handleDescriptionFocus = () => setDescriptionFocused(true);
     const handleDescriptionBlur = () => setDescriptionFocused(false);
@@ -58,12 +61,12 @@ const CreateCourse: React.FC<Props> = ({
                         <div className="image-title image-title-up">
                         <textarea
                                 name="courseName"
-                                className={`form-input form-input-p form-input-up ${nameFocused || courseName ? 'white-text' : 'gray-text'}`}
-                                value={courseName}
+                                className={`form-input form-input-p form-input-up ${nameFocused || localCourseName ? 'white-text' : 'gray-text'}`}
+                                value={localCourseName}
                                 onChange={handleNameChange}
                                 onFocus={handleNameFocus}
                                 onBlur={handleNameBlur}
-                                placeholder={nameFocused || courseName ? '' : defaultName}
+                                placeholder={nameFocused || localCourseName ? '' : defaultName}
                                 rows={3}
                                 maxLength={69} 
                             />
@@ -71,12 +74,12 @@ const CreateCourse: React.FC<Props> = ({
                         <div className="image-subtitle image-subtitle-up image-subtitle-block image-subtitle-create">
                         <textarea
                             name="description"
-                            className={`form-input form-input-p form-input-desc ${descriptionFocused ? 'white-text' : 'gray-text'} ${errors.description ? 'error-input' : ''}`}
-                            value={description}
+                            className={`form-input form-input-p form-input-desc ${localDescription ? 'white-text' : 'gray-text'} ${errors.description ? 'error-input' : ''}`}
+                            value={localDescription}
                             onChange={handleDescriptionChange}
                             onFocus={handleDescriptionFocus}
                             onBlur={handleDescriptionBlur}
-                            placeholder={descriptionFocused || description ? '' : defaultDescription}
+                            placeholder={descriptionFocused || localDescription ? '' : defaultDescription}
                             rows={4} 
                             maxLength={112}
                             />
