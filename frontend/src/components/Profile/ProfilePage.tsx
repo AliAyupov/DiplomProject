@@ -5,6 +5,7 @@ import myPersIcon from '../../img/mypers.svg';
 import shopIcon from '../../img/shop.svg';
 import courseImage from '../../img/course.png';
 import ava from '../../img/ava.png';
+import ShopContainerPage from '../Shop/ShopContainerPage';
 
 interface UserData {
     id: string;
@@ -55,29 +56,33 @@ const ProfilePage: React.FC<Props> = ({
                 <div className="screen__sidebar">
                     <div className="screen__sidebar">
                         <ul className="menu">
-                            <li className={`menu__item ${activeTab === 'profile' ? 'item__active' : ''}`}>
+                            <li className={`menu__item ${activeTab === 'profile' ? 'item__active' : ''}`} onClick={() => handleTabClick('profile')}>
                                 <img src={myProfileIcon} alt="Мой профиль" className="menu__icon" />
-                                <a href="#" className="menu__link" onClick={() => handleTabClick('profile')}>Мой профиль</a>
+                                <a href="#" className="menu__link">Мой профиль</a>
                             </li>
-                            <li className={`menu__item ${activeTab === 'achievements' ? 'item__active' : ''}`}>
+                            <li className={`menu__item ${activeTab === 'achievements' ? 'item__active' : ''}`} onClick={() => handleTabClick('achievements')}>
                                 <img src={myDosIcon} alt="Мои достижения" className="menu__icon" />
-                                <a href="#" className="menu__link" onClick={() => handleTabClick('achievements')}>Мои достижения</a>
+                                <a href="#" className="menu__link">Мои достижения</a>
                             </li>
-                            <li className={`menu__item ${activeTab === 'character' ? 'item__active' : ''}`}>
+                            <li className={`menu__item ${activeTab === 'character' ? 'item__active' : ''}`} onClick={() => handleTabClick('character')}>
                                 <img src={myPersIcon} alt="Мой персонаж" className="menu__icon" />
-                                <a href="#" className="menu__link" onClick={() => handleTabClick('character')}>Мой персонаж</a>
+                                <a href="#" className="menu__link">Мой персонаж</a>
                             </li>
-                            <li className={`menu__item ${activeTab === 'shop' ? 'item__active' : ''}`}>
+                            <li className={`menu__item ${activeTab === 'shop' ? 'item__active' : ''}`} onClick={() => handleTabClick('shop')}>
                                 <img src={shopIcon} alt="Магазин" className="menu__icon" />
-                                <a href="#" className="menu__link" onClick={() => handleTabClick('shop')}>Магазин</a>
+                                <a href="#" className="menu__link">Магазин</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 {userData && (
                 <div className="screen__content">
+                    {activeTab === 'shop' && (
+                        <ShopContainerPage/>
+                    )}
                     {activeTab === 'profile' && (
                     <>
+                <div className='wrapper'>
                     <div className="in-process">
                         
                          {editing ? (
@@ -97,26 +102,26 @@ const ProfilePage: React.FC<Props> = ({
                                             <p>
                                                 <label htmlFor="first_name" className="form-label ">Имя</label>
                                             </p>  
-                                            <input type="text" name="first_name" className="form-input form-input-p border-form" value={editedUserData.first_name} onChange={handleInputChange} />
+                                            <input type="text" name="first_name" className="form-input form-input-p border-form form-input--profile" value={editedUserData.first_name} onChange={handleInputChange} />
                                             
                                             {errors.first_name && <p className="error-message">{errors.first_name}</p>}
                                             
                                             <p>  
                                                 <label htmlFor="email" className="form-label">Email*</label>
                                             </p>  
-                                            <input type="email" name="email" className={`form-input form-input-p border-form ${errors.email ? 'error-input' : ''}`} value={editedUserData.email} onChange={handleInputChange} />
+                                            <input type="email" name="email" className={`form-input form-input-p border-form form-input--profile ${errors.email ? 'error-input' : ''}`} value={editedUserData.email} onChange={handleInputChange} />
                                             
                                             {errors.email && <p className="error-message">{errors.email}</p>}
                                             
                                             <p>  
                                                 <label htmlFor="username" className="form-label">Логин*</label>
                                             </p>  
-                                            <input type="text" name="username" className={`form-input form-input-p border-form ${errors.username ? 'error-input' : ''}`} value={editedUserData.username} onChange={handleInputChange} />
+                                            <input type="text" name="username" className={`form-input form-input-p border-form form-input--profile ${errors.username ? 'error-input' : ''}`} value={editedUserData.username} onChange={handleInputChange} />
                                             
                                             {errors.username && <p className="error-message">{errors.username}</p>}
                                             
                                             <div className="file-container">
-                                                <input type="file" name="picture" id="file-input" className="file-input form-input-p" onChange={handleFileChange} accept="image/*"/>
+                                                <input type="file" name="picture" id="file-input" className="file-input form-input-p " onChange={handleFileChange} accept="image/*"/>
                                                 <label htmlFor="file-input" className="file-button">Загрузить новое изображение</label>
                                             </div>
                                         </div>
@@ -145,14 +150,15 @@ const ProfilePage: React.FC<Props> = ({
                             <div className="grid">
                             
                                 <div className="grid__item">
-                                                <div className="item-block__element item-background">Уровень <h1 className="text__big">{userData.level}</h1></div>
-                                            </div><div className="grid__item">
-                                                    <div className="item-block__element item-background">Опыт <h1 className="text__big">{userData.experience}/300</h1></div>
-                                                </div><div className="grid__item">
-                                                    <div className="item-block__element item-background">Баланс <h1 className="text__big">{userData.balance}</h1></div>
-                                                </div>
-                            
-                            </div>
+                                    <div className="item-block__element item-background">Уровень <h1 className="text__big">{userData.level}</h1></div>
+                                    </div>
+                                    <div className="grid__item">
+                                        <div className="item-block__element item-background">Опыт <h1 className="text__big">{userData.experience}/300</h1></div>
+                                    </div>
+                                    <div className="grid__item">
+                                        <div className="item-block__element item-background">Баланс <h1 className="text__big">{userData.balance}</h1></div>
+                                    </div>
+                                </div>
                             <div className="margin"></div>
                             <div className="progress-text">50%</div>
                             <div className="progress-bar">
@@ -163,9 +169,11 @@ const ProfilePage: React.FC<Props> = ({
                         )}
                         
                     </div>
-                    </>
+                </div>   
+                </>
                     )}
                     {activeTab === 'achievements' && (<>
+                <div className='wrapper'>
                     <div className="wrapper-text">
                         Ваши достижения
                     </div>
@@ -180,18 +188,14 @@ const ProfilePage: React.FC<Props> = ({
                             <img src={courseImage} className="item-img" alt="" />
                         </div>
                     </div>    
-                    </>
+                    </div></>
                     )} 
                     {activeTab === 'character' && (
-                        <div>
+                        <div className='wrapper'>
                             {/* Контент для вкладки "Мой персонаж" */}
                         </div>
                     )}
-                    {activeTab === 'shop' && (
-                        <div>
-                            {/* Контент для вкладки "Магазин" */}
-                        </div>
-                    )}  
+                    
                 </div>
                 )}
             </div>

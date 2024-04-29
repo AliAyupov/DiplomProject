@@ -1,29 +1,34 @@
 import React, { useState } from 'react';
+import { setEnroll } from '../../redux/home-reducer';
 
 interface Enrollment {
     id: number;
-    user: User[];
+    user: User;
+    course_id: number;
+    user_id: number;
 }
 interface User {
+    id: number;
     email: string;
 }
 
 interface Props {
     enrollments: Enrollment[];
+    addStudentProgress: (id:number, user_id: number, course_id:number) => void;
+    setEnroll: (enrollments: any) => void;
 }
-const CourseRequests: React.FC<Props> = ({ enrollments }) => {
-    const [localEnrollments, setLocalEnrollments] = useState(enrollments);
+const CourseRequests: React.FC<Props> = ({ enrollments, addStudentProgress, setEnroll }) => {
 
-    const handleAccept = (id: number) => {
+    const handleAccept = (id: number, user_id:number, course_id:number) => {
         console.log('Accepted request with ID:', id);
-        setLocalEnrollments(localEnrollments.filter(request => request.id !== id));
+        addStudentProgress(id, user_id, course_id);
+        setEnroll(enrollments.filter(request => request.id !== id));
     };
 
     const handleReject = (id: number) => {
         console.log('Rejected request with ID:', id);
-        setLocalEnrollments(localEnrollments.filter(request => request.id !== id));
+        setEnroll(enrollments.filter(request => request.id !== id));
     };
-
     return (
         <><main>
                 <div className="wrapper">
@@ -37,10 +42,10 @@ const CourseRequests: React.FC<Props> = ({ enrollments }) => {
                             <div className="course">
                                 <div className="course-details">
                                     <div>
-                                        <p className="modules-progress">{item.user[0].email}</p>
+                                        <p className="modules-progress">{item.user.email}</p>
                                     </div>
                                     <div>
-                                        <button onClick={() => handleAccept(item.id)} className="btn btn-c btn-accept">Принять</button>
+                                        <button onClick={() =>  handleAccept(item.id, item.user.id, item.course_id)} className="btn btn-c btn-accept">Принять</button>
                                         <button onClick={() => handleReject(item.id)} className="btn btn-c btn-reject">Отклонить</button>
                                     </div>
                                 </div>

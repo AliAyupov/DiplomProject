@@ -26,7 +26,7 @@ from rest_framework_simplejwt.views import (
 from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView, \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView, \
-    CourseTeacherApiView, ModuleCreateAPIView
+    CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet
 
 
 router = routers.DefaultRouter()
@@ -42,10 +42,13 @@ router.register(r'api/progress', StudentOnTheCourseApiView, basename='progress')
 router.register(r'api/users-course', AllUsersOnTheCourseApiView, basename='users-course')
 router.register(r'api/homework-course', AllHomeworkOnTheCourseApiView, basename='homework-course')
 router.register(r'api/modules', ModuleApiView, basename='module')
+router.register(r'api/lessons', LessonViewSet, basename='lesson')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/modules/as', ModuleCreateAPIView.as_view(), name='module-create'),
+    path('api/progress/<int:course_id>/', StudentOnTheCourseApiView.as_view({'get': 'list_by_course'})),
+    path('api/modules/as/<int:module_id>/', ModuleCreateAPIView.as_view(), name='module-update'),
     path('api/custom-users/<int:user_id>/', CustomUserDetailView.as_view()),
     path('api/modules/<int:module_id>/lessons/', LessonApiView.as_view({'get': 'list'}), name='module-lessons'),
     path('api-auth/', include('rest_framework.urls')),

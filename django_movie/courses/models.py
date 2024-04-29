@@ -58,7 +58,7 @@ class Module(models.Model):
 
 class Lesson(models.Model):
     lesson_name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     content = models.JSONField(blank=True, null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='lessons')
 
@@ -95,9 +95,9 @@ class StudentProgress(models.Model):
 class ShopItem(models.Model):
     name = models.CharField(max_length=255)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     picture = models.ImageField(upload_to='shop_files/', null=True, blank=True)
-
+    type = models.IntegerField(default=1)
     class Meta:
         verbose_name = "Вещь в магазине"
         verbose_name_plural = "Вещи в магазине"

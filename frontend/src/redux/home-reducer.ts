@@ -12,6 +12,8 @@ const SET_COURSE_DESCRIPTION = 'SET_COURSE_DESCRIPTION';
 const SET_IMAGES = 'SET_IMAGES';
 const SET_MODULE = 'SET_MODULE';
 const SET_ENROLL = 'SET_ENROLL';
+const SET_PROGRESS = 'SET_PROGRESS';
+const SET_SHOP_ITEMS = 'SET_SHOP_ITEMS';
 
 interface Lesson {
     id: string;
@@ -24,6 +26,7 @@ interface Action {
     picture: string;
     type: string;
     courses: any;
+    usersData: any;
     currentPage: number;
     totalCoursesCount: number;
     isFetching: boolean;
@@ -33,12 +36,14 @@ interface Action {
     modulesCount: number;
     lessonsCount: number;
     lessons: Lesson[];
+    shopItems: any;
     enrollments: any;
 }
 
 interface State {
     courses: any[];
     modules: any[]; 
+    shopItems: any[];
     pageSize: number;
     totalCoursesCount: number;
     currentPage: number;
@@ -51,14 +56,17 @@ interface State {
     courseName: string; 
     description: string;
     picture: string;
+    usersData:any[];
     enrollments: any[]; 
 }
 
 const initialState: State = {
     courses: [],
     modules: [],
+    usersData: [],
     enrollments: [],
-    pageSize: 6,
+    shopItems: [],
+    pageSize: 18,
     totalCoursesCount: 0,
     modulesCount: 0, 
     currentPage: 1,
@@ -102,12 +110,17 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return {...state, modules: [...state.modules, action.module]};
         case SET_ENROLL:
             return { ...state, enrollments: action.enrollments };
+        case SET_PROGRESS:
+            return { ...state, usersData: action.usersData};
+        case SET_SHOP_ITEMS:
+            return { ...state, shopItems: action.shopItems};
         default:
             return state;
     }
 }
 
 export const setCourses = (courses: any) => ({ type: SET_COURSES, courses });
+export const setProgress = (usersData: any) => ({ type: SET_PROGRESS, usersData });
 export const setCurrentPage = (currentPage: number) => ({ type: SET_CURRENT_PAGE, currentPage:currentPage });
 export const setTotalCourses = (totalCoursesCount: number) => ({ type: SET_TOTAL_COURSES_COUNT, totalCoursesCount:totalCoursesCount });
 export const togglePreloader = (isFetching: boolean) => ({type: TOGGLE_PRELOADER, isFetching:isFetching });
@@ -124,5 +137,6 @@ export const setEnroll = (enrollments: any[]) => ({
     type: SET_ENROLL,
     enrollments
 });
+export const setShopItems = (shopItems: any) => ({ type: SET_SHOP_ITEMS, shopItems });
 
 export default homeReducer;

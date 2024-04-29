@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../http/axios";
-import { setCourseName, setCourseDescription, setImages } from '../../redux/home-reducer';
+import { setCourseName, setCourseDescription, setImages, setLessons } from '../../redux/home-reducer';
 import {setCourse, setModules, setModule} from '../../redux/home-reducer';
 import CoursePageEdit from "./CoursePageEdit";
 import { useParams } from "react-router-dom";
@@ -21,6 +21,12 @@ interface Module {
     id: number;
     module_name: string;
     lessons_count: number;
+}
+interface Lesson {
+    id: number;
+    image: string;
+    lesson_name:string;
+    module: number;
 }
 interface UserData {
     id: number;
@@ -42,7 +48,10 @@ interface Props {
     modulesCount: number;
     lessonsCount:number;
     moduleName: string;
-}
+    moduleId:number;
+    lessons: Lesson[];
+    setLessons: (lessons: Lesson[]) => void;
+}   
 
 
 const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
@@ -56,19 +65,31 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
     setModule,
     picture, 
     moduleName,
+    moduleId,
     modules, 
-    userData }) => {
+    userData,
+    lessons,
+    setLessons }) => {
     
     const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isLoading, setIsLoading] = useState(true);
     const [modulesCount, setModulesCount] = useState(0);
     const [lessonsCount, setLessonsCount] = useState(0);
-    
+    const [lessonsByModule, setLessonsByModule] = useState<{[key: number]: Lesson[]}>({});
+
     const [imageUrl, setImageUrl] = useState<string>('');
     const [pictureFile, setImageFile] = useState<File | null>(null);
 
     const { id } = useParams<{ id: string }>();
+    const fetchLessons = async (module_id: number) => {
+        try {
+            const response = await axiosInstance.get(`/modules/${module_id}/lessons`);
+            setLessonsByModule(prev => ({ ...prev, [module_id]: response.data.results }));
+        } catch (error) {
+            console.error('Ошибка при загрузке уроков:', error);
+        }
+    };
         useEffect(() => {
             const getCourse = async () => {
                 try {
@@ -79,10 +100,16 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
                     setImages(response.data.picture);
                     const modulesResponse = await axiosInstance.get(`/modules/?course_id=${id}`);
                     setModules(modulesResponse.data);
+                    modulesResponse.data.forEach((module: { id: number; }) => {
+                        
+                        fetchLessons(module.id);
+                    });
+                    
                     const totalLessonsCount = modulesResponse.data.reduce((total: number, module: Module) => total + module.lessons_count, 0);
                     setModulesCount(modulesResponse.data.length);
                     setLessonsCount(totalLessonsCount);
                 } catch (error) {
+                    debugger
                     console.error('Ошибка при загрузке курса:', error);
                 } finally {
                     setIsLoading(false);
@@ -90,7 +117,7 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             };
 
             getCourse();
-        }, [id, setCourse, setModules, setLessonsCount]);
+        }, [id, setCourse, setModules, setLessonsCount, setModule]);
 
     if (isLoading) {
         return <Preloader/>;
@@ -106,7 +133,28 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             updateCourseDetails(selectedFile, imageUrl);
         }
     };
-
+    
+    const handleCreateLesson = async (lessonName:string, moduleIdcreate: number) => {
+        const formData = new FormData();
+        formData.append('module', moduleIdcreate.toString());
+        formData.append('lesson_name', lessonName);
+        try {
+            const response = await axiosInstance.post('/lessons/', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            
+            if (response.status === 201) {
+                console.log('Модуль успешно создан', response.data);
+                setLessons(response.data); 
+                fetchLessons(moduleIdcreate);
+            } else {
+                console.error('Произошла какая-то ошибка при создании модуля', response.status);
+            }
+        } catch (error) {
+            console.error('Ошибка при создании', error);
+        }
+    
+    };
     const handleFormSubmit = async (moduleName: string) => {
         const formData = new FormData();
         formData.append('module_name', moduleName);
@@ -127,7 +175,25 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
         }
     
     };
-    
+    const handleUpdateModule = async (module_id:number, newName: string) => {
+        const formData = new FormData();
+        formData.append('module_name', newName);
+        
+        formData.append('course', `${id}`);
+        try {
+            const response = await axiosInstance.put(`/modules/as/${module_id}/`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            
+            if (response.status === 200) {
+                console.log('Модуль обновлен успешно');
+                const modulesResponse = await axiosInstance.get(`/modules/?course_id=${id}`);
+                    setModules(modulesResponse.data);
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении модуля:', error);
+        }
+    };
     const updateCourseDetails = async (file: File | null , imageUrl: string) => {
         const formData = new FormData();
         formData.append('course_name', courseName);
@@ -150,11 +216,59 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             console.error('Error updating course', error);
         }
     };
+    const handleUpdateLesson = async (lesson_id: number, updatedData: any) => {
+        try {
+            const formData = new FormData();
+            for (const key in updatedData) {
+                formData.append(key, updatedData[key]);
+            }
+            formData.append('lesson_name', updatedData[0]);
+            formData.append('module', updatedData[1]);
+            const response = await axiosInstance.put(`/lessons/${lesson_id}/`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            if (response.status === 200) {
+                console.log('Урок успешно обновлен');
+                fetchLessons(updatedData[1]);
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении урока:', error);
+        }
+    };
+    
+    const handleDeleteLesson = async (lesson_id: number, module_id: number) => {
+        try {
+            const response = await axiosInstance.delete(`/lessons/${lesson_id}`);
+            if (response.status === 204) {
+                console.log('Урок успешно удален');
+                fetchLessons(module_id); 
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении урока:', error);
+        }
+    };
+    const onDelete = async (module_id: number) => {
+        try {
+            const response = await axiosInstance.delete(`/modules/as/${module_id}/`);
+            if (response.status === 204) { 
+                console.log('Модуль успешно удален');
+                const updatedModules = modules.filter(module => module.id !== module_id);
+                setModules(updatedModules);
+            }
+        } catch (error) {
+            console.error('Ошибка при удалении модуля:', error);
+        }
+    };
+    
     return (
         <CoursePageEdit
+            moduleId={moduleId}
+            lessons={lessons}
+            fetchLessons={fetchLessons}
             updateCourseDetails={updateCourseDetails} 
             errors={errors}
             course={course} 
+            lessonsByModule={lessonsByModule}
             courseName={courseName}
             previewImageUrl={previewImageUrl}
             setCourseDescription={setCourseDescription}
@@ -165,6 +279,11 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             handleFileChange={handleFileChange}
             userData={userData}
             handleFormSubmit={handleFormSubmit}
+            handleUpdateModule={handleUpdateModule}
+            onDelete={onDelete}
+            handleDeleteLesson={handleDeleteLesson}
+            handleUpdateLesson={handleUpdateLesson} 
+            handleCreateLesson={handleCreateLesson}
             />   
     )
 }
@@ -180,6 +299,7 @@ const mapStateToProps = (state: any) => ({
     userData: state.auth.userData,
     moduleName: state.homePage.module,
     isAuthenticated: state.auth.isAuthenticated,
+    lessons: state.homePage.lessons,
 });
 
 const CoursePageEditContainerWithAuthorization = withAuthorization(CoursePageEditContainer);
@@ -190,4 +310,5 @@ export default connect(mapStateToProps, {
     setModules,
     setImages,
     setCourseName, 
-    setCourseDescription}) (CoursePageEditContainerWithAuthorization);
+    setCourseDescription,
+setLessons}) (CoursePageEditContainerWithAuthorization);

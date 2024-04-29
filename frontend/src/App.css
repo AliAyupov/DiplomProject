@@ -112,12 +112,68 @@ input[type="file"][name="picture"] {
         font-size: 20px;
         width: 80%;
     }
-    
+    .image-person {
+        width: 280px;
+    }
     *{
         font-family: "Inter", sans-serif;
         background-color: #F7FAFC;
         margin: 0;
         padding: 0;
+    }
+    .image-head {
+        position: absolute;
+        width: 134px;
+        transform: translate(-153%,77%);
+        background-color: transparent;
+    }
+    .image-tshort {
+        position: absolute;
+        width: 104px;
+        transform: translate(66%,139%);   
+        background-color: transparent;
+    }
+    .image-bruke {
+        position: absolute;
+        width: 115px;
+        transform: translate(53%,196%);
+        background-color: transparent;
+    }
+    .image-shoes {
+        position: absolute;
+        width: 100px;
+        transform: translate(67%,274%);
+        background-color: transparent;
+    }
+    .image-arm {
+        position: absolute;
+        width: 83px;
+        transform: translate(-96%,175%);    
+        background-color: transparent;
+    }
+    .image-tshort {
+        position: absolute;
+        width: 121px;
+        transform: translate(66%,136%);
+        background-color: transparent;
+    }
+    .image-bruke {
+        position: absolute;
+        width: 134px;
+        transform: translate(54%,196%);
+        background-color: transparent;
+    }
+    .image-shoes {
+        position: absolute;
+        width: 109px;
+        transform: translate(77%,296%);
+        background-color: transparent;
+    }
+    .image-arm {
+        position: absolute;
+        width: 108px;
+        transform: translate(-92%,154%);
+        background-color: transparent;
     }
     .item-button__exit {
         font-size: 14px;
@@ -279,7 +335,13 @@ input[type="file"][name="picture"] {
         border: 1px solid transparent;
         border-radius: 12px;
     }
-
+    .form-input--profile {
+        width: 433px !important;
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+    }
+    
     .form-button {
         width: 30%;
         padding: 10px 20px;
@@ -312,6 +374,10 @@ input[type="file"][name="picture"] {
         height: 120px;
         object-fit: cover;
         border-radius: 12px;
+    }
+    .image-course--shop{
+        width: 100px;
+        height: 100px;
     }
     .mob-text{
         display: none;
@@ -449,10 +515,17 @@ input[type="file"][name="picture"] {
         margin-left: 25px;
         margin-top: 15px;
     }
+    .screen__sidebar-new {
+        width: 40%;
+    }
 
     .screen__content {
         width: 80%;
         padding: 25px;
+    }
+    .screen__content-new {
+        width: 60%;
+        padding: 10px 0px;
     }
     .menu {
         list-style: none;
@@ -691,7 +764,36 @@ input[type="file"][name="picture"] {
     #mobile-menu-button {
         display: none;
     }
-
+    .image-head {
+        position: absolute;
+        width: 124px;
+        transform: translate(-145%,62%);
+        background-color: transparent;
+    }
+    .image-tshort {
+        position: absolute;
+        width: 104px;
+        transform: translate(66%,139%);   
+        background-color: transparent;
+    }
+    .image-bruke {
+        position: absolute;
+        width: 115px;
+        transform: translate(53%,196%);
+        background-color: transparent;
+    }
+    .image-shoes {
+        position: absolute;
+        width: 100px;
+        transform: translate(67%,274%);
+        background-color: transparent;
+    }
+    .image-arm {
+        position: absolute;
+        width: 83px;
+        transform: translate(-96%,175%);    
+        background-color: transparent;
+    }
     .header_menu{
         display: flex;
         font-weight: 500;
@@ -950,7 +1052,13 @@ input[type="file"][name="picture"] {
         font-weight: 500;
         font-size: 2.2vw;
     }
-
+    .form-input--profile {
+        width: 270px;
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+    }
+    
     .btn {
         padding: 10px 20px;
         background-color: #007bff;
@@ -1073,6 +1181,13 @@ input[type="file"][name="picture"] {
     }
     .margin{
         margin: 50px;
+    }
+    .image-person{
+        width: 240px;
+    }
+    .image-course--shop {
+        width: 80px;
+        height: 80px;
     }
     .item-background{
         background: #E5E8EB;
@@ -1234,7 +1349,7 @@ input[type="file"][name="picture"] {
         align-items: center;
         height: 70px;
     }
-
+    
     .header__logo{
         margin-right: auto;
         margin-left: 35px;
@@ -1430,7 +1545,10 @@ input[type="file"][name="picture"] {
         text-align: center;
         overflow: hidden;
     }
-
+    .card__image--shop {
+        width: 80px;
+        height: 80px;
+    }
     .image-course {
         width: 100%;
         height: 90px;
@@ -1460,7 +1578,13 @@ input[type="file"][name="picture"] {
         max-width: 100%;
         margin: 0;
     }
-
+    .form-input--profile {
+        width: 240px !important;
+        padding: 6px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        font-size: 10px;
+    }
     .wrapper-input{
         width: 100%;
         background-color: #E8EBF2;
@@ -1581,6 +1705,7 @@ input[type="file"][name="picture"] {
         padding: 0;
         margin: 0;
         display: flex;
+        justify-content: center;
     }
 
     .menu__item {
@@ -2127,7 +2252,7 @@ input[type="file"][name="picture"] {
     }
 
     .screen__sidebar {
-        width: 84%;
+        width: 90%;
         margin: auto;
         margin-top: 20px;
     }
@@ -2485,6 +2610,12 @@ input[type="file"][name="picture"] {
     section{
         position: relative;
     }
+    .image-head {
+        position: absolute;
+        width: 62px;
+        transform: translate(-195%,-24%);
+        background-color: transparent;
+    }
     .grid-absolut{
         position: absolute;
         top: 7%;
@@ -2573,7 +2704,10 @@ input[type="file"][name="picture"] {
         text-align: center;
         overflow: hidden;
     }
-
+    .card__image--shop {
+        width: 80px;
+        height: 80px;
+    }
     .image-course {
         width: 100%;
         height: 22vw;
@@ -2882,6 +3016,17 @@ input[type="file"][name="picture"] {
         font-weight: 300;
         width: 65%;
     }
+    .card__image--shop {
+        width: 70px;
+        height: 70px;
+    }
+    .image-person{
+        width: 180px;
+    }
+    .image-course--shop {
+        width: 70px;
+        height: 70px;
+    }
     .module__image{
         width:60px;
         height: 60px;
@@ -2957,6 +3102,11 @@ input[type="file"][name="picture"] {
     .modules-progress{
         font-family: "Inter", sans-serif;
     }
+    .card-flex{
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
     p{font-family: Cakra;}
     .wrapper__title_c{
         display: block;
@@ -3030,7 +3180,36 @@ p{background: transparent;}
   .pagination__link__active {
     background-color: #f0f0f0;
 }
-  
+  .image-head {
+        position: absolute;
+        width: 91px;
+        transform: translate(-147%,65%);
+        background-color: transparent;
+    }
+    .image-tshort {
+        position: absolute;
+        width: 80px;
+        transform: translate(63%,133%);
+        background-color: transparent;
+    }
+    .image-bruke {
+        position: absolute;
+        width: 88px;
+        transform: translate(53%,196%);
+        background-color: transparent;
+    }
+    .image-shoes {
+        position: absolute;
+        width: 76px;
+        transform: translate(67%,274%);
+        background-color: transparent;
+    }
+    .image-arm {
+        position: absolute;
+        width: 62px;
+        transform: translate(-96%,175%);    
+        background-color: transparent;
+    }
   .pagination__ellipsis {
     margin: 0 5px;
   }
@@ -3197,4 +3376,102 @@ p{background: transparent;}
 .btn-reject:hover{
     background-color: rgb(217, 154, 154);
     color: #0e0202;
+}
+.btn-izm{
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin: 0 5px;
+}
+.btn-del{
+    background-color: rgb(160, 126, 126);
+    border-radius:10px;
+    padding: 10px 14px;
+}
+.lessons-details{
+    background-color: white;
+    padding: 10px 20px;
+    border: 1px #F7FAFC solid;
+    border-radius: 5px;
+}
+.course-title{
+    background-color: transparent;
+}
+.modules-progress{
+    background-color: transparent;
+}
+
+.transp-back{
+    background-color: transparent;
+}
+.btn-del{
+    margin-top: 0px;
+}
+.lessons-div {
+    padding: 2px;
+}
+.createLesson{
+    text-decoration:underline;
+    font-size: 14px;
+    color: #608de7;
+    padding: 10px;
+}
+.card__grid {
+    justify-items: center;
+    text-align: center;
+}
+.card-flex{
+    display: flex;
+    justify-content: center;
+}
+
+.product-info h3 {
+    margin: 0;
+    color: #333; 
+    font-size: 18px; 
+}
+
+.product-info p {
+    color: #666; 
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+
+
+.price {
+    font-size: 20px; 
+    margin-bottom: 10px;
+    color: #525355;
+}
+
+.buy-button {
+    padding: 8px 15px; 
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px; 
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.buy-button:hover {
+    background-color: #0661c3; 
+}
+.product-info p, .price, .buy-button {
+    font-size: 14px;
+}
+
+/* Планшеты */
+@media (max-width: 768px) {
+    .product-info p, .price, .buy-button {
+        font-size: 12px; 
+    }
+}
+
+/* Мобильные телефоны */
+@media (max-width: 480px) {
+
+    .product-info p, .price, .buy-button {
+        font-size: 10px; 
+    }
 }

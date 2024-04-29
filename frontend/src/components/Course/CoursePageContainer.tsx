@@ -69,6 +69,7 @@ const CoursePageContainer: React.FC<Props> = ({  course, modules, setCourse, set
     );
 }
 
+
 export default connect(mapStateToProps, { setCourse, setModules })(CoursePageContainer);
 
 

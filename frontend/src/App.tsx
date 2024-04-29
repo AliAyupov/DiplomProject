@@ -7,7 +7,6 @@ import SignIn from './components/login';
 import Logout from './components/logout';
 import HomeContainer from './components/Home/HomeContainer';
 import Course from './components/Course/CoursePageContainer';
-import LeaderboardPage from './components/Course/LeaderboardPage';
 import ProfilePageContainer from './components/Profile/ProfilePageContainer';
 import LessonsPageContainer from './components/Course/LessonsPageContainer';
 import CoursesPageContainer from './components/Courses/CoursesPageContainer';
@@ -25,7 +24,6 @@ const App: React.FC = () => {
         <Route path="/course/:id" element={<Course/>} />
         <Route path="/modules/:id" element={<LessonsPageContainer />} />
         <Route path="/profile" element={<ProfilePageContainer/>} />
-        <Route path="/leaders" element={<LeaderboardPage/>}/>
         <Route path="/courses/my" element={<MyCoursesContainer/>}/>
         <Route path="/course/create" element={<CreateCourseContainer/>} />
         <Route path="/course/edit/:id" element={<CoursePageEditContainer/>} />
