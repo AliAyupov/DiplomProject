@@ -6,19 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/django_movie/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEditContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEditContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/LeaderboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/LeaderboardPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Enroll/StudentEnroll.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Enroll/StudentEnroll.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Enroll/StudentEnrollContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Enroll/StudentEnrollContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Shop/ShopContainerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Shop/ShopContainerPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Shop/ShopPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Shop/ShopPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

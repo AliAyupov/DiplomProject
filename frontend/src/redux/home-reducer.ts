@@ -14,6 +14,7 @@ const SET_MODULE = 'SET_MODULE';
 const SET_ENROLL = 'SET_ENROLL';
 const SET_PROGRESS = 'SET_PROGRESS';
 const SET_SHOP_ITEMS = 'SET_SHOP_ITEMS';
+const SET_USER_INVENTORY = 'SET_USER_INVENTORY';
 
 interface Lesson {
     id: string;
@@ -24,6 +25,7 @@ interface Action {
     courseName: string;
     description: string;
     picture: string;
+    userInventory: any;
     type: string;
     courses: any;
     usersData: any;
@@ -44,6 +46,7 @@ interface State {
     courses: any[];
     modules: any[]; 
     shopItems: any[];
+    userInventory: any;
     pageSize: number;
     totalCoursesCount: number;
     currentPage: number;
@@ -75,6 +78,7 @@ const initialState: State = {
     module:null,
     lessonsCount: 0,
     lessons: [],
+    userInventory: [],
     courseName: '', 
     description: '',
     picture: '',
@@ -114,6 +118,8 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return { ...state, usersData: action.usersData};
         case SET_SHOP_ITEMS:
             return { ...state, shopItems: action.shopItems};
+        case SET_USER_INVENTORY:
+            return { ...state, userInventory: action.userInventory };
         default:
             return state;
     }
@@ -138,5 +144,7 @@ export const setEnroll = (enrollments: any[]) => ({
     enrollments
 });
 export const setShopItems = (shopItems: any) => ({ type: SET_SHOP_ITEMS, shopItems });
+export const setUserInventory = (userInventory: any[]) => ({ type: SET_USER_INVENTORY, userInventory });
+
 
 export default homeReducer;

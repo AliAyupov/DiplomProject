@@ -2612,8 +2612,32 @@ input[type="file"][name="picture"] {
     }
     .image-head {
         position: absolute;
+        width: 91px;
+        transform: translate(-147%,65%);
+        background-color: transparent;
+    }
+    .image-tshort {
+        position: absolute;
+        width: 80px;
+        transform: translate(63%,133%);
+        background-color: transparent;
+    }
+    .image-bruke {
+        position: absolute;
+        width: 88px;
+        transform: translate(53%,196%);
+        background-color: transparent;
+    }
+    .image-shoes {
+        position: absolute;
+        width: 76px;
+        transform: translate(67%,274%);
+        background-color: transparent;
+    }
+    .image-arm {
+        position: absolute;
         width: 62px;
-        transform: translate(-195%,-24%);
+        transform: translate(-96%,175%);    
         background-color: transparent;
     }
     .grid-absolut{
@@ -3180,36 +3204,7 @@ p{background: transparent;}
   .pagination__link__active {
     background-color: #f0f0f0;
 }
-  .image-head {
-        position: absolute;
-        width: 91px;
-        transform: translate(-147%,65%);
-        background-color: transparent;
-    }
-    .image-tshort {
-        position: absolute;
-        width: 80px;
-        transform: translate(63%,133%);
-        background-color: transparent;
-    }
-    .image-bruke {
-        position: absolute;
-        width: 88px;
-        transform: translate(53%,196%);
-        background-color: transparent;
-    }
-    .image-shoes {
-        position: absolute;
-        width: 76px;
-        transform: translate(67%,274%);
-        background-color: transparent;
-    }
-    .image-arm {
-        position: absolute;
-        width: 62px;
-        transform: translate(-96%,175%);    
-        background-color: transparent;
-    }
+  
   .pagination__ellipsis {
     margin: 0 5px;
   }

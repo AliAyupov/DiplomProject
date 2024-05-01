@@ -108,6 +108,7 @@ class StudentProgressApiView(viewsets.ModelViewSet):
 
 
 class ShopItemApiView(viewsets.ModelViewSet):
+    pagination_class = PageNumberPagination
     queryset = ShopItem.objects.all()
     serializer_class = ShopItemSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
