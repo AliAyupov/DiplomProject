@@ -101,7 +101,6 @@ const SignIn: React.FC<Props>=({setUserData, userData}) => {
 		  password: formData.password,
 		})
 		.then(async (res) => {
-
 		  localStorage.setItem('access_token', res.data.access);
 		  localStorage.setItem('refresh_token', res.data.refresh);
 		  axiosInstance.defaults.headers['Authorization'] =

@@ -43,8 +43,9 @@ const CoursePageContainer: React.FC<Props> = ({setShopItems, shopItems, userData
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const response = await axiosInstance.get(`/student-inventory/`);
-                
+                const userId = userData.id;
+                const response = await axiosInstance.get(`/student-inventory/?user_id=${userId}`);
+            
                 if (response.data && response.data.results) {
                     const inventoryIds = response.data.results.map((item: { item: number; }) => item.item);
                     setUserInventory(inventoryIds);

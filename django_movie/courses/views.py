@@ -39,7 +39,7 @@ class CustomUserDetailView(APIView):
 
     def put(self, request, user_id):
         user = self.get_object(user_id)
-        serializer = CustomUserSerializer(user, data=request.data)
+        serializer = CustomUserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -89,6 +89,7 @@ class LessonApiView(viewsets.ModelViewSet):
     def get_queryset(self):
         module_id = self.kwargs.get('module_id')
         return Lesson.objects.filter(module_id=module_id)
+
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
@@ -115,11 +116,16 @@ class ShopItemApiView(viewsets.ModelViewSet):
 
 
 class StudentInventoryApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsProducer]
+    permission_classes = [IsAuthenticated]
     queryset = StudentInventory.objects.all()
     serializer_class = StudentInventorySerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user_id')
+        if user_id:
+            return StudentInventory.objects.filter(student_id=user_id)
+        return StudentInventory.objects.all()
 
 class EnrollmentApiView(viewsets.ModelViewSet):
     permission_classes_by_action = {'create': [IsAuthenticated, IsStudent],
@@ -286,8 +292,8 @@ class StudentOnTheCourseApiView(viewsets.ViewSet):
         student_id = request.data.get('student_id')
 
         if not course_id or not student_id:
-            return Response({'error': 'Необходимо указать ID курса и ID студента'}, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'error': 'Необходимо указать ID курса и ID студента'},
+                                                    status=status.HTTP_400_BAD_REQUEST)
         user_id = request.user.id
 
         try:
@@ -297,7 +303,6 @@ class StudentOnTheCourseApiView(viewsets.ViewSet):
         except Course.DoesNotExist:
             return Response({'error': 'Курс не существует'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Создание записи о прогрессе студента
         student_progress = StudentProgress(
             student_id=student_id,
             course_id=course_id,

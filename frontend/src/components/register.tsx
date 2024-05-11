@@ -60,9 +60,8 @@ interface Props {
 
 const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
   const classes = useStyles();
-  const [userId, setUserId] = useState("");
-  const [registrationSuccess, setRegistrationSuccess] = useState(false); 
-  const [selectedRole, setSelectedRole] = useState('');
+  const [userId, setUserId] = useState(0);
+  const [selectedRole, setSelectedRole] = useState('student');
   
   const [formData, setFormData] = useState({
     email: '',
@@ -76,6 +75,14 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
   });
   const handleChangeSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedRole(event.target.value as string);
+  
+  };
+  
+  const handleChange = (e: { target: { name: any; value: string; }; }) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value.trim(),
+    });
   };
   const handleChooseRole = async () => {
     const foData = new FormData();
@@ -97,73 +104,76 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
       console.error('Ошибка при обновлении пользователя:', error);
     }
   };
-  const handleChange = (e: { target: { name: any; value: string; }; }) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value.trim(),
-    });
-  };
-
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     const isValid = validateForm();
 
     if (isValid) {
-      axiosInstance
-        .post('auth/users/', {
-          email: formData.email,
-          username: formData.username,
-          password: formData.password,
-        })
-        .then((res) => {
-          setUserId(res.data.id);
-          setRegistrationSuccess(true);
-      axiosInstance
-        .post('token/', {
-          username: formData.username,
-          password: formData.password,
-        })
-        .then((res) => {
-          console.log(res);
-          localStorage.setItem('access_token', res.data.access);
-          localStorage.setItem('refresh_token', res.data.refresh);
-          axiosInstance.defaults.headers['Authorization'] =
-            'Bearer ' + localStorage.getItem('access_token');
-          setUserData(formData.username, res.data.userId, res.data.login, res.data.picture, res.data.role, true, null); 
-          })
-          .catch((error) => {
-            console.error('Ошибка при входе:', error);
-          });
-        })
-        .catch((error) => {
-          if (error.response && error.response.data) {
-            if (
-              error.response.status === 400 &&
-              error.response.data &&
-              error.response.data.username 
-            ) {
-              setFormErrors(prevErrors => ({
-                ...prevErrors,
-                username: 'Пользователь с таким именем уже существует',
-              }));
-            }
-            if (
-              error.response.status === 400 &&
-              error.response.data &&
-              error.response.data.email 
-            ) {
-              setFormErrors(prevErrors => ({
-                ...prevErrors,
-                email: 'Пользователь с такой почтой уже существует',
-              }));
-            }
-          } else {
-            console.error('Ошибка при регистрации:', error);
-          }
-        });
+        axiosInstance
+            .post('auth/users/', {
+                email: formData.email,
+                username: formData.username,
+                password: formData.password
+            })
+            .then((res) => {
+                setUserId(res.data.id);
+                if (selectedRole !== 'student') {
+                  axiosInstance
+                        .put(`custom-users/${res.data.id}/`, { 
+                          role: selectedRole})
+                        .then((response) => {
+                            console.log('Роль успешно обновлена:', response.data);
+                        })
+                        .catch((error) => {
+                            console.error('Ошибка при обновлении роли:', error);
+                        });
+                }
+                axiosInstance
+                    .post('token/', {
+                        username: formData.username,
+                        password: formData.password,
+                    })
+                    .then((res) => {
+                        console.log(res);
+                        localStorage.setItem('access_token', res.data.access);
+                        localStorage.setItem('refresh_token', res.data.refresh);
+                        axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+                        setUserData(
+                            formData.username,
+                            res.data.userId,
+                            res.data.login,
+                            res.data.picture,
+                            res.data.role,
+                            true,
+                            null
+                        );
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка при входе:', error);
+                    });
+            })
+            .catch((error) => {
+              debugger
+                if (error.response && error.response.data) {
+                    if (error.response.status === 400 && error.response.data && error.response.data.username) {
+                        setFormErrors((prevErrors) => ({
+                            ...prevErrors,
+                            username: 'Пользователь с таким именем уже существует',
+                        }));
+                    }
+                    if (error.response.status === 400 && error.response.data && error.response.data.email) {
+                        setFormErrors((prevErrors) => ({
+                            ...prevErrors,
+                            email: 'Пользователь с такой почтой уже существует',
+                        }));
+                    }
+                } else {
+                    console.error('Ошибка при регистрации:', error);
+                }
+            });
     }
-  };
+};
   const validateForm = () => {
     let errors:any = {};
     let isValid = true;
@@ -181,8 +191,8 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
     if (!formData.username) {
       errors.username = 'Имя пользователя отсутствует';
       isValid = false;
-    } else if (formData.username.length < 5) {
-      errors.username = 'Имя пользователя должно быть не менее 5-ех символов в длину';
+    } else if (formData.username.length < 5 || formData.username.length > 30) {
+      errors.username = 'Имя пользователя должно быть не менее 5-ех и не более 30-ти символов в длину';
       isValid = false;
     } else {
       errors.username = ''; 
@@ -191,8 +201,8 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
     if (!formData.password) {
       errors.password = 'Пароль отсутствует';
       isValid = false;
-    } else if (formData.password.length < 8) {
-      errors.password = 'Пароль должен быть не менее 8-ми символов в длину';
+    } else if (formData.password.length < 8 || formData.password.length > 50) {
+      errors.password = 'Пароль должен быть не менее 8-ми и не  более 50-ти символов в длину';
       isValid = false;
     } else if (!/\d/.test(formData.password)) {
       errors.password = 'Пароль должен содержать цифру';
@@ -214,37 +224,7 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
         <Typography component="h1" variant="h5">
           Регистрация
         </Typography>
-        {registrationSuccess ? (
-          <div className="role_selector">
-            <Typography variant="h6">Поздравляем, вы успешно зарегистрированы!</Typography>
-            <FormControl style={{ minWidth: "200px" }}>
-            <InputLabel htmlFor="role-select">Роль</InputLabel>
-            <Select
-              className={classes.select}
-              value={selectedRole}
-              onChange={handleChangeSelect}
-              inputProps={{ name: "role", id: "role-select" }}
-            >
-              <MenuItem value="" disabled>
-                Выберите роль
-              </MenuItem>
-              <MenuItem value="student">Студент</MenuItem>
-              <MenuItem value="tutor">Тьютор</MenuItem>
-              <MenuItem value="producer">Продюсер</MenuItem>
-            </Select>
-          </FormControl>
-          <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleChooseRole}
-          >
-            Выбрать роль
-          </Button>
-          </div>
-        ) : 
+        
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -292,6 +272,22 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
               />
             </Grid>
             <Grid item xs={12}>
+              <InputLabel htmlFor="role-select">Роль</InputLabel>
+              <Select
+                className={classes.select}
+                value={selectedRole}
+                onChange={handleChangeSelect}
+                inputProps={{ name: "role", id: "role-select" }}
+              >
+                <MenuItem value="" disabled>
+                  Выберите роль
+                </MenuItem>
+                <MenuItem value="student">Студент</MenuItem>
+                <MenuItem value="tutor">Тьютор</MenuItem>
+                <MenuItem value="producer">Продюсер</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="Я хочу получать уведомления на свою почту"
@@ -316,7 +312,6 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
             </Grid>
           </Grid>
         </form> 
-        }
       </div>
     </Container>
   );
