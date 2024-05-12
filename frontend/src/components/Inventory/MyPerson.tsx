@@ -32,7 +32,7 @@ interface TypeToImageKey {
 interface Props {
     shopItems: ShopItems[];
     setShopItems: (shopItems: ShopItems[]) => void;
-    handlePurchase: (itemId: number) => void;
+    handlePurchase: (itemId: number, itemType: number) => void;
     pageSize: number;
     totalCoursesCount: number;
     userInventory: number[];
@@ -48,7 +48,7 @@ const typeToImageKey: TypeToImageKey = {
     4: 'tshort', // Броня
     5: 'arm' // Оружие
 };
-const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userInventory, totalCoursesCount, currentPage, onPageChanged, personData}) => {
+const MyPerson: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userInventory, totalCoursesCount, currentPage, onPageChanged, personData}) => {
     const [images, setImages] = useState({
         head: head,
         shoes: shoes,
@@ -81,7 +81,7 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
         }
     };
     const onNextPageClicked = () => {
-        if (currentPage < Math.ceil(totalCoursesCount / pageSize)) {
+        if (currentPage < Math.ceil(userInventory.length / pageSize)) {
             const nextPage = currentPage + 1;
             onPageChanged(nextPage);
         }
@@ -94,7 +94,7 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
         }
     }
 
-    let pagesCount = Math.ceil(totalCoursesCount / pageSize);
+    let pagesCount = Math.ceil(userInventory.length / pageSize);
     let pages = [];
 
     for (let i = 1; i <= pagesCount; i++) {
@@ -107,24 +107,25 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
             <div className="screen__content-new">
                 <div className="grid card__grid">
                     {shopItems && shopItems.map((item) => (
+                        
                     <div key={item.id} className="grid__item">
-                        <div className="card ">
-                            <div className="card__image card__image--shop">
+                        {userInventory.includes(item.id) ? (
+                        <div className="card"  onClick={() => handleImageClick(item.type, item.picture)}>
+                            <div className="card__image card__image--shop" onClick={() => handlePurchase(item.id, item.type)}>
                                 <img src={item.picture} alt={item.name} className="image-course--shop"
-                                onClick={() => handleImageClick(item.type, item.picture)} /> 
+                                /> 
                             </div>
-                            <div className="purchase-info">
-                                <span className="price">{item.cost}</span>
-                            </div>
-                            <div className="purchase-info">
-                                {userInventory.includes(item.id) ? (
-                                    <div>Куплено!</div>
-                                ) : (
-                                    <button className="buy-button" onClick={() => handlePurchase(item.id)}>Купить</button>
-                                )}
-                            </div>
-
+                            {personData && (personData.head === item.id || personData.shoes === item.id || personData.arm === item.id || personData.bruke === item.id || personData.tshort === item.id) ? (
+                                <div>Надето</div>
+                            ) : (
+                                <div className="purchase-info"  onClick={() => handlePurchase(item.id, item.type)}>
+                                    <button className="buy-button">Надеть</button>
+                                </div>
+                            )}
                         </div>
+                        ):(
+                            null
+                        )}
                     </div>
                     ))}
                 </div>
@@ -152,4 +153,4 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
     );
 }
 
-export default ShopPage;
+export default MyPerson;

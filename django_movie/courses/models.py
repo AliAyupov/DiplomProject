@@ -127,13 +127,26 @@ class Enrollment(models.Model):
         verbose_name = "Запрос на обучение"
         verbose_name_plural = "Запросы на обучение"
 
-    class StudentAchievement(models.Model):
-        achievements_name = models.CharField(max_length=255)
-        achievements_description = models.TextField()
-        student_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='achievements')
-        achievements_date = models.DateField()
-        picture = models.ImageField(upload_to='achievement_pictures/', null=True, blank=True)
+class StudentAchievement(models.Model):
+    achievements_name = models.CharField(max_length=255)
+    achievements_description = models.TextField()
+    student_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='achievements')
+    achievements_date = models.DateField()
+    picture = models.ImageField(upload_to='achievement_pictures/', null=True, blank=True)
 
-        class Meta:
-            verbose_name = "Достижение студента"
-            verbose_name_plural = "Достижения студентов"
+    class Meta:
+        verbose_name = "Достижение студента"
+        verbose_name_plural = "Достижения студентов"
+
+
+class Person(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='person')
+    head = models.IntegerField(default=0)  # Шлемы
+    shoes = models.IntegerField(default=0)  # Сапоги
+    bruke = models.IntegerField(default=0)  # Штаны
+    tshort = models.IntegerField(default=0)  # Броня
+    arm = models.IntegerField(default=0)  # Оружие
+
+    class Meta:
+        verbose_name = "Персонаж"
+        verbose_name_plural = "Персонаж"

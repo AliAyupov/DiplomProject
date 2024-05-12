@@ -26,10 +26,11 @@ from rest_framework_simplejwt.views import (
 from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView, \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView, \
-    CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet
+    CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet, PersonViewSet
 
 
 router = routers.DefaultRouter()
+router.register(r'api/persons', PersonViewSet)
 router.register(r'api/courses', CourseApiView)
 router.register(r'api/student-homeworks', StudentHomeworkApiView)
 router.register(r'api/student-progress', StudentProgressApiView)

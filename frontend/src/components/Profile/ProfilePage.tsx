@@ -6,6 +6,7 @@ import shopIcon from '../../img/shop.svg';
 import courseImage from '../../img/course.png';
 import ava from '../../img/ava.png';
 import ShopContainerPage from '../Shop/ShopContainerPage';
+import MyPersonPageContainer from '../Inventory/MyPersonPageContainer';
 
 interface UserData {
     id: string;
@@ -192,7 +193,7 @@ const ProfilePage: React.FC<Props> = ({
                     )} 
                     {activeTab === 'character' && (
                         <div className='wrapper'>
-                            {/* Контент для вкладки "Мой персонаж" */}
+                            <MyPersonPageContainer/>
                         </div>
                     )}
                     

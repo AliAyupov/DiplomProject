@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface LessonCreationDialogProps {
     onClose: () => void;
@@ -7,7 +8,7 @@ interface LessonCreationDialogProps {
 }
 
 const LessonCreationDialog: React.FC<LessonCreationDialogProps> = ({ onClose, onSave, activeModuleId }) => {
-
+    const navigate = useNavigate();
     const [lessonName, setLessonName] = useState('');
     const handleSaveClick = () => {
       
@@ -17,6 +18,7 @@ const LessonCreationDialog: React.FC<LessonCreationDialogProps> = ({ onClose, on
             console.error('Ошибка: ID модуля не может быть null');
         }
         onClose(); 
+        navigate('/course/lessons');
     };
 
     return (

@@ -3470,3 +3470,37 @@ p{background: transparent;}
         font-size: 10px; 
     }
 }
+.lesson-constructor {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.lesson-elements {
+    width: 200px;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.element {
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.lesson-canvas {
+    flex: 1;
+    padding: 10px;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+.lesson-element {
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #e0e0e0;
+}
+
+.lesson-element.dragging {
+    opacity: 0.5;
+}

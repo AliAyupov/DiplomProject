@@ -261,7 +261,7 @@ const CoursePageEdit: React.FC<Props> = ({
                     {modules && modules.length > 0 ? (
                         modules.map((moduleItem, index) => (
                             <div key={moduleItem.id} className="in-process__item">
-                                    <div className="course">
+                                    <div  key={moduleItem.id} className="course">
                                         <img src={module} alt="Course Image" className="module__image" />
                                         <div className="course-details">
                                             <div>

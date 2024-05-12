@@ -1,5 +1,6 @@
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 from requests import Request
@@ -16,11 +17,11 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, Bl
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
-    Enrollment
+    Enrollment, Person
 from .permissions import IsTutor, IsStudent, IsProducer, IsProducerOrTutor
 from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerializer, LessonSerializer, \
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
-    EnrollmentSerializer, ModuleTheSerializer
+    EnrollmentSerializer, ModuleTheSerializer, PersonSerializer
 
 
 class CustomUserDetailView(APIView):
@@ -438,3 +439,26 @@ class ModuleCreateAPIView(APIView):
 
         module.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class PersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+
+    def retrieve(self, request, pk=None):
+        queryset = Person.objects.filter(user_id=pk)
+        if not queryset.exists():
+            return Response({"detail": "Not found."}, status=404)
+        serializer = PersonSerializer(queryset.first())
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        try:
+            instance = Person.objects.get(user_id=pk)
+        except Person.DoesNotExist:
+            return Response({"detail": "Not found."}, status=404)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)

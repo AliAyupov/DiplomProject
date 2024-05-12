@@ -118,6 +118,23 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
             })
             .then((res) => {
                 setUserId(res.data.id);
+
+                axiosInstance
+                    .post('persons/', {
+                        user: res.data.id,
+                        head: 0,
+                        shoes: 0,
+                        bruke: 0,
+                        tshort: 0,
+                        arm: 0
+                    })
+                    .then((response) => {
+                        console.log('Запись в таблице Person успешно создана:', response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка при создании записи в таблице Person:', error);
+                    });
+
                 if (selectedRole !== 'student') {
                   axiosInstance
                         .put(`custom-users/${res.data.id}/`, { 
@@ -135,7 +152,6 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
                         password: formData.password,
                     })
                     .then((res) => {
-                        console.log(res);
                         localStorage.setItem('access_token', res.data.access);
                         localStorage.setItem('refresh_token', res.data.refresh);
                         axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
@@ -154,7 +170,6 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
                     });
             })
             .catch((error) => {
-              debugger
                 if (error.response && error.response.data) {
                     if (error.response.status === 400 && error.response.data && error.response.data.username) {
                         setFormErrors((prevErrors) => ({

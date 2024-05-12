@@ -13,6 +13,7 @@ import CoursesPageContainer from './components/Courses/CoursesPageContainer';
 import MyCoursesContainer from './components/Courses/MyCoursesContainer';
 import CreateCourseContainer from './components/Courses/CreateCourseContainer';
 import CoursePageEditContainer from './components/Course/CoursePageEditContainer';
+import CreateLessonContainer from './components/CreateLesson/CreateLessonContainer';
 const App: React.FC = () => {
   return (
       <Routes>
@@ -27,6 +28,7 @@ const App: React.FC = () => {
         <Route path="/courses/my" element={<MyCoursesContainer/>}/>
         <Route path="/course/create" element={<CreateCourseContainer/>} />
         <Route path="/course/edit/:id" element={<CoursePageEditContainer/>} />
+        <Route path="/course/lessons" element={<CreateLessonContainer/>} />
       </Routes>
   );
 }

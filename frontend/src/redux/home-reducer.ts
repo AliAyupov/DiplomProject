@@ -15,6 +15,8 @@ const SET_ENROLL = 'SET_ENROLL';
 const SET_PROGRESS = 'SET_PROGRESS';
 const SET_SHOP_ITEMS = 'SET_SHOP_ITEMS';
 const SET_USER_INVENTORY = 'SET_USER_INVENTORY';
+const SET_PERSON = 'SET_PERSON';
+const SET_PERSON_ID = 'SET_PERSON_ID';
 
 interface Lesson {
     id: string;
@@ -40,6 +42,8 @@ interface Action {
     lessons: Lesson[];
     shopItems: any;
     enrollments: any;
+    personData: any;
+    personId: any;
 }
 
 interface State {
@@ -47,6 +51,7 @@ interface State {
     modules: any[]; 
     shopItems: any[];
     userInventory: any;
+    personId: any;
     pageSize: number;
     totalCoursesCount: number;
     currentPage: number;
@@ -61,6 +66,7 @@ interface State {
     picture: string;
     usersData:any[];
     enrollments: any[]; 
+    personData: any;
 }
 
 const initialState: State = {
@@ -79,9 +85,12 @@ const initialState: State = {
     lessonsCount: 0,
     lessons: [],
     userInventory: [],
+    personId: [],
+    
     courseName: '', 
     description: '',
     picture: '',
+    personData: null,
 }
 
 const homeReducer = (state: State = initialState, action: Action): State => {
@@ -120,6 +129,10 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return { ...state, shopItems: action.shopItems};
         case SET_USER_INVENTORY:
             return { ...state, userInventory: action.userInventory };
+        case SET_PERSON:
+            return { ...state, personData: action.personData };
+        case SET_PERSON_ID:
+            return {...state, personId: action.personId };
         default:
             return state;
     }
@@ -145,6 +158,7 @@ export const setEnroll = (enrollments: any[]) => ({
 });
 export const setShopItems = (shopItems: any) => ({ type: SET_SHOP_ITEMS, shopItems });
 export const setUserInventory = (userInventory: any[]) => ({ type: SET_USER_INVENTORY, userInventory });
-
+export const setPerson = (head: number, shoes: number, bruke: number, tshort: number, arm: number) => ({ type: SET_PERSON, personData:{head, shoes, bruke, tshort, arm}, });
+export const setPersonId = (personId: any[]) => ({ type: SET_PERSON_ID, personId });
 
 export default homeReducer;
