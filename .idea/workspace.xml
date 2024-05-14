@@ -6,21 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/courses/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout/CreateDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout/CreateDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Shop/ShopContainerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Shop/ShopContainerPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Shop/ShopPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Shop/ShopPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

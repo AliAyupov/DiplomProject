@@ -3475,11 +3475,28 @@ p{background: transparent;}
     flex-direction: row;
     height: 100%;
 }
-
+.button-constructor{
+    border: transparent;
+    padding: 10px;
+    cursor: move;
+}
+.delete {
+    display: block;
+    text-align: right;
+    border-radius: 10px;
+}
 .lesson-elements {
     width: 200px;
     padding: 10px;
-    background-color: #f0f0f0;
+    background-color: #f7fafc;
+    display: flex;
+    flex-direction: column;
+}
+.draggable-item {
+    cursor: move;
+    border-radius: 4px;
+    margin:2px;
+    border: 1px solid #777777;
 }
 
 .element {
@@ -3498,9 +3515,91 @@ p{background: transparent;}
 .lesson-element {
     padding: 10px;
     margin-bottom: 5px;
-    background-color: #e0e0e0;
+    border-radius: 10px;
 }
-
+.element-constructor{
+    border-radius: 10px;
+}
+.backgroud-element{
+    background-color: #fff;
+}
 .lesson-element.dragging {
     opacity: 0.5;
+}
+.input-constructor {
+    width: 90%;
+    padding: 10px;
+    margin: 8px auto;
+    border-radius: 25px;
+    border: 0px solid;
+    text-align: center;
+    background: #1a5ce5;
+    color: white;
+    font-size: 20px;
+}
+.input-constructor::placeholder {
+    color: rgb(238, 238, 238); 
+}
+.form-input-lesson {
+    font-family: Cakra;
+    color: black;
+    width: 90%;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+}
+.file-input-nove{
+    display:none;
+}
+.form-input-desctiption {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: black;
+}
+.input-link {
+    width: 90%;
+    padding: 10px;
+    margin: 8px auto;
+    border-radius: 5px;
+    border: 1px solid;
+}
+.btn-const {
+    padding: 5px 10px;
+    margin: 1px;
+    background-color: #1a5ce5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-upload-container {
+    margin-top: 10px;
+}
+
+.file-info {
+    font-size: 14px;
+}
+
+.file-actions {
+    margin-top: 5px;
+}
+
+.file-actions button,
+.file-actions a {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.file-actions button:hover,
+.file-actions a:hover {
+    background-color: #0056b3;
 }
