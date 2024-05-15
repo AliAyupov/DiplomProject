@@ -2827,9 +2827,6 @@ input[type="file"][name="picture"] {
     .btn:hover {
         background-color: #0056b3;
     }
-    .btn-c{
-        display: none;
-    }
     .progress-bar {
         width: 100%;
         height: 8px;
@@ -3431,8 +3428,6 @@ p{background: transparent;}
     margin-bottom: 10px;
 }
 
-
-
 .price {
     font-size: 20px; 
     margin-bottom: 10px;
@@ -3456,20 +3451,20 @@ p{background: transparent;}
     font-size: 14px;
 }
 
-/* Планшеты */
+
 @media (max-width: 768px) {
     .product-info p, .price, .buy-button {
         font-size: 12px; 
     }
 }
 
-/* Мобильные телефоны */
 @media (max-width: 480px) {
 
     .product-info p, .price, .buy-button {
         font-size: 10px; 
     }
 }
+@media screen and (min-width: 993px) {
 .lesson-constructor {
     display: flex;
     flex-direction: row;
@@ -3540,6 +3535,22 @@ p{background: transparent;}
 .input-constructor::placeholder {
     color: rgb(238, 238, 238); 
 }
+.video-container {
+    text-align: -webkit-center;
+    width: 90%;
+    height: auto;
+}
+.file-input-constructor{
+    font-size: 20px;
+}
+.video-none {
+    max-width: 640px;
+    max-height: 360px;
+    width: 100%;
+    height: auto;
+    inline-size: fit-content;
+    border-radius: 7px;
+}
 .form-input-lesson {
     font-family: Cakra;
     color: black;
@@ -3547,6 +3558,7 @@ p{background: transparent;}
     padding: 10px;
     border: 1px solid transparent;
     border-radius: 12px;
+    height: auto;
 }
 .file-input-nove{
     display:none;
@@ -3566,21 +3578,42 @@ p{background: transparent;}
     border: 1px solid;
 }
 .btn-const {
-    padding: 5px 10px;
-    margin: 1px;
-    background-color: #1a5ce5;
-    color: #fff;
-    border: none;
+    padding: 5px 11px;
+    margin: 0px;
+    background-color: #ffffff;
+    color: #7e7e7e;
+    font-size: 20px;
+    border: 1px solid #777777;
     border-radius: 5px;
     cursor: pointer;
+    position: absolute;
+}
+
+.btn-const-one {
+    padding: 5px 11px;
+    margin-left: 40px;
+    background-color: #ffffff;
+    color: #7e7e7e;
+    font-size: 20px;
+    border: 1px solid #777777;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
 }
 
 .file-upload-container {
+    width: 90%;
     margin-top: 10px;
+    text-align: center;
 }
 
+
 .file-info {
-    font-size: 14px;
+    font-size: 20px;
+    border: 1px solid #a1a1a1;
+    margin-top: 15px;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .file-actions {
@@ -3602,4 +3635,568 @@ p{background: transparent;}
 .file-actions button:hover,
 .file-actions a:hover {
     background-color: #0056b3;
+}
+}
+@media screen and (max-width: 993px) {
+    .lesson-constructor {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+    }
+    .button-constructor{
+        border: transparent;
+        padding: 10px;
+        cursor: move;
+    }
+    .delete {
+        display: block;
+        text-align: right;
+        border-radius: 10px;
+    }
+    .lesson-elements {
+        width: 200px;
+        padding: 10px;
+        background-color: #f7fafc;
+        display: flex;
+        flex-direction: column;
+    }
+    .draggable-item {
+        cursor: move;
+        border-radius: 4px;
+        margin:2px;
+        border: 1px solid #777777;
+    }
+    
+    .element {
+        padding: 10px;
+        margin-bottom: 5px;
+        cursor: pointer;
+    }
+    
+    .lesson-canvas {
+        flex: 1;
+        padding: 10px;
+        background-color: #fff;
+        overflow-y: auto;
+    }
+    
+    .lesson-element {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 10px;
+    }
+    .element-constructor{
+        border-radius: 10px;
+    }
+    .backgroud-element{
+        background-color: #fff;
+    }
+    .lesson-element.dragging {
+        opacity: 0.5;
+    }
+    .input-constructor {
+        width: 90%;
+        padding: 10px;
+        margin: 8px auto;
+        border-radius: 25px;
+        border: 0px solid;
+        text-align: center;
+        background: #1a5ce5;
+        color: white;
+        font-size: 16px;
+    }
+    .input-constructor::placeholder {
+        color: rgb(238, 238, 238); 
+    }
+    
+    .file-input-constructor{
+        font-size: 16px;
+    }
+    .video-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+     }
+     
+     .player-wrapper {
+        position: relative;
+     }
+     
+     .player {
+        object-fit: cover;
+        padding: 0;
+        margin: 0;
+     }
+    .video-none {
+        max-width: 640px; /* Максимальная ширина */
+        width: 80%; /* Подстраиваем ширину под контейнер */
+        height: auto;
+        border-radius: 7px;
+    }
+    .form-input-lesson {
+        font-family: Cakra;
+        color: black;
+        width: 90%;
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        height: auto;
+    }
+    .file-input-nove{
+        display:none;
+    }
+    .form-input-desctiption {
+        width: 90%;
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        color: black;
+    }
+    .input-link {
+        width: 90%;
+        padding: 10px;
+        margin: 8px auto;
+        border-radius: 5px;
+        border: 1px solid;
+    }
+    .btn-const {
+        padding: 5px 11px;
+        margin: 0px;
+        background-color: #ffffff;
+        color: #7e7e7e;
+        font-size: 20px;
+        border: 1px solid #777777;
+        border-radius: 5px;
+        cursor: pointer;
+        position: absolute;
+    }
+    
+    .btn-const-one {
+        padding: 5px 11px;
+        margin-left: 40px;
+        background-color: #ffffff;
+        color: #7e7e7e;
+        font-size: 20px;
+        border: 1px solid #777777;
+        border-radius: 5px;
+        cursor: pointer;
+        position: absolute;
+    }
+    
+    .file-upload-container {
+        width: 90%;
+        margin-top: 10px;
+        text-align: center;
+    }
+    
+    
+    .file-info {
+        font-size: 20px;
+        border: 1px solid #a1a1a1;
+        margin-top: 15px;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    
+    .file-actions {
+        margin-top: 5px;
+    }
+    
+    .file-actions button,
+    .file-actions a {
+        margin-right: 10px;
+        padding: 5px 10px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .file-actions button:hover,
+    .file-actions a:hover {
+        background-color: #0056b3;
+    }
+    }
+
+@media screen and (max-width: 768px) {
+        .lesson-constructor {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+        .button-constructor{
+            border: transparent;
+            padding: 10px;
+            cursor: move;
+        }
+        .delete {
+            display: block;
+            text-align: right;
+            border-radius: 10px;
+        }
+        .lesson-elements {
+            width: 200px;
+            padding: 10px;
+            background-color: #f7fafc;
+            display: flex;
+            flex-direction: column;
+        }
+        .draggable-item {
+            cursor: move;
+            border-radius: 4px;
+            margin:2px;
+            border: 1px solid #777777;
+        }
+        
+        .element {
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .lesson-canvas {
+            flex: 1;
+            padding: 10px;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+        
+        .lesson-element {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+        }
+        .element-constructor{
+            border-radius: 10px;
+        }
+        .backgroud-element{
+            background-color: #fff;
+        }
+        .lesson-element.dragging {
+            opacity: 0.5;
+        }
+        .input-constructor {
+            width: 95%;
+            padding: 10px;
+            margin: 8px auto;
+            border-radius: 25px;
+            border: 0px solid;
+            text-align: center;
+            background: #1a5ce5;
+            color: white;
+            font-size: 14px;
+        }
+        .input-constructor::placeholder {
+            color: rgb(238, 238, 238); 
+        }
+        
+        .file-input-constructor{
+            font-size: 16px;
+        }
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 99% !important;
+         }
+         
+         .player-wrapper {
+            position: relative;
+         }
+         
+         .player {
+            object-fit: cover;
+            padding: 0;
+            margin: 0;
+         }
+        .video-none {
+            max-width: 640px; /* Максимальная ширина */
+            width: 100%; /* Подстраиваем ширину под контейнер */
+            height: auto;
+            border-radius: 7px;
+        }
+        .form-input-lesson {
+            font-family: Cakra;
+            color: black;
+            width: 90%;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            height: auto;
+        }
+        .file-input-nove{
+            display:none;
+        }
+        .form-input-desctiption {
+            width: 95% !important;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            color: black;
+        }
+        .input-link {
+            width: 95%;
+            padding: 10px;
+            margin: 8px auto;
+            border-radius: 5px;
+            border: 1px solid;
+        }
+        .btn-const {
+            padding: 5px 11px;
+            margin: 0px;
+            background-color: #ffffff;
+            color: #7e7e7e;
+            font-size: 20px;
+            border: 1px solid #777777;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        .btn-const-one {
+            padding: 5px 11px;
+            margin-left: 40px;
+            background-color: #ffffff;
+            color: #7e7e7e;
+            font-size: 20px;
+            border: 1px solid #777777;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        .file-upload-container {
+            width: 100%;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        
+        .file-info {
+            font-size: 20px;
+            border: 1px solid #a1a1a1;
+            margin-top: 15px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .file-actions {
+            margin-top: 5px;
+        }
+        
+        .file-actions button,
+        .file-actions a {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .file-actions button:hover,
+        .file-actions a:hover {
+            background-color: #0056b3;
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        .lesson-constructor {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            align-items: center;
+        }
+        .button-constructor{
+            border: transparent;
+            padding: 10px;
+            cursor: move;
+        }
+        .delete {
+            display: block;
+            text-align: right;
+            border-radius: 10px;
+        }
+        .lesson-elements {
+            width: 200px;
+            padding: 10px;
+            background-color: #f7fafc;
+            display: flex;
+            flex-direction: column;
+        }
+        .draggable-item {
+            cursor: move;
+            border-radius: 4px;
+            margin:2px;
+            border: 1px solid #777777;
+        }
+        
+        .element {
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .lesson-canvas {
+            flex: 1;
+            padding: 10px;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+        
+        .lesson-element {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+        }
+        .element-constructor{
+            border-radius: 10px;
+        }
+        .backgroud-element{
+            background-color: #fff;
+        }
+        .lesson-element.dragging {
+            opacity: 0.5;
+        }
+        .input-constructor {
+            width: 95%;
+            padding: 10px;
+            margin: 8px auto;
+            border-radius: 25px;
+            border: 0px solid;
+            text-align: center;
+            background: #1a5ce5;
+            color: white;
+            font-size: 14px;
+        }
+        .input-constructor::placeholder {
+            color: rgb(238, 238, 238); 
+        }
+        
+        .file-input-constructor{
+            font-size: 16px;
+        }
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 99% !important;
+         }
+         
+         .player-wrapper {
+            position: relative;
+         }
+         
+         .player {
+            object-fit: cover;
+            padding: 0;
+            margin: 0;
+         }
+        .video-none {
+            max-width: 640px; /* Максимальная ширина */
+            width: 100%; /* Подстраиваем ширину под контейнер */
+            height: auto;
+            border-radius: 7px;
+        }
+        .form-input-lesson {
+            font-family: Cakra;
+            color: black;
+            width: 90%;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            height: auto;
+        }
+        .file-input-nove{
+            display:none;
+        }
+        .form-input-desctiption {
+            width: 95% !important;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            color: black;
+        }
+        .input-link {
+            width: 95%;
+            padding: 10px;
+            margin: 8px auto;
+            border-radius: 5px;
+            border: 1px solid;
+        }
+        .btn-const {
+            padding: 5px 11px;
+            margin: 0px;
+            background-color: #ffffff;
+            color: #7e7e7e;
+            font-size: 20px;
+            border: 1px solid #777777;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        .btn-const-one {
+            padding: 5px 11px;
+            margin-left: 40px;
+            background-color: #ffffff;
+            color: #7e7e7e;
+            font-size: 20px;
+            border: 1px solid #777777;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        .file-upload-container {
+            width: 100%;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        
+        .file-info {
+            font-size: 20px;
+            border: 1px solid #a1a1a1;
+            margin-top: 15px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .file-actions {
+            margin-top: 5px;
+        }
+        
+        .file-actions button,
+        .file-actions a {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .file-actions button:hover,
+        .file-actions a:hover {
+            background-color: #0056b3;
+        }
+    }
+@media screen and (max-width: 640px){
+    .image-subtitle-home {
+        width: 80% !important;
+    }
+    .wrapper-form-home{
+        width: 100% !important;
+    }
 }

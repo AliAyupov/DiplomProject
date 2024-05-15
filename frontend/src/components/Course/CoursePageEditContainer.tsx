@@ -7,6 +7,7 @@ import CoursePageEdit from "./CoursePageEdit";
 import { useParams } from "react-router-dom";
 import Preloader from "../common/preloader/Preloader";
 import { withAuthorization } from "../hoc/AuthRedirect";
+import { useNavigate } from 'react-router-dom';
 
 interface Course {
     id: number;
@@ -70,7 +71,7 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
     userData,
     lessons,
     setLessons }) => {
-    
+    const navigate = useNavigate();
     const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isLoading, setIsLoading] = useState(true);
@@ -82,6 +83,7 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
     const [pictureFile, setImageFile] = useState<File | null>(null);
 
     const { id } = useParams<{ id: string }>();
+
     const fetchLessons = async (module_id: number) => {
         try {
             const response = await axiosInstance.get(`/modules/${module_id}/lessons`);
@@ -146,7 +148,10 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
             if (response.status === 201) {
                 console.log('Модуль успешно создан', response.data);
                 setLessons(response.data); 
+                
                 fetchLessons(moduleIdcreate);
+                navigate(`/course/lessons/${response.data.id}`)
+                
             } else {
                 console.error('Произошла какая-то ошибка при создании модуля', response.status);
             }

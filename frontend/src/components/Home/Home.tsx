@@ -66,7 +66,7 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                             <br />
                             БЕЗ МИЛЛИОННЫХ ИНВЕСТИЦИЙ
                         </div>
-                        <div className="image-subtitle">
+                        <div className="image-subtitle image-subtitle-home">
                             Создавайте вовлекающие курсы, используйте гибкую методологию,
                             запускайте международные
                             <b>проекты и зарабатывайте на своей экспертизе</b>
@@ -76,7 +76,7 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                                 <input
                                     type="text"
                                     name="search"
-                                    className="form-input"
+                                    className="form-input wrapper-form-home"
                                     placeholder="Поиск..."
                                     value={searchQuery} 
                                     onChange={handleSearchChange}  />

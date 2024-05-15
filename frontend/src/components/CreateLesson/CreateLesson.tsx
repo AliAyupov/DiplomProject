@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactPlayer from 'react-player';
+import none from '../../img/balvan-foto.jpg';
 
-// Определение типов перетаскиваемых элементов
 enum ItemType {
     BUTTON = 'button',
     TEXT = 'text',
@@ -13,44 +13,132 @@ enum ItemType {
 }
 
 const CreateLesson = () => {
-    const [lessonElements, setLessonElements] = useState<{ type: ItemType }[]>([]);
-    
-    // Компонент элемента урока
-    const LessonElement: React.FC<{ type: ItemType }> = ({ type }) => {
-        const [videoLink, setVideoLink] = useState('');
-        const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [lessonElements, setLessonElements] = useState<{ id: number; type: ItemType; data?: any }[]>([]);
+    const [nextId, setNextId] = useState(1);
+    const [savedLessonCode, setSavedLessonCode] = useState<string>('');
 
-        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setVideoLink(e.target.value);
+    const handleAddElement = (type: ItemType, data?: any) => {
+        const newLessonElements = [...lessonElements, { id: nextId, type, data }];
+        setLessonElements(newLessonElements);
+        setNextId(nextId + 1);
+    };
+
+    const handleRemoveElement = (id: number) => {
+        const newLessonElements = lessonElements.filter((element) => element.id !== id);
+        setLessonElements(newLessonElements);
+    };
+
+    const handleUpdateElementData = (id: number, newData: any) => {
+        const newLessonElements = lessonElements.map((element) =>
+            element.id === id ? { ...element, data: newData } : element
+        );
+        setLessonElements(newLessonElements);
+    };
+
+    const generateLessonCode = () => {
+        let code = lessonElements.map((element) => {
+            switch (element.type) {
+                case ItemType.BUTTON:
+                    return `<button>${element.data?.buttonName || 'Кнопка'}</button>`;
+                case ItemType.TEXT:
+                    return `<p>${element.data || 'Текст'}</p>`;
+                case ItemType.VIDEO:
+                    return `<video src="${element.data}" controls></video>`;
+                case ItemType.FILE:
+                    return `<a href="${element.data}" download>Скачать файл</a>`;
+                case ItemType.DESCRIPTION:
+                    return `<p>${element.data || 'Описание'}</p>`;
+                default:
+                    return '';
+            }
+        }).join('');
+        
+        setSavedLessonCode(code);
+    };
+
+    const LessonElement: React.FC<{ id: number; type: ItemType; data?: any; onUpdateLink?: (id: number) => void }> = ({ id, type, data }) => {
+        const [link, setLink] = useState<string>(data && data?.link || '');
+        const [buttonName, setButtonName] = useState<string>(data && data?.buttonName || '');
+        const [text, setText]= useState<string>(data && data?.text || '');
+        const [video, setVideo]= useState<string>(data && data?.video || '');
+        const [description, setDescriotion]= useState<string>(data && data?.description || '');
+        const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setLink(event.target.value);
+        };
+        const handleVideoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setVideo(event.target.value);
+        };
+        const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            setDescriotion(event.target.value);
+        };
+        const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            setText(event.target.value);
+        };
+        const handleButtonNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setButtonName(event.target.value);
+        };
+        const handleInputBlurOne = () => {
+            handleUpdateElementData(id, { ...data, buttonName });
+        };
+        const handleInputBlur = () => {
+            handleUpdateElementData(id, {...data, text});
+            
+        };
+        const handleInputBlurVideo = () => {
+            handleUpdateElementData(id, {...data, video});
+            
+        };
+        const handleInputBlurDescription = () => {
+            handleUpdateElementData(id, {...data, description});
+            
+        };
+        const handleInputBlurTwo = () => {
+            handleUpdateElementData(id, { ...data, link });
         };
 
         const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
             const files = event.target.files;
             if (files && files.length > 0) {
-                setUploadedFile(files[0]);
+                handleUpdateElementData(id, files[0]);
             }
         };
 
-        const [{ isOver }, drop] = useDrop({
-            accept: [ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION],
-            drop: (item: any) => handleDrop(item),
-            collect: (monitor) => ({
-                isOver: !!monitor.isOver(),
-            }),
-        });
-
-        const handleRemoveElement = () => {
-            const newLessonElements = lessonElements.filter((element) => element.type !== type);
-            setLessonElements(newLessonElements);
+        const handleRemove = () => {
+            handleRemoveElement(id);
         };
 
         let content = null;
+        let contentTwo = null;
         switch (type) {
             case ItemType.BUTTON:
                 content = (
                     <>
-                        <input placeholder='Название кнопки' type='text' className="input-constructor" />
-                        <input placeholder='Ссылка' type='text' className="input-link" />
+                        <div>
+                            <input
+                                placeholder='Название кнопки'
+                                type='text'
+                                name="buttonName"
+                                className="input-constructor"
+                                value={buttonName}
+                                onBlur={handleInputBlurOne}
+                                onChange={handleButtonNameChange}
+                            />
+                        </div>
+                    </>
+                );
+                contentTwo = (
+                    <>
+                        <div>
+                            <input
+                                placeholder='Ссылка'
+                                type='text'
+                                name="link"
+                                className="input-link"
+                                value={link}
+                                onChange={handleLinkChange}
+                                onBlur={handleInputBlurTwo}
+                            />
+                        </div>
                     </>
                 );
                 break;
@@ -60,7 +148,9 @@ const CreateLesson = () => {
                         name="courseName"
                         className={`form-input-lesson form-input-up`}
                         placeholder="Введите заголовок"
-                        rows={3}
+                        value={text}
+                        onBlur={handleInputBlur}
+                        onChange={handleTextChange}
                     />
                 );
                 break;
@@ -70,11 +160,21 @@ const CreateLesson = () => {
                         <input
                             placeholder='Ссылка на видео'
                             type='text'
-                            className="input-constructor"
-                            value={videoLink}
-                            onChange={handleInputChange}
+                            className="input-link"
+                            value={video}
+                            onBlur={handleInputBlurVideo}
+                            onChange={handleVideoChange}
                         />
-                        <ReactPlayer url={videoLink} controls={true} />
+                        
+                        <div className='video-container'>
+                            {data ? (
+                                <div className='player-wrapper'>
+                                    <ReactPlayer className="player" width="100%" height="100%" url={data} controls={true} />
+                                </div>
+                            ) : (
+                                <img className='video-none' src={none} alt="Картинка" />
+                            )}
+                        </div>
                     </>
                 );
                 break;
@@ -82,17 +182,17 @@ const CreateLesson = () => {
                 content = (
                     <div className="file-upload-container">
                         <div className="file-container">
-                            <input className="file-input-nove form-input-p " id="file-input" type="file" onChange={handleFileUpload} />
-                            <label htmlFor="file-input" className="file-button">Загрузите файл</label>
+                            <input className="file-input-nove form-input-p" id="file-input" type="file" onChange={handleFileUpload} />
+                            <label htmlFor="file-input" className="file-button file-input-constructor">Загрузите файл</label>
                         </div>
-                        {uploadedFile && (
+                        {data && (
                             <div className="file-info">
-                                <p>Имя файла: {uploadedFile.name}</p>
+                                <p>Имя файла: {data.name}</p>
                                 <div className="file-actions">
-                                    <button onClick={() => window.open(URL.createObjectURL(uploadedFile), '_blank')}>
+                                    <button className="file-button file-input-constructor" onClick={() => window.open(URL.createObjectURL(data), '_blank')}>
                                         Посмотреть
                                     </button>
-                                    <a href={URL.createObjectURL(uploadedFile)} download={uploadedFile.name}>
+                                    <a className="file-button file-input-constructor" href={URL.createObjectURL(data)} download={data.name}>
                                         Скачать
                                     </a>
                                 </div>
@@ -108,6 +208,9 @@ const CreateLesson = () => {
                         className={`form-input-desctiption form-input-p form-input-desc`}
                         placeholder="Введите описание"
                         rows={4}
+                        value={description}
+                        onBlur={handleInputBlurDescription}
+                        onChange={handleDescriptionChange}
                     />
                 );
                 break;
@@ -118,16 +221,16 @@ const CreateLesson = () => {
         return (
             <div className="element-constructor">
                 <div className='delete'>
-                    <button className="btn btn-c btn-del" onClick={handleRemoveElement}>🗑</button>
+                    <button className="btn btn-c btn-del" onClick={handleRemove}>🗑</button>
                 </div>
-                <div ref={drop} className={`lesson-element ${isOver ? 'over' : ''}`}>
+                <div className={`lesson-element`}>
                     {content}
+                    {contentTwo ? contentTwo : ''}
                 </div>
             </div>
         );
     };
 
-    // Компонент кнопки для перетаскивания
     const DraggableButton: React.FC<{ type: ItemType }> = ({ type }) => {
         const [, drag] = useDrag({
             type,
@@ -137,13 +240,8 @@ const CreateLesson = () => {
             }),
         });
 
-        const handleAddElement = () => {
-            const newLessonElements = [...lessonElements, { type }];
-            setLessonElements(newLessonElements);
-        };
-
         return (
-            <button onClick={handleAddElement} ref={drag} className={`draggable-item draggable-${type}`}>
+            <button onClick={() => handleAddElement(type)} ref={drag} className={`draggable-item draggable-${type}`}>
                 {type === ItemType.BUTTON ? (
                     <button className="button-constructor">Кнопка</button>
                 ) : type === ItemType.TEXT ? (
@@ -159,15 +257,12 @@ const CreateLesson = () => {
         );
     };
 
-    // Функция для обработки события сброса
     const handleDrop = (item: any) => {
         if ([ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION].includes(item.type)) {
-            const newLessonElements = [...lessonElements, { type: item.type }];
-            setLessonElements(newLessonElements);
+            handleAddElement(item.type);
         }
     };
 
-    // Функция для перемещения элемента вверх
     const handleMoveUp = (index: number) => {
         if (index > 0) {
             const newLessonElements = [...lessonElements];
@@ -176,7 +271,6 @@ const CreateLesson = () => {
         }
     };
 
-    // Функция для перемещения элемента вниз
     const handleMoveDown = (index: number) => {
         if (index < lessonElements.length - 1) {
             const newLessonElements = [...lessonElements];
@@ -185,7 +279,8 @@ const CreateLesson = () => {
         }
     };
 
-    // Компонент холста урока
+    
+
     const LessonCanvas: React.FC = () => {
         const [, drop] = useDrop({
             accept: [ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION],
@@ -199,13 +294,13 @@ const CreateLesson = () => {
             <div className="lesson-canvas" ref={drop}>
                 {lessonElements.map((element, index) => (
                     <div className="backgroud-element" key={index}>
-                        <LessonElement type={element.type} />
                         <button className='btn-const' onClick={() => handleMoveUp(index)} disabled={index === 0}>
                             ↑
                         </button>
-                        <button className='btn-const' onClick={() => handleMoveDown(index)} disabled={index === lessonElements.length - 1}>
+                        <button className='btn-const-one' onClick={() => handleMoveDown(index)} disabled={index === lessonElements.length - 1}>
                             ↓
                         </button>
+                        <LessonElement id={element.id} type={element.type} data={element.data} />
                     </div>
                 ))}
             </div>
@@ -214,17 +309,25 @@ const CreateLesson = () => {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div className="lesson-constructor">
-                <div className="lesson-elements">
-                    <DraggableButton type={ItemType.BUTTON} />
-                    <DraggableButton type={ItemType.TEXT} />
-                    <DraggableButton type={ItemType.VIDEO} />
-                    <DraggableButton type={ItemType.FILE} />
-                    <DraggableButton type={ItemType.DESCRIPTION} />
+            <div className='wrapper'>
+                <div className="lesson-constructor">
+                    <div className="lesson-elements">
+                        <DraggableButton type={ItemType.BUTTON} />
+                        <DraggableButton type={ItemType.TEXT} />
+                        <DraggableButton type={ItemType.VIDEO} />
+                        <DraggableButton type={ItemType.FILE} />
+                        <DraggableButton type={ItemType.DESCRIPTION} />
+                    </div>
+                    <LessonCanvas />
                 </div>
-                <LessonCanvas />
+            </div>
+            <button onClick={generateLessonCode}>Сохранить урок</button>
+            <div>
+                <h2>Сохраненный JSX код урока:</h2>
+                <pre>{savedLessonCode}</pre>
             </div>
         </DndProvider>
     );
 };
+
 export default CreateLesson;

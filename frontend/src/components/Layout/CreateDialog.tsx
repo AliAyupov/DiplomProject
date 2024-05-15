@@ -18,7 +18,7 @@ const LessonCreationDialog: React.FC<LessonCreationDialogProps> = ({ onClose, on
             console.error('Ошибка: ID модуля не может быть null');
         }
         onClose(); 
-        navigate('/course/lessons');
+        
     };
 
     return (

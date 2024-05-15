@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_movie/django_movie/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,22 +34,22 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for courses.tests.CourseCreaterApiViewTests.test_delete_course_of_other_user.executor": "Run",
-    "Python tests.Python tests for courses.tests.CreateUserAPITest.executor": "Run",
-    "Python tests.Python tests for courses.tests.ModuleCreateAPIViewTests.executor": "Run",
-    "Python tests.Python tests for courses.tests.ModuleCreateAPIViewTests.test_create_module.executor": "Run",
-    "Python tests.Python tests for tests.ExampleTests.executor": "Run",
-    "Python.permissions.executor": "Run",
-    "Python.settings.executor": "Debug",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/aliay/PycharmProjects/Project/django_movie/media/user_photo",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for courses.tests.CourseCreaterApiViewTests.test_delete_course_of_other_user.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for courses.tests.CreateUserAPITest.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for courses.tests.ModuleCreateAPIViewTests.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for courses.tests.ModuleCreateAPIViewTests.test_create_module.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ExampleTests.executor&quot;: &quot;Run&quot;,
+    &quot;Python.permissions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.settings.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/aliay/PycharmProjects/Project/django_movie/media/user_photo&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\aliay\PycharmProjects\Project\django_movie\media\user_photo" />
