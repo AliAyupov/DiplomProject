@@ -17,6 +17,10 @@ const SET_SHOP_ITEMS = 'SET_SHOP_ITEMS';
 const SET_USER_INVENTORY = 'SET_USER_INVENTORY';
 const SET_PERSON = 'SET_PERSON';
 const SET_PERSON_ID = 'SET_PERSON_ID';
+const SET_CONTENT = 'SET_CONTENT';
+
+
+ 
 
 interface Lesson {
     id: string;
@@ -25,6 +29,7 @@ interface Lesson {
 }
 interface Action {
     courseName: string;
+    contentBD: string;
     description: string;
     picture: string;
     userInventory: any;
@@ -64,12 +69,14 @@ interface State {
     courseName: string; 
     description: string;
     picture: string;
+    contentBD: string;
     usersData:any[];
     enrollments: any[]; 
     personData: any;
 }
 
 const initialState: State = {
+    contentBD: '',
     courses: [],
     modules: [],
     usersData: [],
@@ -133,6 +140,8 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return { ...state, personData: action.personData };
         case SET_PERSON_ID:
             return {...state, personId: action.personId };
+        case SET_CONTENT:
+            return { ...state, contentBD: action.contentBD }; 
         default:
             return state;
     }
@@ -160,5 +169,5 @@ export const setShopItems = (shopItems: any) => ({ type: SET_SHOP_ITEMS, shopIte
 export const setUserInventory = (userInventory: any[]) => ({ type: SET_USER_INVENTORY, userInventory });
 export const setPerson = (head: number, shoes: number, bruke: number, tshort: number, arm: number) => ({ type: SET_PERSON, personData:{head, shoes, bruke, tshort, arm}, });
 export const setPersonId = (personId: any[]) => ({ type: SET_PERSON_ID, personId });
-
+export const setContent = (contentBD: string) => ({type: SET_CONTENT, contentBD});
 export default homeReducer;

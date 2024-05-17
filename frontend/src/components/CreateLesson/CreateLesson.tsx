@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactPlayer from 'react-player';
@@ -11,8 +11,19 @@ enum ItemType {
     FILE = 'file',
     DESCRIPTION = 'description',
 }
+interface Props {
+    fetchLessons(codeJSON: string): void;
+    contentBD: string;
+}
 
-const CreateLesson = () => {
+const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
+    
+    useEffect(() => {
+        if (contentBD) {
+            const initialLessonElements = generateInitialContent(contentBD);
+            setLessonElements(initialLessonElements);
+        }
+    }, [contentBD]);
     const [lessonElements, setLessonElements] = useState<{ id: number; type: ItemType; data?: any }[]>([]);
     const [nextId, setNextId] = useState(1);
     const [savedLessonCode, setSavedLessonCode] = useState<string>('');
@@ -35,26 +46,69 @@ const CreateLesson = () => {
         setLessonElements(newLessonElements);
     };
 
-    const generateLessonCode = () => {
-        let code = lessonElements.map((element) => {
-            switch (element.type) {
-                case ItemType.BUTTON:
-                    return `<button>${element.data?.buttonName || 'Кнопка'}</button>`;
-                case ItemType.TEXT:
-                    return `<p>${element.data || 'Текст'}</p>`;
-                case ItemType.VIDEO:
-                    return `<video src="${element.data}" controls></video>`;
-                case ItemType.FILE:
-                    return `<a href="${element.data}" download>Скачать файл</a>`;
-                case ItemType.DESCRIPTION:
-                    return `<p>${element.data || 'Описание'}</p>`;
-                default:
-                    return '';
-            }
-        }).join('');
-        
-        setSavedLessonCode(code);
+    const generateInitialContent = (jsonData: string): { id: number; type: ItemType; data?: any }[] => {
+        try {
+            const parsedData = JSON.parse(jsonData.replace(/'/g, '"'));
+            return parsedData.map((element: any, index: number) => {
+                
+                switch (element.type) {
+                    case ItemType.BUTTON:
+                        return { id: index + 1, type: ItemType.BUTTON, data: { buttonName: element.name, link: element.link } };
+                    case ItemType.TEXT:
+                        return { id: index + 1, type: ItemType.TEXT, data: { text: element.name } };
+                    case ItemType.VIDEO:
+                        return { id: index + 1, type: ItemType.VIDEO, data: { video: element.video } };
+                    case ItemType.FILE:
+                        return { id: index + 1, type: ItemType.FILE, data: { file: { name: element.file } } };
+                    case ItemType.DESCRIPTION:
+                        return { id: index + 1, type: ItemType.DESCRIPTION, data: { description: element.description } };
+                    default:
+                        return null;
+                }
+            }).filter((element: any) => element !== null);
+        } catch (error) {
+            console.error('Ошибка при разборе JSON:', error);
+            return [];
+        }
     };
+    
+  const generateLessonCode = () => {
+    let code = lessonElements.map((element) => {
+        switch (element.type) {
+            case ItemType.BUTTON:
+                return `{
+                    "type": "${element.type}",
+                    "name": "${element.data?.buttonName || ""}",
+                    "link": "${element.data?.link || ""}"
+                }`;
+            case ItemType.TEXT:
+                return `{
+                    "type": "${element.type}",
+                    "name": "${element.data?.text || ""}"
+                }`;
+            case ItemType.VIDEO:
+                return `{
+                    "type": "${element.type}",
+                    "video": "${element.data?.video || ""}"
+                }`;
+            case ItemType.FILE:
+                return `{
+                    "type": "${element.type}",
+                    "file": "${element.data?.file?.name || ""}"
+                }`;
+            case ItemType.DESCRIPTION:
+                return `{
+                    "type": "${element.type}",
+                    "description": "${element.data?.description || ""}"
+                }`;
+            default:
+                return "";
+        }
+    }).join(",");
+    
+    setSavedLessonCode(`[${code}]`);
+    fetchLessons(`[${code}]`);
+};
 
     const LessonElement: React.FC<{ id: number; type: ItemType; data?: any; onUpdateLink?: (id: number) => void }> = ({ id, type, data }) => {
         const [link, setLink] = useState<string>(data && data?.link || '');
@@ -62,6 +116,21 @@ const CreateLesson = () => {
         const [text, setText]= useState<string>(data && data?.text || '');
         const [video, setVideo]= useState<string>(data && data?.video || '');
         const [description, setDescriotion]= useState<string>(data && data?.description || '');
+        const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+        const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            const file = event.target.files?.[0];
+            if (file) {
+                setUploadedFile(file);
+                // Прочитать содержимое файла как DataURL
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const fileContent = reader.result; // содержимое файла как DataURL
+                    handleUpdateElementData(id, { ...data, file: fileContent }); // обновить данные элемента с содержимым файла
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
         const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             setLink(event.target.value);
         };
@@ -80,9 +149,12 @@ const CreateLesson = () => {
         const handleInputBlurOne = () => {
             handleUpdateElementData(id, { ...data, buttonName });
         };
-        const handleInputBlur = () => {
-            handleUpdateElementData(id, {...data, text});
-            
+        const handleInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            handleUpdateElementData(id, e.target.value);
+
+        };
+        const handleInputBlurText = () => {
+            handleUpdateElementData(id, {...data, text}); 
         };
         const handleInputBlurVideo = () => {
             handleUpdateElementData(id, {...data, video});
@@ -97,11 +169,13 @@ const CreateLesson = () => {
         };
 
         const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-            const files = event.target.files;
-            if (files && files.length > 0) {
-                handleUpdateElementData(id, files[0]);
+            const file = event.target.files?.[0];
+            if (file) {
+                // Если файл был выбран
+                setUploadedFile(file); // Сохраняем файл в состоянии компонента
+                handleUpdateElementData(id, { ...data, file }); // Обновляем данные элемента с переданным файлом
             }
-        };
+        }
 
         const handleRemove = () => {
             handleRemoveElement(id);
@@ -149,7 +223,7 @@ const CreateLesson = () => {
                         className={`form-input-lesson form-input-up`}
                         placeholder="Введите заголовок"
                         value={text}
-                        onBlur={handleInputBlur}
+                        onBlur={handleInputBlurText}
                         onChange={handleTextChange}
                     />
                 );
@@ -187,12 +261,12 @@ const CreateLesson = () => {
                         </div>
                         {data && (
                             <div className="file-info">
-                                <p>Имя файла: {data.name}</p>
+                                <p>Имя файла: {data.file.name}</p>
                                 <div className="file-actions">
-                                    <button className="file-button file-input-constructor" onClick={() => window.open(URL.createObjectURL(data), '_blank')}>
+                                    <button className="file-button file-input-constructor" onClick={() => window.open(URL.createObjectURL(data.file), '_blank')}>
                                         Посмотреть
                                     </button>
-                                    <a className="file-button file-input-constructor" href={URL.createObjectURL(data)} download={data.name}>
+                                    <a className="file-button file-input-constructor" href={URL.createObjectURL(data.file)} download={data.name}>
                                         Скачать
                                     </a>
                                 </div>
@@ -320,12 +394,13 @@ const CreateLesson = () => {
                     </div>
                     <LessonCanvas />
                 </div>
-            </div>
-            <button onClick={generateLessonCode}>Сохранить урок</button>
+                <button onClick={generateLessonCode}>Сохранить урок</button>
             <div>
                 <h2>Сохраненный JSX код урока:</h2>
                 <pre>{savedLessonCode}</pre>
             </div>
+            </div>
+            
         </DndProvider>
     );
 };

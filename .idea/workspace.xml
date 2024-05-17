@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="" />
+    <list default="true" id="e0843ca4-ef39-489d-8ecb-d218520fd8fe" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_movie/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLessonContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLessonContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

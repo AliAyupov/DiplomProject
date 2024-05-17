@@ -91,9 +91,25 @@ class LessonApiView(viewsets.ModelViewSet):
         module_id = self.kwargs.get('module_id')
         return Lesson.objects.filter(module_id=module_id)
 
+
+
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentHomeworkApiView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsProducer]
