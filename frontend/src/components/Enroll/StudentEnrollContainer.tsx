@@ -44,10 +44,15 @@ const StudentEnrollPageContainer: React.FC<Props> = ({setEnroll, enrollments}) =
             fetchEnrollments();
         }
     }, [id]);
-
+    const rejectEnroll= async(id: number) => {
+        await axiosInstance.delete(`/enrollment/${id}`);
+        return;
+    }
     const addStudentProgress = async (id: number, user_id: any, course_id: any) => {
         try {
-            const existingProgressResponse = await axiosInstance.get(`/progress/?course_id=${course_id}&student_id=${user_id}`);
+            const existingProgressResponse = await axiosInstance.get('/progress/', {
+                params: { course_id: course_id, student_id: user_id }
+            });
             if (existingProgressResponse.data.length > 0) {
                 alert('Прогресс для данного студента и курса уже существует!');
                 await axiosInstance.delete(`/enrollment/${id}`);
@@ -60,10 +65,10 @@ const StudentEnrollPageContainer: React.FC<Props> = ({setEnroll, enrollments}) =
                 completion_time: 0  
             };
 
-            const response = await axiosInstance.post('/progress/', postData);
+            const response = await axiosInstance.post(`/progress/`, postData);
             if (response.status === 201) {
                 setEnroll(enrollments.filter(enrollment => enrollment.id !== id));
-                await axiosInstance.delete(`/enrollment/${id}`);
+                await axiosInstance.delete(`/enrollment/${id}/`);
             }
         } catch (error) {
             console.error('Failed to add student progress:', error);
@@ -74,6 +79,7 @@ const StudentEnrollPageContainer: React.FC<Props> = ({setEnroll, enrollments}) =
     enrollments={enrollments}
     setEnroll ={setEnroll}
     addStudentProgress={addStudentProgress}
+    rejectEnroll={rejectEnroll}
     />
 }
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface LessonCreationDialogProps {
     onClose: () => void;
@@ -8,7 +7,7 @@ interface LessonCreationDialogProps {
 }
 
 const LessonCreationDialog: React.FC<LessonCreationDialogProps> = ({ onClose, onSave, activeModuleId }) => {
-    const navigate = useNavigate();
+    
     const [lessonName, setLessonName] = useState('');
     const handleSaveClick = () => {
       

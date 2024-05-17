@@ -11,6 +11,7 @@ import ModuleEditDialog from '../Layout/DialogEdit';
 import LessonEditDialog from '../Layout/LessonEditDialog';
 import LeaderBoardPageContainer from './LeaderBoardPageContainer';
 import LessonCreationDialog from '../Layout/CreateDialog';
+import { NavLink } from 'react-router-dom';
 interface Course {
     id: number;
     course_name: string;
@@ -286,19 +287,20 @@ const CoursePageEdit: React.FC<Props> = ({
                                     </div>
                                     <div>
                                         {lessonsByModule[moduleItem.id] && lessonsByModule[moduleItem.id].map((lesson, ind_less)  => (
-                                            <><div key={lesson.id} className='lessons-div'>
-                                                <div className="course-details lessons-details">
-                                                    <div className='transp-back'>
-                                                        <h2 className="course-title">{lesson.lesson_name}</h2>
-                                                        <p className="modules-progress">{ind_less + 1} Урок</p>
-                                                    </div>
-                                                    <div  className='transp-back'>
-                                                        {userData.role === 'producer' || userData.role === 'tutor' ?
-                                                            <><button  onClick={() => openLessonDialog(lesson.id, lesson.module)} className="btn btn-c btn-izm">✐</button>
-                                                                <button onClick={() => handleDeleteLesson(lesson.id, moduleItem.id)} className="btn btn-c btn-del">🗑</button></>
-                                                                
-                                                            : null}
-                                                    </div>
+                                            <><NavLink key={lesson.id} to={`/course/lessons/${lesson.id}`}>
+                                                <div className='lessons-div'>
+                                                    <div className="course-details lessons-details">
+                                                        <div className='transp-back'>
+                                                            <h2 className="course-title">{lesson.lesson_name}</h2>
+                                                            <p className="modules-progress">{ind_less + 1} Урок</p>
+                                                        </div>
+                                                        <div  className='transp-back'>
+                                                            {userData.role === 'producer' || userData.role === 'tutor' ?
+                                                                <><button  onClick={() => openLessonDialog(lesson.id, lesson.module)} className="btn btn-c btn-izm">✐</button>
+                                                                    <button onClick={() => handleDeleteLesson(lesson.id, moduleItem.id)} className="btn btn-c btn-del">🗑</button></>
+                                                                    
+                                                                : null}
+                                                        </div>
                                                      {showLessonDialog && activeLessonId && (
                                                         <LessonEditDialog
                                                             lessonId={activeLessonId}
@@ -309,7 +311,7 @@ const CoursePageEdit: React.FC<Props> = ({
                                                         />
                                                     )}
                                                 </div>
-                                            </div></>
+                                            </div></NavLink></>
                                         ))}
 
                                         <div onClick={() => handleOpenDialogCreate(moduleItem.id)} className='createLesson'>добавить урок +</div>

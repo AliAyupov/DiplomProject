@@ -48,7 +48,6 @@ router.register(r'api/lessons', LessonViewSet, basename='lesson')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/modules/as', ModuleCreateAPIView.as_view(), name='module-create'),
-    path('api/progress/<int:course_id>/', StudentOnTheCourseApiView.as_view({'get': 'list_by_course'})),
     path('api/modules/as/<int:module_id>/', ModuleCreateAPIView.as_view(), name='module-update'),
     path('api/custom-users/<int:user_id>/', CustomUserDetailView.as_view()),
     path('api/modules/<int:module_id>/lessons/', LessonApiView.as_view({'get': 'list'}), name='module-lessons'),

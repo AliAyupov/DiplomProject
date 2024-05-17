@@ -3,6 +3,7 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactPlayer from 'react-player';
 import none from '../../img/balvan-foto.jpg';
+import Preloader from '../common/preloader/Preloader';
 
 enum ItemType {
     BUTTON = 'button',
@@ -14,16 +15,16 @@ enum ItemType {
 interface Props {
     fetchLessons(codeJSON: string): void;
     contentBD: string;
+    isFetching: boolean;
 }
 
-const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
+const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) => {
     
     useEffect(() => {
-        if (contentBD) {
             const initialLessonElements = generateInitialContent(contentBD);
             setLessonElements(initialLessonElements);
-        }
     }, [contentBD]);
+
     const [lessonElements, setLessonElements] = useState<{ id: number; type: ItemType; data?: any }[]>([]);
     const [nextId, setNextId] = useState(1);
     const [savedLessonCode, setSavedLessonCode] = useState<string>('');
@@ -53,14 +54,19 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
                 
                 switch (element.type) {
                     case ItemType.BUTTON:
-                        return { id: index + 1, type: ItemType.BUTTON, data: { buttonName: element.name, link: element.link } };
+                        setNextId(nextId + 1);
+                        return { id: index + 1, type: ItemType.BUTTON, data: { buttonName: element.buttonName, link: element.link } };
                     case ItemType.TEXT:
-                        return { id: index + 1, type: ItemType.TEXT, data: { text: element.name } };
+                        setNextId(nextId + 1);
+                        return { id: index + 1, type: ItemType.TEXT, data: { text: element.text } };
                     case ItemType.VIDEO:
+                        setNextId(nextId + 1);
                         return { id: index + 1, type: ItemType.VIDEO, data: { video: element.video } };
                     case ItemType.FILE:
+                        setNextId(nextId + 1);
                         return { id: index + 1, type: ItemType.FILE, data: { file: { name: element.file } } };
                     case ItemType.DESCRIPTION:
+                        setNextId(nextId + 1);
                         return { id: index + 1, type: ItemType.DESCRIPTION, data: { description: element.description } };
                     default:
                         return null;
@@ -78,13 +84,13 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
             case ItemType.BUTTON:
                 return `{
                     "type": "${element.type}",
-                    "name": "${element.data?.buttonName || ""}",
+                    "buttonName": "${element.data?.buttonName || ""}",
                     "link": "${element.data?.link || ""}"
                 }`;
             case ItemType.TEXT:
                 return `{
                     "type": "${element.type}",
-                    "name": "${element.data?.text || ""}"
+                    "text": "${element.data?.text || ""}"
                 }`;
             case ItemType.VIDEO:
                 return `{
@@ -198,10 +204,6 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
                                 onChange={handleButtonNameChange}
                             />
                         </div>
-                    </>
-                );
-                contentTwo = (
-                    <>
                         <div>
                             <input
                                 placeholder='Ссылка'
@@ -366,6 +368,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
 
         return (
             <div className="lesson-canvas" ref={drop}>
+                {isFetching ? <Preloader key="unique_preloader_key"/> : null}
                 {lessonElements.map((element, index) => (
                     <div className="backgroud-element" key={index}>
                         <button className='btn-const' onClick={() => handleMoveUp(index)} disabled={index === 0}>
@@ -394,10 +397,11 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD }) => {
                     </div>
                     <LessonCanvas />
                 </div>
-                <button onClick={generateLessonCode}>Сохранить урок</button>
+                <div className="center">
+                    <button className="btn btn-c" onClick={generateLessonCode}>Сохранить урок</button>
+                    
+                </div>
             <div>
-                <h2>Сохраненный JSX код урока:</h2>
-                <pre>{savedLessonCode}</pre>
             </div>
             </div>
             

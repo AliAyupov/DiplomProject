@@ -3469,6 +3469,7 @@ p{background: transparent;}
     display: flex;
     flex-direction: row;
     height: 100%;
+    border: 1px solid #e7e7e7;
 }
 .button-constructor{
     border: transparent;
@@ -3505,6 +3506,7 @@ p{background: transparent;}
     padding: 10px;
     background-color: #fff;
     overflow-y: auto;
+    border: 1px solid #e7e7e7;
 }
 
 .lesson-element {
@@ -3575,7 +3577,7 @@ p{background: transparent;}
     padding: 10px;
     margin: 8px auto;
     border-radius: 5px;
-    border: 1px solid;
+    border: 1px solid #b2b2b2;
 }
 .btn-const {
     padding: 5px 11px;
@@ -3642,6 +3644,7 @@ p{background: transparent;}
         display: flex;
         flex-direction: row;
         height: 100%;
+        border: 1px solid #e7e7e7;
     }
     .button-constructor{
         border: transparent;
@@ -3678,6 +3681,7 @@ p{background: transparent;}
         padding: 10px;
         background-color: #fff;
         overflow-y: auto;
+        border: 1px solid #e7e7e7;
     }
     
     .lesson-element {
@@ -3759,7 +3763,7 @@ p{background: transparent;}
         padding: 10px;
         margin: 8px auto;
         border-radius: 5px;
-        border: 1px solid;
+        border: 1px solid #b2b2b2;
     }
     .btn-const {
         padding: 5px 11px;
@@ -3827,6 +3831,7 @@ p{background: transparent;}
             display: flex;
             flex-direction: row;
             height: 100%;
+            border: 1px solid #e7e7e7;
         }
         .button-constructor{
             border: transparent;
@@ -3863,6 +3868,7 @@ p{background: transparent;}
             padding: 10px;
             background-color: #fff;
             overflow-y: auto;
+            border: 1px solid #e7e7e7;
         }
         
         .lesson-element {
@@ -3944,8 +3950,9 @@ p{background: transparent;}
             padding: 10px;
             margin: 8px auto;
             border-radius: 5px;
-            border: 1px solid;
+            border: 1px solid #b2b2b2;
         }
+        
         .btn-const {
             padding: 5px 11px;
             margin: 0px;
@@ -4013,6 +4020,7 @@ p{background: transparent;}
             flex-direction: column;
             height: 100%;
             align-items: center;
+            border: 1px solid #e7e7e7;
         }
         .button-constructor{
             border: transparent;
@@ -4049,6 +4057,7 @@ p{background: transparent;}
             padding: 10px;
             background-color: #fff;
             overflow-y: auto;
+            border: 1px solid #e7e7e7;
         }
         
         .lesson-element {
@@ -4130,7 +4139,7 @@ p{background: transparent;}
             padding: 10px;
             margin: 8px auto;
             border-radius: 5px;
-            border: 1px solid;
+            border: 1px solid #b2b2b2;
         }
         .btn-const {
             padding: 5px 11px;
@@ -4199,4 +4208,9 @@ p{background: transparent;}
     .wrapper-form-home{
         width: 100% !important;
     }
+}
+.center {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
 }

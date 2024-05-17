@@ -25,16 +25,11 @@ const CreateCourseContainer: React.FC<Props> = ({ setCourseName, setCourseDescri
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData();
-        
         formData.append('course_name', courseName);
         formData.append('description', description);
-        
-
         if (pictureFile) {
             formData.append('picture', pictureFile);
         }
-        
-
         try {
             const response = await axiosInstance.post('/courses/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -51,7 +46,6 @@ const CreateCourseContainer: React.FC<Props> = ({ setCourseName, setCourseDescri
             }
         } catch (error) {
             console.error('Error creating course', error);
-            
         }
     };
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -6,12 +6,18 @@ import { useParams } from 'react-router-dom';
 import LeaderboardPage from './LeaderboardPage';
 import { withAuthorization } from '../hoc/AuthRedirect';
 
+interface Student {
+    id: number;
+    username: string;
+    picture: string;
+}
+
 interface UsersData {
     id: number;
     image: string;
     completed_lessons:number;
     course_id: number;
-    student_id: number;
+    student: Student;
     completion_time: number;
 }
 
@@ -25,7 +31,9 @@ const LeaderboardPageContainer: React.FC<Props> = ({setProgress, usersData}) => 
     useEffect(() => {
         const fetchLessons = async () => {
             try {
-                const response = await axiosInstance.get(`/progress/${id}/`);
+                const response = await axiosInstance.get('/progress/', {
+                    params: { course_id: id}
+                });
                 setProgress(response.data);
             } catch (error) {
                 console.error('Ошибка при загрузке уроков:', error);

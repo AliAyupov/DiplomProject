@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { setEnroll } from '../../redux/home-reducer';
+import { rejects } from 'assert';
 
 interface Enrollment {
     id: number;
@@ -16,17 +17,17 @@ interface Props {
     enrollments: Enrollment[];
     addStudentProgress: (id:number, user_id: number, course_id:number) => void;
     setEnroll: (enrollments: any) => void;
+    rejectEnroll: (id: number) => void;
 }
-const CourseRequests: React.FC<Props> = ({ enrollments, addStudentProgress, setEnroll }) => {
+const CourseRequests: React.FC<Props> = ({ enrollments, addStudentProgress, setEnroll, rejectEnroll }) => {
 
     const handleAccept = (id: number, user_id:number, course_id:number) => {
-        console.log('Accepted request with ID:', id);
         addStudentProgress(id, user_id, course_id);
         setEnroll(enrollments.filter(request => request.id !== id));
     };
 
     const handleReject = (id: number) => {
-        console.log('Rejected request with ID:', id);
+        rejectEnroll(id);
         setEnroll(enrollments.filter(request => request.id !== id));
     };
     return (

@@ -40,9 +40,10 @@ class StudentHomeworkSerializer(serializers.ModelSerializer):
 
 
 class StudentProgressSerializer(serializers.ModelSerializer):
+    student = CustomUserSerializer()
     class Meta:
         model = StudentProgress
-        fields = '__all__'
+        fields = ['id', 'student', 'course', 'completed_lessons', 'completion_time']
 
 
 class ShopItemSerializer(serializers.ModelSerializer):

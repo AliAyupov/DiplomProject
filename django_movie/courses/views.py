@@ -288,9 +288,10 @@ class CourseTeacherApiView(viewsets.ModelViewSet):
 # по jwt токену отображение студентов принадлежащих определенному курсу http://127.0.0.1:8000/api/progress/?course_id=1
 class StudentOnTheCourseApiView(viewsets.ViewSet):
     serializer_class = StudentProgressSerializer
-    permission_classes = [IsAuthenticated, IsProducerOrTutor]
     http_method_names = ['get', 'post', 'put', 'delete']
-    def list_by_course(self, request, course_id=None):
+    def list(self, request):
+        course_id = request.query_params.get('course_id')
+        student_id = request.query_params.get('student_id')
 
         if not course_id:
             return Response({'error': 'Выберите нужный курс'}, status=status.HTTP_400_BAD_REQUEST)
@@ -298,10 +299,14 @@ class StudentOnTheCourseApiView(viewsets.ViewSet):
         try:
             course = Course.objects.get(pk=course_id)
         except Course.DoesNotExist:
-            raise Response({'error': 'не существует'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Курс не существует'}, status=status.HTTP_404_NOT_FOUND)
 
-        student_progress = StudentProgress.objects.filter(course_id=course_id)
-        serializer = self.serializer_class(student_progress, many=True)
+        queryset = StudentProgress.objects.filter(course_id=course_id)
+
+        if student_id:
+            queryset = queryset.filter(student_id=student_id)
+
+        serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
