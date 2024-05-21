@@ -10,6 +10,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    teacher = CustomUserSerializer(many=True, read_only=True)
     class Meta:
         model = Course
         fields = '__all__'
@@ -41,6 +42,7 @@ class StudentHomeworkSerializer(serializers.ModelSerializer):
 
 class StudentProgressSerializer(serializers.ModelSerializer):
     student = CustomUserSerializer()
+    course = CourseSerializer()
     class Meta:
         model = StudentProgress
         fields = ['id', 'student', 'course', 'completed_lessons', 'completion_time']
@@ -60,8 +62,8 @@ class StudentInventorySerializer(serializers.ModelSerializer):
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
-    user_id = serializers.IntegerField(source='user.id', read_only=True)
-    course_id = serializers.IntegerField(source='course.id', read_only=True)
+    user_id = serializers.IntegerField
+    course_id = serializers.IntegerField
 
     class Meta:
         model = Enrollment

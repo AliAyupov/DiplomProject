@@ -13,11 +13,11 @@ interface Course {
 }
 
 interface UserData {
+    id:number;
     role:string;
 }
 
 interface Props {
-    
     setCourseName: (courseName: string) => void;
     setCourseDescription: (description: string) => void;
     setImages: (picture: string) => void;
@@ -35,19 +35,21 @@ const MyCoursesContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsFet
     useEffect(() => {
         let endpoint = '';
         if (userData.role === 'producer') {
-            endpoint = 'user-courses/'; 
+            endpoint = 'user-courses/';
         } else if (userData.role === 'tutor') {
-            endpoint = 'tutor/'; 
+            endpoint = 'tutor/';
         } else {
-            endpoint = 'courses/';
+            endpoint = `/student-progress-by-student/?student_id=${userData.id}`;
         }
         toogleIsFetching(true);
         if (searchQuery.trim() === '') {
             axiosInstance.get(endpoint)
         .then(response => {
             toogleIsFetching(false);
-            setCourses(response.data.results);
+            const courses = response.data.results ? response.data.results : response.data;
+            setCourses(courses);
             setTotalCoursesCount(response.data.length);
+            
         })
         .catch(error => {
             console.error('Ошибка при загрузке курсов:', error);

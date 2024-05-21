@@ -26,7 +26,7 @@ from rest_framework_simplejwt.views import (
 from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView, \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView, \
-    CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet, PersonViewSet
+    CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet, PersonViewSet, CustomUserListView, AddTutorToCourseView, StudentProgressByStudentApiView
 
 
 router = routers.DefaultRouter()
@@ -44,9 +44,15 @@ router.register(r'api/users-course', AllUsersOnTheCourseApiView, basename='users
 router.register(r'api/homework-course', AllHomeworkOnTheCourseApiView, basename='homework-course')
 router.register(r'api/modules', ModuleApiView, basename='module')
 router.register(r'api/lessons', LessonViewSet, basename='lesson')
+router.register(r'api/student-progress-by-student', StudentProgressByStudentApiView, basename='student-progress-by-student')
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/users/', CustomUserListView.as_view(), name='user-list'),
+    path('api/courses/<int:course_id>/add-tutor/', AddTutorToCourseView.as_view(), name='add-tutor-to-course'),
+    path('api/courses/<int:course_id>/remove-teacher/<int:teacher_id>/', CourseTeacherApiView.as_view({'delete': 'remove_teacher'}), name='remove_teacher_from_course'),
     path('api/modules/as', ModuleCreateAPIView.as_view(), name='module-create'),
     path('api/modules/as/<int:module_id>/', ModuleCreateAPIView.as_view(), name='module-update'),
     path('api/custom-users/<int:user_id>/', CustomUserDetailView.as_view()),

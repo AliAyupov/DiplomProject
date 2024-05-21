@@ -20,9 +20,10 @@ interface UsersData {
 interface Props {
     usersData: UsersData[];
     setProgress: (usersData: UsersData[]) => void;
+    handleDelete: (id: number) => void;
 }
 
-const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData }) => {
+const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData, handleDelete }) => {
     const baseUrl = 'http://localhost:8000';
 
     return (
@@ -32,24 +33,26 @@ const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData }) => {
                     ЛУЧШИЕ УЧЕНИКИ
                 </div>
                 <div className="margin"></div>
+                {usersData && usersData.length > 0 && (
                 <div className="wrapper-search">
                     <form action="search.php" className="wrapper-search__form" method="get">
                         <input type="text" name="search" className="wrapper-input" placeholder="Поиск..." />
                     </form>
                 </div>
+                )}
                 <div className="leaderboard">
+                    {usersData && usersData.length > 0 && (
                     <div className="leaderboard__row">
-                        <div className="leaderboard__cell leaderboard__cell--header z-imd">Ранг</div>
-                        <div className="leaderboard__cell leaderboard__cell--header leaderboard__cell--clear"> </div>
+                        <div className="leaderboard__cell leaderboard__cell--header"></div>
                         <div className="leaderboard__cell leaderboard__cell--header"></div>
                         <div className="leaderboard__cell leaderboard__cell--header">Опыт</div>
                         <div className="leaderboard__cell leaderboard__cell--header">Время</div>
                         <div className="leaderboard__cell leaderboard__cell--header">Результат</div>
-                        <div className="leaderboard__cell leaderboard__cell--header off">Подробнее</div>
                     </div>
-                    {usersData ? usersData.map((user, index) => (
+                    )}
+                    {usersData && usersData.length > 0 ? usersData.map((user, index) => (
                         <div className="leaderboard__row" key={user.id}>
-                            <div className="leaderboard__cell">{index + 1}</div>
+                            <div className='onesr'>{index + 1}</div>
                             <div className="leaderboard__cell">
                                 {user.student.picture ? (
                                     <img src={`${baseUrl}${user.student.picture}`} alt="Student Image" className="image_cell" />
@@ -63,14 +66,14 @@ const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData }) => {
                             <div className="leaderboard__cell">
                                 <div className="progress-bar">
                                     <div className="progress"></div>
+                                    <div className='position-absolut btn btn-del btn_small' onClick={()=>{handleDelete(user.id)}}>X</div>
                                 </div>
                             </div>
-                            <div className="leaderboard__cell off">
-                                <button className="button">Подробнее</button>
-                            </div>
+                            
                         </div>
-                    )) : <div>учеников нет</div>}
+                    )) : <div>Учеников нет</div>}
                 </div>
+                
             </div>
         </main>
     );

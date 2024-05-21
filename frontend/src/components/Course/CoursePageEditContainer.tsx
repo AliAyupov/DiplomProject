@@ -9,6 +9,13 @@ import Preloader from "../common/preloader/Preloader";
 import { withAuthorization } from "../hoc/AuthRedirect";
 import { useNavigate } from 'react-router-dom';
 
+interface Tutor {
+    id: number;
+    username: string;
+    picture: string;
+    email:string;
+}
+
 interface Course {
     id: number;
     course_name: string;
@@ -16,7 +23,7 @@ interface Course {
     picture: string;
     totalLessonsCount: number;
     creator: number;
-    teacher: number[];
+    teacher: Tutor[];
 }
 interface Module {
     id: number;
@@ -111,7 +118,6 @@ const CoursePageEditContainer: React.FC<Props> = ({ setCourse,
                     setModulesCount(modulesResponse.data.length);
                     setLessonsCount(totalLessonsCount);
                 } catch (error) {
-                    debugger
                     console.error('Ошибка при загрузке курса:', error);
                 } finally {
                     setIsLoading(false);

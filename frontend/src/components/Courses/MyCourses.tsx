@@ -27,7 +27,7 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
     const baseUrl = 'http://localhost:8000';
     let pagesCount = Math.ceil(totalCoursesCount / pageSize);
     let pages = [];
-
+    
     for (let i = 1; i <= pagesCount; i++) {
         pages.push(i);
     }
@@ -49,18 +49,25 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
             <div className="wrapper-text"></div>
             {isFetching ? <Preloader key="unique_preloader_key"/> : null}
             <div className="grid">
-                {Array.isArray(courses) && courses.map(c => (
+                {Array.isArray(courses)  && courses.length > 0 ? (courses.map(c => (
                     <NavLink key={c.id} to={userData.role === 'producer' || userData.role === 'tutor' ? `/course/edit/${c.id}` : `/course/${c.id}`}>
                         <div className="grid__item">
                             <div className="card">
                                 <div className="card__image">
-                                    {c.picture? <img src={c.picture} alt="" className="image-course"/> : <img src={none} alt="" className="image-course"/>}
+                                    {c.picture? <img src={
+                                                userData.role === 'student'
+                                                    ? `${baseUrl}${c.picture}`
+                                                    : c.picture}
+                                                    alt="" className="image-course"/> : <img src={none} alt="" className="image-course"/>}
                                 </div>
                                 <div className="card__title">{c.course_name}</div>
                             </div>
                         </div>
                     </NavLink>
-                ))}
+                ))
+                ) : (
+                    <div>Курсов пока нет</div>
+                )}
             </div>   
         </div>
     </main>

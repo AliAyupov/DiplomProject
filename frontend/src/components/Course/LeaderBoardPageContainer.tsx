@@ -42,7 +42,20 @@ const LeaderboardPageContainer: React.FC<Props> = ({setProgress, usersData}) => 
         fetchLessons();
     }, [id, setProgress]);
 
-    return <LeaderboardPage usersData={usersData} setProgress={setProgress}/>
+    const handleDelete = (progressId: number) => {
+        try {
+            const response = axiosInstance.delete(`/progress/`, {
+                params: { id: progressId}
+            });
+
+            const updatedUsersData = usersData.filter(user => user.id !== progressId);
+            setProgress(updatedUsersData);
+        } catch (error) {
+            console.error('Ошибка при загрузке уроков:', error);
+        }
+    };
+
+    return <LeaderboardPage usersData={usersData} setProgress={setProgress} handleDelete={handleDelete} />
 }
 
 const mapStateToProps = (state: any) => {

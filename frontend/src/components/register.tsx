@@ -129,10 +129,10 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
                         arm: 0
                     })
                     .then((response) => {
-                        console.log('Запись в таблице Person успешно создана:', response.data);
+                        
                     })
                     .catch((error) => {
-                        console.error('Ошибка при создании записи в таблице Person:', error);
+                        
                     });
 
                 if (selectedRole !== 'student') {

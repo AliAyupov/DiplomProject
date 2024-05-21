@@ -3,6 +3,7 @@ const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_TOTAL_COURSES_COUNT = 'SET_TOTAL_COURSES_COUNT';
 const TOGGLE_PRELOADER = 'TOGGLE_PRELOADER';
 const SET_COURSE = 'SET_COURSE';
+const SET_TUTOR = 'SET_TUTOR';
 const SET_MODULES = 'SET_MODULES';
 const SET_MODULES_COUNT = 'SET_MODULES_COUNT';
 const SET_LESSONS_COUNT = 'SET_LESSONS_COUNT';
@@ -40,6 +41,7 @@ interface Action {
     totalCoursesCount: number;
     isFetching: boolean;
     course: any;
+    tutor: any;
     module:any;
     modules: any;
     modulesCount: number;
@@ -62,6 +64,7 @@ interface State {
     currentPage: number;
     isFetching: boolean;
     course: any;
+    tutor: any;
     module: any;
     modulesCount: number;
     lessonsCount: number;
@@ -88,6 +91,7 @@ const initialState: State = {
     currentPage: 1,
     isFetching: false,
     course: null,
+    tutor: null,
     module:null,
     lessonsCount: 0,
     lessons: [],
@@ -112,6 +116,8 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return {...state, isFetching: action.isFetching};
         case SET_COURSE:
             return {...state, course: [action.course]};
+        case SET_TUTOR:
+            return {...state, tutor: [action.tutor]};
         case SET_MODULES:
             return {...state, modules: action.modules};
         case SET_MODULES_COUNT:
@@ -153,6 +159,7 @@ export const setCurrentPage = (currentPage: number) => ({ type: SET_CURRENT_PAGE
 export const setTotalCourses = (totalCoursesCount: number) => ({ type: SET_TOTAL_COURSES_COUNT, totalCoursesCount:totalCoursesCount });
 export const togglePreloader = (isFetching: boolean) => ({type: TOGGLE_PRELOADER, isFetching:isFetching });
 export const setCourse = (course:any) => ({type: SET_COURSE, course});
+export const setTutor = (tutor:any) => ({type: SET_TUTOR, tutor});
 export const setModules = (modules: any) => ({ type: SET_MODULES, modules });
 export const setModulesCount = (modulesCount: number) => ({ type: SET_MODULES_COUNT, modulesCount });
 export const setLessonsCount = (lessonsCount: number) => ({ type: SET_LESSONS_COUNT, lessonsCount });

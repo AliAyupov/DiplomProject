@@ -12,6 +12,15 @@ import LessonEditDialog from '../Layout/LessonEditDialog';
 import LeaderBoardPageContainer from './LeaderBoardPageContainer';
 import LessonCreationDialog from '../Layout/CreateDialog';
 import { NavLink } from 'react-router-dom';
+import TutorPageContainer from '../Tutor/TutorPageContainer';
+
+interface Tutor {
+    id: number;
+    username: string;
+    picture: string;
+    email:string;
+}
+
 interface Course {
     id: number;
     course_name: string;
@@ -19,8 +28,9 @@ interface Course {
     picture: string;
     totalLessonsCount: number;
     creator: number;
-    teacher: number[];
+    teacher: Tutor[];
 }
+
 interface Lesson {
     id: number;
     image: string;
@@ -99,12 +109,18 @@ const CoursePageEdit: React.FC<Props> = ({
         setLocalCourseName(event.target.value);
         setCourseName(event.target.value);
     };
-    const isAuthorized = course.some(item => 
-        userData.id === item.creator || item.teacher.includes(userData.id)
-    );
+    const [isAuthorized, setAuth] = useState(false);
+
+    useEffect(() => {
+        setAuth(course.some(item =>
+            userData.id === item.creator || (item.teacher && item.teacher.some(teacher => teacher.id === userData.id))
+        ));
+    }, [course, userData.id]);
+    
     if (!isAuthorized) {
         return <div>Доступ запрещен. У вас нет прав на редактирование.</div>;
     }
+
     const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setLocalDescription(event.target.value);
         setCourseDescription(event.target.value);
@@ -173,21 +189,21 @@ const CoursePageEdit: React.FC<Props> = ({
             <div className="screen__sidebar">
                 <div className="screen__sidebar">
                     <ul className="menu">
-                        <li className={`menu__item ${activeTab === 'edit' ? 'item__active' : ''}`}>
+                        <li onClick={() => handleTabClick('edit')} className={`menu__item ${activeTab === 'edit' ? 'item__active' : ''}`}>
                             <img src={myProfileIcon} alt="Редактировать" className="menu__icon" />
-                            <a href="#" className="menu__link" onClick={() => handleTabClick('edit')}>Редактировать курс</a>
+                            <a href="#" className="menu__link">Редактировать курс</a>
                         </li>
-                        <li className={`menu__item ${activeTab === 'enroll' ? 'item__active' : ''}`}>
+                        <li onClick={() => handleTabClick('enroll')} className={`menu__item ${activeTab === 'enroll' ? 'item__active' : ''}`}>
                             <img src={myDosIcon} alt="Запросы на вступление" className="menu__icon" />
-                            <a href="#" className="menu__link" onClick={() => handleTabClick('enroll')}>Запросы на вступление</a>
+                            <a href="#" className="menu__link" >Запросы на вступление</a>
                         </li>
-                        <li className={`menu__item ${activeTab === 'character' ? 'item__active' : ''}`}>
+                        <li onClick={() => handleTabClick('character')} className={`menu__item ${activeTab === 'character' ? 'item__active' : ''}`}>
                             <img src={myPersIcon} alt="Ученики курса" className="menu__icon" />
-                            <a href="#" className="menu__link" onClick={() => handleTabClick('character')}>Ученики курса</a>
+                            <a href="#" className="menu__link">Ученики курса</a>
                         </li>
-                        <li className={`menu__item ${activeTab === 'shop' ? 'item__active' : ''}`}>
-                            <img src={shopIcon} alt="Магазин" className="menu__icon" />
-                            <a href="#" className="menu__link" onClick={() => handleTabClick('shop')}>Магазин</a>
+                        <li  onClick={() => handleTabClick('shop')} className={`menu__item ${activeTab === 'shop' ? 'item__active' : ''}`}>
+                            <img src={myPersIcon} alt="Тьюторы" className="menu__icon" />
+                            <a href="#" className="menu__link">Тьюторы</a>
                         </li>
                     </ul>
                 </div>
@@ -197,6 +213,9 @@ const CoursePageEdit: React.FC<Props> = ({
             {activeTab === 'enroll' && (
             <StudentEnrollContainer/>
             )}
+            {activeTab === 'shop' && (
+            <TutorPageContainer/>
+            )}
             {activeTab === 'character' && (
             <LeaderBoardPageContainer/> 
             )}
@@ -204,7 +223,6 @@ const CoursePageEdit: React.FC<Props> = ({
             course.map(item => (
                 <div key={item.id} className="wrapper">
                     <section>
-
                         <form encType="multipart/form-data" className='form form-create'>
                             {previewImageUrl ? (
                                 <img src={previewImageUrl} alt="Preview" className="wrapper-img-c" />
@@ -249,91 +267,89 @@ const CoursePageEdit: React.FC<Props> = ({
                     </div>
                     <div className="wrapper-text"></div>
                     <div className="wrapper__title wrapper__title_my">
-                        Модули
+                    Модули
                         {userData.role === 'producer' || userData.role === 'tutor' ?
                             <button type="submit" onClick={handleOpenDialog} className="button__create">+</button>
                             : null}
                         {showDialog && (
                             <ModuleCreationDialog
+                                key="moduleCreationDialog"
                                 onClose={handleCloseDialog}
                                 onSave={handleSaveModule} />
                         )}
                     </div>
-                    {modules && modules.length > 0 ? (
-                        modules.map((moduleItem, index) => (
-                            <div key={moduleItem.id} className="in-process__item">
-                                    <div  key={moduleItem.id} className="course">
-                                        <img src={module} alt="Course Image" className="module__image" />
-                                        <div className="course-details">
-                                            <div>
-                                                <h2 className="course-title">{moduleItem.module_name}</h2>
-                                                <p className="modules-progress">{index + 1} модуль</p>
-                                            </div>
-                                            <div>
-                                            {userData.role === 'producer' || userData.role === 'tutor' ?
-                                             <><button onClick={() => handleOpenDialogEdit(moduleItem.id)} className="btn btn-c btn-izm">✐</button>
-                                             <button onClick={() => onDelete(moduleItem.id)} className="btn btn-c btn-del">🗑</button></>
-                                             : null}
-                                             </div>
-                                             {isDialogActive(moduleItem.id) && (
-                                                <ModuleEditDialog
-                                                    id={moduleItem.id} 
-                                                    initialModuleName={moduleItem.module_name} 
-                                                    onClose={handleCloseDialogEdit}  
-                                                    onSave={handleSaveModuleEdit}  
-                                                />
-                                             )}
-                                        </div>
+                    
+                        <div className="in-process__item">
+                        {modules && modules.length > 0 ? ( modules.map((moduleItem, index) => (
+                        <div key={moduleItem.id} >
+                            <div className="course">
+                                <img src={module} alt="Course Image" className="module__image" />
+                                <div className="course-details">
+                                    <div>
+                                        <h2 className="course-title">{moduleItem.module_name}</h2>
+                                        <p className="modules-progress">{index + 1} модуль</p>
                                     </div>
                                     <div>
-                                        {lessonsByModule[moduleItem.id] && lessonsByModule[moduleItem.id].map((lesson, ind_less)  => (
-                                            <><NavLink key={lesson.id} to={`/course/lessons/${lesson.id}`}>
-                                                <div className='lessons-div'>
-                                                    <div className="course-details lessons-details">
-                                                        <div className='transp-back'>
-                                                            <h2 className="course-title">{lesson.lesson_name}</h2>
-                                                            <p className="modules-progress">{ind_less + 1} Урок</p>
-                                                        </div>
-                                                        <div  className='transp-back'>
-                                                            {userData.role === 'producer' || userData.role === 'tutor' ?
-                                                                <><button  onClick={() => openLessonDialog(lesson.id, lesson.module)} className="btn btn-c btn-izm">✐</button>
-                                                                    <button onClick={() => handleDeleteLesson(lesson.id, moduleItem.id)} className="btn btn-c btn-del">🗑</button></>
-                                                                    
-                                                                : null}
-                                                        </div>
-                                                     {showLessonDialog && activeLessonId && (
-                                                        <LessonEditDialog
-                                                            lessonId={activeLessonId}
-                                                            initialLessonName={initialLessonName} 
-                                                            onClose={closeLessonDialog}
-                                                            activeModuleId={activeLessonModule}
-                                                            onSave={handleUpdateLesson}
-                                                        />
-                                                    )}
-                                                </div>
-                                            </div></NavLink></>
-                                        ))}
-
-                                        <div onClick={() => handleOpenDialogCreate(moduleItem.id)} className='createLesson'>добавить урок +</div>
-                                        {showLessonCrete && moduleIdCreate && (
-                                                        <LessonCreationDialog
-                                                
-                                                            onClose={handleCloseDialogCreate}
-                                                            activeModuleId={moduleIdCreate}
-                                                            onSave={handleCreateLesson}
-                                                        />
-                                                    )}
+                                        {userData.role === 'producer' || userData.role === 'tutor' ?
+                                            <><button onClick={() => handleOpenDialogEdit(moduleItem.id)} className="btn btn-c btn-izm">✐</button>
+                                                <button onClick={() => onDelete(moduleItem.id)} className="btn btn-c btn-del">🗑</button></>
+                                            : null}
                                     </div>
+                                    {isDialogActive(moduleItem.id) && (
+                                        <ModuleEditDialog
+                                            id={moduleItem.id}
+                                            initialModuleName={moduleItem.module_name}
+                                            onClose={handleCloseDialogEdit}
+                                            onSave={handleSaveModuleEdit} />
+                                    )}
+                                </div>
                             </div>
-                            
-                        ))
-                    ) : (
-                        <p>Модулей еще нет</p>
-                    )}
-                    <hr />
+                            <div>{lessonsByModule[moduleItem.id] && lessonsByModule[moduleItem.id].map((lesson, ind_less) => (
+                                        
+                                        <div key={lesson.id} className='lessons-div'>
+                                            <div className="course-details lessons-details">
+                                                <NavLink to={`/course/lessons/${lesson.id}`}>
+                                                    <div className='transp-back'>
+                                                        <h2 className="course-title">{lesson.lesson_name}</h2>
+                                                        <p className="modules-progress">{ind_less + 1} Урок</p>
+                                                    </div>
+                                                </NavLink>
+                                                <div className='transp-back'>
+                                                    {userData.role === 'producer' || userData.role === 'tutor' ?
+                                                        <><button onClick={() => openLessonDialog(lesson.id, lesson.module)} className="btn btn-c btn-izm">✐</button>
+                                                            <button onClick={() => handleDeleteLesson(lesson.id, moduleItem.id)} className="btn btn-c btn-del">🗑</button></> : null}
+                                                </div>
+                                                {showLessonDialog && activeLessonId && (
+                                                    <LessonEditDialog
+                                                        key={`lessonEditDialog-${activeLessonId}`}
+                                                        lessonId={activeLessonId}
+                                                        initialLessonName={initialLessonName}
+                                                        onClose={closeLessonDialog}
+                                                        activeModuleId={activeLessonModule}
+                                                        onSave={handleUpdateLesson} />
+                                                )}
+                                            </div>
+                                        </div>
+                                ))}
 
+                                <div onClick={() => handleOpenDialogCreate(moduleItem.id)} className='createLesson'>добавить урок +</div>
+                                {showLessonCrete && moduleIdCreate && (
+                                    <LessonCreationDialog
+                                        key={`lessonCreationDialog-${moduleIdCreate}`}
+                                        onClose={handleCloseDialogCreate}
+                                        activeModuleId={moduleIdCreate}
+                                        onSave={handleCreateLesson} />
+                                )}
+                            </div>
+                        </div>
+                            ))
+                        ) : (
+                            <p>Модулей еще нет</p>
+                        )}
+                    </div>
+                    <hr />
                 </div>
-            ))
+                ))
             )}
         </div>
     </div></>

@@ -107,28 +107,31 @@ const MyPerson: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
             <div className="screen__content-new">
                 <div className="grid card__grid">
                     {shopItems && shopItems.map((item) => (
-                        
-                    <div key={item.id} className="grid__item">
-                        {userInventory.includes(item.id) ? (
+                        userInventory.includes(item.id) ? (
+                        <div key={item.id} className="grid__item">
                         <div className="card"  onClick={() => handleImageClick(item.type, item.picture)}>
                             <div className="card__image card__image--shop" onClick={() => handlePurchase(item.id, item.type)}>
                                 <img src={item.picture} alt={item.name} className="image-course--shop"
                                 /> 
                             </div>
                             {personData && (personData.head === item.id || personData.shoes === item.id || personData.arm === item.id || personData.bruke === item.id || personData.tshort === item.id) ? (
-                                <div>Надето</div>
+                                <div className="purchase-info"  onClick={() => handlePurchase(0, item.type)}>
+                                <button className="buy-button">Снять</button>
+                            </div>
                             ) : (
                                 <div className="purchase-info"  onClick={() => handlePurchase(item.id, item.type)}>
                                     <button className="buy-button">Надеть</button>
                                 </div>
                             )}
                         </div>
+                        </div>
                         ):(
                             null
-                        )}
-                    </div>
+                        )
                     ))}
                 </div>
+                
+                {userInventory.length > 0 ? (
                 <div className="pagination">
                         <span className="pagination__link" onClick={onPreviousPageClicked}>&laquo;</span>
                         {pages.map(p => (
@@ -136,7 +139,11 @@ const MyPerson: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                                     onClick={() => { onPageChanged(p) }}>{p}</span>
                         ))}
                         <span className="pagination__link" onClick={onNextPageClicked}>&raquo;</span>
-                    </div>
+                </div>
+                ) : (
+                    <div>Инвентарь пустой</div>
+                )}
+
             </div>
             <div className="screen__sidebar-new">
                 <div className='image-person'>   

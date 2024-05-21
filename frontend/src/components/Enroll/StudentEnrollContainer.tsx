@@ -44,12 +44,13 @@ const StudentEnrollPageContainer: React.FC<Props> = ({setEnroll, enrollments}) =
             fetchEnrollments();
         }
     }, [id]);
-    const rejectEnroll= async(id: number) => {
+    const rejectEnroll = async(id: number) => {
         await axiosInstance.delete(`/enrollment/${id}`);
         return;
     }
     const addStudentProgress = async (id: number, user_id: any, course_id: any) => {
         try {
+            
             const existingProgressResponse = await axiosInstance.get('/progress/', {
                 params: { course_id: course_id, student_id: user_id }
             });

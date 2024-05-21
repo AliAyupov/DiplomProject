@@ -1149,7 +1149,7 @@ input[type="file"][name="picture"] {
     .menu__link {
         text-decoration: none;
         color: #000;
-        font-size: 12px;
+        font-size: 9px;
         white-space: nowrap;
         background: transparent
     }
@@ -4213,4 +4213,26 @@ p{background: transparent;}
     display: block;
     text-align: center;
     margin-top: 10px;
+}
+.onesr {
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    background: #fff;
+}
+.position-absolut{
+    position: absolute;
+    transform: translate(28%, 9%);
+    right: -3%;
+    top: -192%;
+}
+.btn_small{
+    background-color: rgb(160, 126, 126);
+    border-radius: 2px;
+    padding: 4px 6px;
+    font-size: 7px;
+    display: flex;
+}
+.btn-request{
+    background-color: #1b9414;
 }

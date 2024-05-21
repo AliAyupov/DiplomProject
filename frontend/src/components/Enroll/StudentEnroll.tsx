@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { setEnroll } from '../../redux/home-reducer';
-import { rejects } from 'assert';
 
 interface Enrollment {
     id: number;
@@ -31,12 +29,12 @@ const CourseRequests: React.FC<Props> = ({ enrollments, addStudentProgress, setE
         setEnroll(enrollments.filter(request => request.id !== id));
     };
     return (
-        <><main>
-                <div className="wrapper">
-                    <div className="wrapper__title">
-                        Запросы на  вступление
-                    </div>
-                
+    <><main>
+            <div className="wrapper"> 
+                <div className="wrapper__title">
+                    Запросы на  вступление
+                </div>
+                <div className="margin"></div>
                 {enrollments.length > 0 ? (
                     enrollments.map(item => (
                         <div key={item.id} className="in-process__item">

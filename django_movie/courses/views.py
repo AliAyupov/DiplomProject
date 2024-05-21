@@ -1,5 +1,6 @@
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -23,6 +24,32 @@ from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerialize
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
     EnrollmentSerializer, ModuleTheSerializer, PersonSerializer
 
+class AddTutorToCourseView(APIView):
+    def post(self, request, course_id):
+        user_id = request.data.get('userId')
+        try:
+            course = Course.objects.get(id=course_id)
+            user = CustomUser.objects.get(id=user_id)
+            course.teacher.add(user)
+            course.save()
+            return Response({"message": "Tutor added successfully"}, status=status.HTTP_200_OK)
+        except Course.DoesNotExist:
+            return Response({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomUserListView(APIView):
+    def get(self, request):
+        email = request.query_params.get('email', None)
+        if email is not None:
+            users = CustomUser.objects.filter(email=email)
+        else:
+            users = CustomUser.objects.all()
+
+        serializer = CustomUserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CustomUserDetailView(APIView):
     def get_object(self, user_id):
@@ -83,6 +110,9 @@ class CourseApiView(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
 
 class LessonApiView(viewsets.ModelViewSet):
     serializer_class = LessonSerializer
@@ -146,49 +176,43 @@ class StudentInventoryApiView(viewsets.ModelViewSet):
 
 class EnrollmentApiView(viewsets.ModelViewSet):
     permission_classes_by_action = {'create': [IsAuthenticated, IsStudent],
-                                    'get_queryset': [IsAuthenticated, IsProducer],
-                                    'destroy': [IsAuthenticated, IsProducerOrTutor]}
+                                    'get_queryset': [IsAuthenticated],
+                                    'destroy': [IsAuthenticated, IsProducerOrTutor],
+                                    'create': [IsAuthenticated, IsStudent]}
     serializer_class = EnrollmentSerializer
 
     def get_queryset(self):
-
         user_id = self.request.user.id
         course_id = self.request.query_params.get('course')
         try:
             course = Course.objects.get(pk=course_id)
-            if course.creator_id != user_id:
-                return Response({'error': 'нет доступа'}, status=status.HTTP_403_FORBIDDEN)
+
         except Course.DoesNotExist:
-            raise Response({'error': 'не существует'}, status=status.HTTP_404_NOT_FOUND)
+            raise NotFound('не существует')
         queryset = Enrollment.objects.filter(course=course)
         return queryset
 
-    #
     def list(self, request):
         queryset = self.get_queryset()
         if not queryset.exists():
-            raise NotFound("No data available")
+            return Response([], status=status.HTTP_200_OK)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Запрос на обучение
     def create(self, request):
-        # Получаем данные из запроса формата form-data
-        user = request.data.get('user')
-        course = request.data.get('course')
+        user_id = request.data.get('user_id')
+        course_id = request.data.get('course_id')
 
-        # Проверяем, существует ли уже запись с такими значениями user и course
-        enrollment_exists = Enrollment.objects.filter(user=user, course=course).exists()
+        enrollment_exists = Enrollment.objects.filter(user_id=user_id, course_id=course_id).exists()
         if enrollment_exists:
-            return Response({'error': 'Пользователь уже на курсе'}, status=status.HTTP_400_BAD_REQUEST)
-        enrollment_exists = Enrollment.objects.filter(user=user, course=course).exists()
-        if enrollment_exists:
-            return Response({'error': 'Запрос уже отправлен'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Пользователь уже на курсе или запрос уже отправлен'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         # Создаем запись
-        serializer = EnrollmentSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user_id=user_id, course_id=course_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -245,7 +269,7 @@ class CourseCreaterApiView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CourseTeacherApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsTutor]
+    permission_classes = [IsAuthenticated]
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
 
@@ -265,16 +289,19 @@ class CourseTeacherApiView(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    def destroy(self, request, pk=None):
+    def remove_teacher(self, request, course_id, teacher_id):
         try:
-            course = Course.objects.get(pk=pk, teacher=request.user)
-            if course.teacher != request.user:
-                raise PermissionDenied()
-        except Course.DoesNotExist:
-            return Response({'error': 'Такого курса нет'}, status=status.HTTP_404_NOT_FOUND)
+            # Получаем объект курса
+            course = Course.objects.get(pk=course_id)
 
-        course.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            # Удаляем связь между курсом и преподавателем
+            course.teacher.remove(teacher_id)
+
+            return Response({'message': 'Преподаватель успешно удален из курса'}, status=status.HTTP_204_NO_CONTENT)
+        except Course.DoesNotExist:
+            return Response({'error': 'Курс не найден'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def retrieve(self, request, pk=None):
         try:
@@ -335,6 +362,46 @@ class StudentOnTheCourseApiView(viewsets.ViewSet):
 
         serializer = self.serializer_class(student_progress)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, pk=None):
+        progress_id = request.query_params.get('id')
+        user_id = request.user.id
+
+        if not progress_id:
+            return Response({'error': 'Необходимо указать ID прогресса'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            student_progress = StudentProgress.objects.get(pk=progress_id)
+        except StudentProgress.DoesNotExist:
+            return Response({'error': 'Запись не существует'}, status=status.HTTP_404_NOT_FOUND)
+
+        course = student_progress.course
+        if course.creator_id != user_id:
+            return Response({'error': 'нет доступа'}, status=status.HTTP_403_FORBIDDEN)
+
+        student_progress.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+# апи для студентов чтобы отобразить мои курсы
+class StudentProgressByStudentApiView(viewsets.ViewSet):
+    serializer_class = CourseSerializer
+    http_method_names = ['get']
+
+    def list(self, request):
+        student_id = request.query_params.get('student_id')
+
+        if not student_id:
+            return Response({'error': 'Необходимо указать ID студента'}, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = StudentProgress.objects.filter(student_id=student_id)
+
+        # Извлекаем уникальные ID курсов, к которым относятся найденные прогрессы
+        course_ids = queryset.values_list('course_id', flat=True).distinct()
+
+        # Извлекаем данные о курсах
+        courses = Course.objects.filter(id__in=course_ids)
+        serializer = self.serializer_class(courses, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AllUsersOnTheCourseApiView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, IsProducerOrTutor]
