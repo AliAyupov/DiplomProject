@@ -1,9 +1,9 @@
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from requests import Request
 from rest_framework import viewsets, status, authentication
 from rest_framework.decorators import action
@@ -11,6 +11,7 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,11 +19,12 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, Bl
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
-    Enrollment, Person
+    Enrollment, Person, FileModel
 from .permissions import IsTutor, IsStudent, IsProducer, IsProducerOrTutor
 from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerializer, LessonSerializer, \
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
-    EnrollmentSerializer, ModuleTheSerializer, PersonSerializer
+    EnrollmentSerializer, ModuleTheSerializer, PersonSerializer, FileModelSerializer
+
 
 class AddTutorToCourseView(APIView):
     def post(self, request, course_id):
@@ -140,6 +142,28 @@ class LessonViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FileUploadView(APIView):
+    def get(self, request, *args, **kwargs):
+        lesson_id = self.request.query_params.get('lesson_id')
+        id_element = self.request.query_params.get('id_element')
+
+        if lesson_id and id_element:
+            files = FileModel.objects.filter(lesson_id=lesson_id, id_element=id_element)  # Замените на вашу модель
+            file_serializer = FileModelSerializer(files, many=True)  # Подставьте ваш сериализатор
+            return Response(file_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Missing lessonId or elementId in request'}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        if 'file_field' in request.data:
+            file_serializer = FileModelSerializer(data=request.data)
+            if file_serializer.is_valid():
+                file_serializer.save()
+                return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'No file found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentHomeworkApiView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsProducer]

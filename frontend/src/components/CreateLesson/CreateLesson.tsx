@@ -4,6 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactPlayer from 'react-player';
 import none from '../../img/balvan-foto.jpg';
 import Preloader from '../common/preloader/Preloader';
+import axiosInstance from '../../http/axios';
 
 enum ItemType {
     BUTTON = 'button',
@@ -16,70 +17,108 @@ interface Props {
     fetchLessons(codeJSON: string): void;
     contentBD: string;
     isFetching: boolean;
+    postFile(file:Blob, id:number): void;
+    getFilesByLessonAndElementId(elementId: string): Promise<File[]>;
 }
 
-const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) => {
-    
-    useEffect(() => {
-            const initialLessonElements = generateInitialContent(contentBD);
-            setLessonElements(initialLessonElements);
-    }, [contentBD]);
-
+const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, postFile, getFilesByLessonAndElementId }) => {
     const [lessonElements, setLessonElements] = useState<{ id: number; type: ItemType; data?: any }[]>([]);
     const [nextId, setNextId] = useState(1);
     const [savedLessonCode, setSavedLessonCode] = useState<string>('');
+    const [uploadedFiles, setUploadedFiles] = useState<{ [id: number]: File | null }>({});
+    useEffect(() => {
+        const fetchInitialContent = async () => {
+            const initialLessonElements = await generateInitialContent(contentBD);
+            setLessonElements(initialLessonElements);
 
-    const handleAddElement = (type: ItemType, data?: any) => {
-        const newLessonElements = [...lessonElements, { id: nextId, type, data }];
-        setLessonElements(newLessonElements);
-        setNextId(nextId + 1);
-    };
+            if (initialLessonElements.length > 0) {
+                const maxId = Math.max(...initialLessonElements.map(element => element.id));
+                setNextId(maxId + 1); // Устанавливаем nextId на максимальное значение id + 1
+            } else {
+                setNextId(1); // Иначе устанавливаем nextId равным 1
+            }
+        };
+    
+        fetchInitialContent();
+    }, [contentBD]);
+
+    
 
     const handleRemoveElement = (id: number) => {
         const newLessonElements = lessonElements.filter((element) => element.id !== id);
         setLessonElements(newLessonElements);
     };
-
+    const addUploadedFile = (idF: number, file: File | null) => {
+    
+        setUploadedFiles(prevState => ({
+            ...prevState,
+            [idF]: file
+        }));
+        console.log(uploadedFiles);
+    };
     const handleUpdateElementData = (id: number, newData: any) => {
+        
         const newLessonElements = lessonElements.map((element) =>
             element.id === id ? { ...element, data: newData } : element
         );
         setLessonElements(newLessonElements);
     };
 
-    const generateInitialContent = (jsonData: string): { id: number; type: ItemType; data?: any }[] => {
+    const generateInitialContent = async (jsonData: string): Promise<{ id: number; type: ItemType; data?: any }[]> => {
         try {
             const parsedData = JSON.parse(jsonData.replace(/'/g, '"'));
-            return parsedData.map((element: any, index: number) => {
-                
+    
+            const initialFiles: { [idF: number]: File[] } = {};
+    
+            const promises = parsedData.map(async (element: any, index: number) => {
+                const ind = index+1;
                 switch (element.type) {
                     case ItemType.BUTTON:
-                        setNextId(nextId + 1);
-                        return { id: index + 1, type: ItemType.BUTTON, data: { buttonName: element.buttonName, link: element.link } };
+                        setNextId(ind);
+                        return { id: ind, type: ItemType.BUTTON, data: { buttonName: element.buttonName, link: element.link } };
                     case ItemType.TEXT:
-                        setNextId(nextId + 1);
-                        return { id: index + 1, type: ItemType.TEXT, data: { text: element.text } };
+                        setNextId(ind);
+                        return { id: ind, type: ItemType.TEXT, data: { text: element.text } };
                     case ItemType.VIDEO:
-                        setNextId(nextId + 1);
-                        return { id: index + 1, type: ItemType.VIDEO, data: { video: element.video } };
+                        setNextId(ind);
+                        return { id: ind, type: ItemType.VIDEO, data: { video: element.video } };
                     case ItemType.FILE:
-                        setNextId(nextId + 1);
-                        return { id: index + 1, type: ItemType.FILE, data: { file: { name: element.file } } };
+                        setNextId(ind);
+                        const file = await getFilesByLessonAndElementId(element.id);
+                        initialFiles[element.id] = file;
+                        return { id:ind, type: ItemType.FILE, data: { file:file, fileName: element.fileName } };
                     case ItemType.DESCRIPTION:
-                        setNextId(nextId + 1);
-                        return { id: index + 1, type: ItemType.DESCRIPTION, data: { description: element.description } };
+                        setNextId(ind);
+                        return { id: ind, type: ItemType.DESCRIPTION, data: { description: element.description } };
                     default:
                         return null;
                 }
-            }).filter((element: any) => element !== null);
+            });
+    
+            const result = await Promise.all(promises);
+    
+            return result.filter((element: any) => element !== null);
         } catch (error) {
             console.error('Ошибка при разборе JSON:', error);
             return [];
         }
     };
     
+    const handleAddElement = (type: ItemType, data?: any) => {
+        setNextId(nextId+1); 
+        const newLessonElements = [...lessonElements, { id: nextId, type, data }];
+        setLessonElements(newLessonElements);
+    };
   const generateLessonCode = () => {
+    
+    Object.entries(uploadedFiles).forEach(([id, file]) => {
+        if (file) {
+            postFile(file, parseInt(id, 10)); 
+        }
+    });
+
     let code = lessonElements.map((element) => {
+       
         switch (element.type) {
             case ItemType.BUTTON:
                 return `{
@@ -99,8 +138,9 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
                 }`;
             case ItemType.FILE:
                 return `{
+                    "id": "${element.id}",
                     "type": "${element.type}",
-                    "file": "${element.data?.file?.name || ""}"
+                    "fileName": "${element.data?.fileName || ""}"
                 }`;
             case ItemType.DESCRIPTION:
                 return `{
@@ -123,20 +163,8 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
         const [video, setVideo]= useState<string>(data && data?.video || '');
         const [description, setDescriotion]= useState<string>(data && data?.description || '');
         const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-        const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files?.[0];
-            if (file) {
-                setUploadedFile(file);
-                // Прочитать содержимое файла как DataURL
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const fileContent = reader.result; // содержимое файла как DataURL
-                    handleUpdateElementData(id, { ...data, file: fileContent }); // обновить данные элемента с содержимым файла
-                };
-                reader.readAsDataURL(file);
-            }
-        }
         
+        console.log(id);
         const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             setLink(event.target.value);
         };
@@ -155,10 +183,6 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
         const handleInputBlurOne = () => {
             handleUpdateElementData(id, { ...data, buttonName });
         };
-        const handleInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            handleUpdateElementData(id, e.target.value);
-
-        };
         const handleInputBlurText = () => {
             handleUpdateElementData(id, {...data, text}); 
         };
@@ -174,14 +198,16 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
             handleUpdateElementData(id, { ...data, link });
         };
 
-        const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
+            
             if (file) {
-                // Если файл был выбран
-                setUploadedFile(file); // Сохраняем файл в состоянии компонента
-                handleUpdateElementData(id, { ...data, file }); // Обновляем данные элемента с переданным файлом
+                
+                handleUpdateElementData(id, { ...data, fileName: file.name  }); 
+                setUploadedFile(file);
+                addUploadedFile(id, file);
             }
-        }
+        };
 
         const handleRemove = () => {
             handleRemoveElement(id);
@@ -189,6 +215,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
 
         let content = null;
         let contentTwo = null;
+        
         switch (type) {
             case ItemType.BUTTON:
                 content = (
@@ -258,17 +285,18 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
                 content = (
                     <div className="file-upload-container">
                         <div className="file-container">
-                            <input className="file-input-nove form-input-p" id="file-input" type="file" onChange={handleFileUpload} />
-                            <label htmlFor="file-input" className="file-button file-input-constructor">Загрузите файл</label>
+                            <label   className="file-button file-input-constructor">Загрузите файл
+                                <input className="file-input-nove form-input-p"  type="file" onChange={handleFileUpload} />
+                            </label>
                         </div>
                         {data && (
                             <div className="file-info">
-                                <p>Имя файла: {data.file.name}</p>
+                                <p>Имя файла: {data.fileName}</p>
                                 <div className="file-actions">
-                                    <button className="file-button file-input-constructor" onClick={() => window.open(URL.createObjectURL(data.file), '_blank')}>
+                                    <button className="file-button file-input-constructor" >
                                         Посмотреть
                                     </button>
-                                    <a className="file-button file-input-constructor" href={URL.createObjectURL(data.file)} download={data.name}>
+                                    <a className="file-button file-input-constructor" >
                                         Скачать
                                     </a>
                                 </div>
@@ -293,7 +321,6 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching }) 
             default:
                 content = null;
         }
-
         return (
             <div className="element-constructor">
                 <div className='delete'>

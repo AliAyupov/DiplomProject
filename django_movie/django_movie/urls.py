@@ -23,11 +23,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView, TokenVerifyView,
 )
-from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView, \
+from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView,  \
     StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView, \
     CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet, PersonViewSet, CustomUserListView, AddTutorToCourseView, StudentProgressByStudentApiView
 
+
+from courses.views import FileUploadView
 
 router = routers.DefaultRouter()
 router.register(r'api/persons', PersonViewSet)
@@ -50,6 +52,7 @@ router.register(r'api/student-progress-by-student', StudentProgressByStudentApiV
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/upload-file/', FileUploadView.as_view(), name='upload_file'),
     path('api/users/', CustomUserListView.as_view(), name='user-list'),
     path('api/courses/<int:course_id>/add-tutor/', AddTutorToCourseView.as_view(), name='add-tutor-to-course'),
     path('api/courses/<int:course_id>/remove-teacher/<int:teacher_id>/', CourseTeacherApiView.as_view({'delete': 'remove_teacher'}), name='remove_teacher_from_course'),

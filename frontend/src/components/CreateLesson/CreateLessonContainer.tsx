@@ -14,6 +14,7 @@ interface Props {
 }
 
 const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, isFetching, contentBD}) => {
+    
     const { id } = useParams<{ id: string }>();
     useEffect(() => {
         const setContentLesson = async () => {
@@ -30,16 +31,65 @@ const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, i
         };
         setContentLesson();
     }, [id]);
+
+    const postFile = async (file: Blob, elementId: number) => {
+        const config = {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          };
+        if (file) {
+            const formData = new FormData();
+            formData.append('lesson', id || '');
+            formData.append('file_field', file);
+            formData.append('id_element', String(elementId));
+            try {
+                const response = await axiosInstance.post('/upload-file/', formData, config);
+    
+                if (response.status === 201) {
+                    response.data.id;
+                } else {
+                    debugger
+                    console.error('Ошибка при загрузке файла:', response.statusText);
+                    // Обработка ошибки, если загрузка файла не удалась
+                }
+            } catch (error) {
+                debugger
+                console.error('Ошибка при загрузке файла:', error);
+            }
+        }
+    }
+
+    const getFilesByLessonAndElementId = async (elementId: string): Promise<File[]> => {
+        try {
+            const response = await axiosInstance.get('/upload-file/', {
+                params: {
+                    lesson_id: id,
+                    id_element: elementId
+                }
+            });
+            if (response.status === 200) {
+                
+                return response.data;
+            } else {
+                console.error('Ошибка при получении файлов:', response.statusText);
+                return [];
+            }
+        } catch (error) {
+            console.error('Ошибка при получении файлов:', error);
+            return [];
+        }
+    };
+    
     const fetchLessons = async (codeJSON: string) => {
         try {
             const response = await axiosInstance.put(`lessons/${id}/`, { content: codeJSON });
-                
         } catch (error) {
             console.error('Ошибка при загрузке уроков:', error);
         }
     };
     return (
-        <CreateLesson fetchLessons={fetchLessons} contentBD={contentBD} isFetching={isFetching} />   
+        <CreateLesson fetchLessons={fetchLessons} contentBD={contentBD} isFetching={isFetching} postFile={postFile} getFilesByLessonAndElementId={getFilesByLessonAndElementId}/>   
     )
 }
 

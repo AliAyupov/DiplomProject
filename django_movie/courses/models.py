@@ -150,3 +150,11 @@ class Person(models.Model):
     class Meta:
         verbose_name = "Персонаж"
         verbose_name_plural = "Персонаж"
+
+class FileModel(models.Model):
+    file_field = models.FileField(upload_to='uploads/')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='files')
+    id_element = models.IntegerField(default=0)
+    class Meta:
+        verbose_name = "Файл"
+        verbose_name_plural = "Файлы"

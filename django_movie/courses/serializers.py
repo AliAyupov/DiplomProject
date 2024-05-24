@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
-    Enrollment, Person
+    Enrollment, Person, FileModel
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -73,4 +73,10 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
+        fields = '__all__'
+
+
+class FileModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileModel
         fields = '__all__'
