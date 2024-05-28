@@ -4236,3 +4236,17 @@ p{background: transparent;}
 .btn-request{
     background-color: #1b9414;
 }
+.answer {
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #a1a1a1;
+}
+.comment {
+    font-size: 10px;
+    color: #8d8d8d;
+}
+.width-container{
+    width: 100%;
+    padding-top: 15px;
+}

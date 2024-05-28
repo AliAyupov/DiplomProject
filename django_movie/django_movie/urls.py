@@ -24,7 +24,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView, TokenVerifyView,
 )
 from courses.views import CustomUserDetailView, CourseApiView, ModuleApiView, LessonApiView,  \
-    StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, \
+    StudentHomeworkApiView, StudentProgressApiView, ShopItemApiView, StudentInventoryApiView, EnrollmentApiView, ModuleCourseApiView, \
     CourseCreaterApiView, StudentOnTheCourseApiView, AllUsersOnTheCourseApiView, AllHomeworkOnTheCourseApiView, BlacklistRefreshView, \
     CourseTeacherApiView, ModuleCreateAPIView, LessonViewSet, PersonViewSet, CustomUserListView, AddTutorToCourseView, StudentProgressByStudentApiView
 
@@ -42,6 +42,7 @@ router.register(r'api/enrollment', EnrollmentApiView, basename='enrollment')
 router.register(r'api/user-courses', CourseCreaterApiView, basename='user-courses')
 router.register(r'api/tutor', CourseTeacherApiView, basename='tutor')
 router.register(r'api/progress', StudentOnTheCourseApiView, basename='progress')
+router.register(r'api/module-course', ModuleCourseApiView, basename='module-coursea')
 router.register(r'api/users-course', AllUsersOnTheCourseApiView, basename='users-course')
 router.register(r'api/homework-course', AllHomeworkOnTheCourseApiView, basename='homework-course')
 router.register(r'api/modules', ModuleApiView, basename='module')

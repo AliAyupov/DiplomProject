@@ -32,7 +32,7 @@ const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, i
         setContentLesson();
     }, [id]);
 
-    const postFile = async (file: Blob, elementId: number) => {
+    const postFile = async (file: File, elementId: number) => {
         const config = {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -47,7 +47,7 @@ const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, i
                 const response = await axiosInstance.post('/upload-file/', formData, config);
     
                 if (response.status === 201) {
-                    response.data.id;
+                    return response.data.id;
                 } else {
                     debugger
                     console.error('Ошибка при загрузке файла:', response.statusText);
@@ -64,9 +64,9 @@ const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, i
         try {
             const response = await axiosInstance.get('/upload-file/', {
                 params: {
-                    lesson_id: id,
-                    id_element: elementId
+                    id: elementId
                 }
+                
             });
             if (response.status === 200) {
                 

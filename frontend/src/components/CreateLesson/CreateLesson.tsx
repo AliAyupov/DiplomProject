@@ -12,12 +12,13 @@ enum ItemType {
     VIDEO = 'video',
     FILE = 'file',
     DESCRIPTION = 'description',
+    HOMEWORK = 'homework',
 }
 interface Props {
     fetchLessons(codeJSON: string): void;
     contentBD: string;
     isFetching: boolean;
-    postFile(file:Blob, id:number): void;
+    postFile(file:File, id:number): void;
     getFilesByLessonAndElementId(elementId: string): Promise<File[]>;
 }
 
@@ -26,6 +27,8 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
     const [nextId, setNextId] = useState(1);
     const [savedLessonCode, setSavedLessonCode] = useState<string>('');
     const [uploadedFiles, setUploadedFiles] = useState<{ [id: number]: File | null }>({});
+
+    
     useEffect(() => {
         const fetchInitialContent = async () => {
             const initialLessonElements = await generateInitialContent(contentBD);
@@ -54,7 +57,6 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
             ...prevState,
             [idF]: file
         }));
-        console.log(uploadedFiles);
     };
     const handleUpdateElementData = (id: number, newData: any) => {
         
@@ -71,6 +73,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
             const initialFiles: { [idF: number]: File[] } = {};
     
             const promises = parsedData.map(async (element: any, index: number) => {
+            
                 const ind = index+1;
                 switch (element.type) {
                     case ItemType.BUTTON:
@@ -84,12 +87,18 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                         return { id: ind, type: ItemType.VIDEO, data: { video: element.video } };
                     case ItemType.FILE:
                         setNextId(ind);
-                        const file = await getFilesByLessonAndElementId(element.id);
-                        initialFiles[element.id] = file;
-                        return { id:ind, type: ItemType.FILE, data: { file:file, fileName: element.fileName } };
+                        const file = await getFilesByLessonAndElementId(element.fileId);
+                        initialFiles[element.fileId] = file;
+                        return { id:ind, type: ItemType.FILE, data: { file:file, fileId:element.fileId, fileName: element.fileName } };
                     case ItemType.DESCRIPTION:
                         setNextId(ind);
                         return { id: ind, type: ItemType.DESCRIPTION, data: { description: element.description } };
+                    case ItemType.HOMEWORK:
+                        setNextId(ind);
+                        const homeworkFile = await getFilesByLessonAndElementId(element.fileId);
+                        
+                        initialFiles[element.fileId] = homeworkFile;
+                        return { id: ind, type: ItemType.HOMEWORK, data: { file: homeworkFile, fileId: element.fileId, fileName: element.fileName, description: element.description } };
                     default:
                         return null;
                 }
@@ -109,16 +118,36 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
         const newLessonElements = [...lessonElements, { id: nextId, type, data }];
         setLessonElements(newLessonElements);
     };
-  const generateLessonCode = () => {
+  const generateLessonCode = async  () => {
     
-    Object.entries(uploadedFiles).forEach(([id, file]) => {
-        if (file) {
-            postFile(file, parseInt(id, 10)); 
-        }
-    });
+    const updatedLessonElements = await Promise.all(
+        lessonElements.map(async (element) => {
+            
+            if (element.type === ItemType.FILE && uploadedFiles[element.id]) {
+                const file = uploadedFiles[element.id];
+                if (file) {
+                    const fileId = await postFile(file, element.id);
+                    if (fileId !== null) {
+                        return { ...element, data: { ...element.data, fileId } };
+                    }
+                }
+            }
+            else if (element.type === ItemType.HOMEWORK && uploadedFiles[element.id]) {
+                const file = uploadedFiles[element.id];
+                if (file) {
+                    const fileId = await postFile(file, element.id);
+                    if (fileId !== null) {
+                        return { ...element, data: { ...element.data, fileId } };
+                    }
+                }
+            }
+            return element;
 
-    let code = lessonElements.map((element) => {
-       
+            
+        })
+    );
+
+    const code = updatedLessonElements.map((element) => {
         switch (element.type) {
             case ItemType.BUTTON:
                 return `{
@@ -138,13 +167,20 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                 }`;
             case ItemType.FILE:
                 return `{
-                    "id": "${element.id}",
+                    "fileId": "${element.data?.fileId || ""}",
                     "type": "${element.type}",
                     "fileName": "${element.data?.fileName || ""}"
                 }`;
             case ItemType.DESCRIPTION:
                 return `{
                     "type": "${element.type}",
+                    "description": "${element.data?.description || ""}"
+                }`;
+            case ItemType.HOMEWORK:
+                return `{
+                    "type": "${element.type}",
+                    "fileId": "${element.data?.fileId || ""}",
+                    "fileName": "${element.data?.fileName || ""}",
                     "description": "${element.data?.description || ""}"
                 }`;
             default:
@@ -164,7 +200,6 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
         const [description, setDescriotion]= useState<string>(data && data?.description || '');
         const [uploadedFile, setUploadedFile] = useState<File | null>(null);
         
-        console.log(id);
         const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             setLink(event.target.value);
         };
@@ -203,7 +238,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
             
             if (file) {
                 
-                handleUpdateElementData(id, { ...data, fileName: file.name  }); 
+                handleUpdateElementData(id, { ...data, fileName: file.name, filePrew: file  }); 
                 setUploadedFile(file);
                 addUploadedFile(id, file);
             }
@@ -213,9 +248,85 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
             handleRemoveElement(id);
         };
 
+        const handleViewFile = async () => {
+            if (data?.filePrew) {
+                const fileURL = URL.createObjectURL(data.filePrew);
+                window.open(fileURL);
+            } else {
+                if (data?.file[0].id) {
+                    const files = await getFilesByLessonAndElementId(data.file[0].id);
+                    if (files.length > 0) {
+                        const file_field = data.file[0].file_field;
+                        const file = files[0];
+                        if (file && file_field) {
+                            const url = `${baseUrl}/${file_field}`; 
+                            window.open(url, '_blank'); 
+                        }
+                    }
+                }
+            }
+            
+        };
+        
+
+        const handleDownloadFile = async () => {
+            if (data?.filePrew) {
+                const fileURL = URL.createObjectURL(data.filePrew);
+                const a = document.createElement('a');
+                a.href = fileURL;
+                a.download = data.fileName || 'download';
+                a.click();
+                URL.revokeObjectURL(fileURL);
+            } else {
+                try {
+                    if (data?.file[0]?.id) {
+                        const files = await getFilesByLessonAndElementId(data.file[0].id);
+                        if (files.length > 0) {
+                            const file_field = data.file[0].file_field;
+                            const file = files[0];
+                            if (file && file_field) {
+                                const url = `${baseUrl}/${file_field}`;
+            
+                                // Проверка доступности URL
+                                const response = await fetch(url);
+                                if (!response.ok) {
+                                    throw new Error('File not found or server error');
+                                }
+            
+                                const blob = await response.blob();
+                                const downloadUrl = window.URL.createObjectURL(blob);
+            
+                                const a = document.createElement('a');
+                                a.href = downloadUrl;
+                                a.download = file_field || 'download';
+                                document.body.appendChild(a);
+                                a.click();
+            
+                                // Очистка URL объекта после скачивания
+                                window.URL.revokeObjectURL(downloadUrl);
+                                document.body.removeChild(a);
+                            } else {
+                                console.error('File or file_field is missing');
+                            }
+                        } else {
+                            console.error('No files found');
+                        }
+                    } else {
+                        console.error('Invalid file ID');
+                    }
+                } catch (error) {
+                    console.error('Error downloading the file:', error);
+                }
+            }
+        };
+        
+        
+        
+
         let content = null;
         let contentTwo = null;
         
+        const baseUrl = 'http://localhost:8000';
         switch (type) {
             case ItemType.BUTTON:
                 content = (
@@ -272,7 +383,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                         <div className='video-container'>
                             {data ? (
                                 <div className='player-wrapper'>
-                                    <ReactPlayer className="player" width="100%" height="100%" url={data} controls={true} />
+                                    <ReactPlayer className="player" width="80%"  url={data.video} controls={true} />
                                 </div>
                             ) : (
                                 <img className='video-none' src={none} alt="Картинка" />
@@ -293,15 +404,53 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                             <div className="file-info">
                                 <p>Имя файла: {data.fileName}</p>
                                 <div className="file-actions">
-                                    <button className="file-button file-input-constructor" >
+                                    <button className="file-button file-input-constructor" onClick={handleViewFile}>
                                         Посмотреть
                                     </button>
-                                    <a className="file-button file-input-constructor" >
+                                    <a className="file-button file-input-constructor" onClick={handleDownloadFile}>
                                         Скачать
                                     </a>
                                 </div>
                             </div>
                         )}
+                        
+                    </div>
+                );
+                break;
+            case ItemType.HOMEWORK:
+                content = (
+                        <div className="file-upload-container">
+                            <textarea
+                            name="description"
+                            className={`form-input-desctiption form-input-p form-input-desc`}
+                            placeholder="Введите описание"
+                            rows={4}
+                            value={description}
+                            onBlur={handleInputBlurDescription}
+                            onChange={handleDescriptionChange}
+                        />
+                        <div className="file-container">
+                            <label   className="file-button file-input-constructor">Загрузите файл
+                                <input className="file-input-nove form-input-p"  type="file" onChange={handleFileUpload} />
+                            </label>
+                        </div>
+                        {data && (
+                            <div className="file-info">
+                                <p>Имя файла: {data.fileName}</p>
+                                <div className="file-actions">
+                                    <button className="file-button file-input-constructor" onClick={handleViewFile}>
+                                        Посмотреть
+                                    </button>
+                                    <a className="file-button file-input-constructor" onClick={handleDownloadFile}>
+                                        Скачать
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+                        <div>
+                            <div className='answer'>Поле для ответа (заполняется учениками при прохождении)</div>
+                            <div className='comment'>У ученика будет возможность прикрепить файлы к ответу</div>
+                        </div>
                     </div>
                 );
                 break;
@@ -355,13 +504,15 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                     <button className="button-constructor">Описание</button>
                 ) : type === ItemType.FILE ? (
                     <button className="button-constructor">Файл</button>
-                ) : null}
+                ) : type === ItemType.HOMEWORK ? (
+                    <button className="button-constructor">Домашнее задание</button>
+                ): null}
             </button>
         );
     };
 
     const handleDrop = (item: any) => {
-        if ([ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION].includes(item.type)) {
+        if ([ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION, ItemType.HOMEWORK].includes(item.type)) {
             handleAddElement(item.type);
         }
     };
@@ -386,7 +537,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
 
     const LessonCanvas: React.FC = () => {
         const [, drop] = useDrop({
-            accept: [ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION],
+            accept: [ItemType.BUTTON, ItemType.TEXT, ItemType.VIDEO, ItemType.FILE, ItemType.DESCRIPTION, ItemType.HOMEWORK],
             drop: (item: any) => handleDrop(item),
             collect: (monitor) => ({
                 isOver: !!monitor.isOver(),
@@ -421,12 +572,12 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                         <DraggableButton type={ItemType.VIDEO} />
                         <DraggableButton type={ItemType.FILE} />
                         <DraggableButton type={ItemType.DESCRIPTION} />
+                        <DraggableButton type={ItemType.HOMEWORK} />
                     </div>
                     <LessonCanvas />
                 </div>
                 <div className="center">
                     <button className="btn btn-c" onClick={generateLessonCode}>Сохранить урок</button>
-                    
                 </div>
             <div>
             </div>

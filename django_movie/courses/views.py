@@ -145,11 +145,10 @@ class LessonViewSet(viewsets.ModelViewSet):
 
 class FileUploadView(APIView):
     def get(self, request, *args, **kwargs):
-        lesson_id = self.request.query_params.get('lesson_id')
-        id_element = self.request.query_params.get('id_element')
+        id = self.request.query_params.get('id')
 
-        if lesson_id and id_element:
-            files = FileModel.objects.filter(lesson_id=lesson_id, id_element=id_element)  # Замените на вашу модель
+        if id:
+            files = FileModel.objects.filter(id=id)  # Замените на вашу модель
             file_serializer = FileModelSerializer(files, many=True)  # Подставьте ваш сериализатор
             return Response(file_serializer.data, status=status.HTTP_200_OK)
         else:
@@ -166,7 +165,6 @@ class FileUploadView(APIView):
             return Response({'error': 'No file found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentHomeworkApiView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsProducer]
     queryset = StudentHomework.objects.all()
     serializer_class = StudentHomeworkSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
@@ -495,6 +493,18 @@ class BlacklistRefreshView(APIView):
                 return Response(status=status.HTTP_205_RESET_CONTENT)
             except Exception as e:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ModuleCourseApiView(viewsets.ModelViewSet):
+    serializer_class = ModuleSerializer
+    queryset = Module.objects.all()
+
+    def retrieve(self, request, pk=None):
+        try:
+            module = self.get_object()
+            serializer = self.serializer_class(module)
+            return Response(serializer.data)
+        except Module.DoesNotExist:
+            raise Http404("Module does not exist")
 
 
 class ModuleApiView(viewsets.ModelViewSet):

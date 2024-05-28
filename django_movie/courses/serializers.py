@@ -20,7 +20,7 @@ class ModuleSerializer(serializers.ModelSerializer):
     lessons_count = serializers.IntegerField(required=False)
     class Meta:
         model = Module
-        fields = ['id', 'module_name', 'lessons_count']
+        fields = ['id', 'module_name', 'course_id', 'lessons_count']
 
 
 class ModuleTheSerializer(serializers.ModelSerializer):

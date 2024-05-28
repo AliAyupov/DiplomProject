@@ -14,6 +14,7 @@ import MyCoursesContainer from './components/Courses/MyCoursesContainer';
 import CreateCourseContainer from './components/Courses/CreateCourseContainer';
 import CoursePageEditContainer from './components/Course/CoursePageEditContainer';
 import CreateLessonContainer from './components/CreateLesson/CreateLessonContainer';
+import LessonViewContainer from './components/LessonView/LessonViewContainer';
 const App: React.FC = () => {
   return (
       <Routes>
@@ -29,6 +30,8 @@ const App: React.FC = () => {
         <Route path="/course/create" element={<CreateCourseContainer/>} />
         <Route path="/course/edit/:id" element={<CoursePageEditContainer/>} />
         <Route path="/course/lessons/:id" element={<CreateLessonContainer/>} />
+        <Route path="/lessons-view/:id" element={<LessonViewContainer/>} />
+        
       </Routes>
   );
 }

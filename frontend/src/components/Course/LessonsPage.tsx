@@ -1,5 +1,6 @@
 import React from 'react';
 import learnImage from '../../img/learn.png';
+import { NavLink } from 'react-router-dom';
 
 interface Lesson {
     id: string;
@@ -28,16 +29,18 @@ const LessonsPage:  React.FC<Props> = ({lessons}) => {
                 {lessons.length > 0 ? (
                     lessons.map(item => (
                         <div key={item.id} className="in-process__item">
-                            <div className="course">
-                                <img src={learnImage} alt="Course Image" className="module__image" />
-                                <div className="course-details">
-                                    <div>
-                                        <h2 className="course-title">{item.lesson_name}</h2>
-                                        <p className="modules-progress">1h 12m</p>
+                            <NavLink to={`/lessons-view/${item.id}`}>
+                                <div className="course">
+                                    <img src={learnImage} alt="Course Image" className="module__image" />
+                                    <div className="course-details">
+                                        <div>
+                                            <h2 className="course-title">{item.lesson_name}</h2>
+                                            <p className="modules-progress">1h 12m</p>
+                                        </div>
+                                        <button className="btn btn-c">Начать</button>
                                     </div>
-                                    <button className="btn btn-c">Начать</button>
                                 </div>
-                            </div>
+                            </NavLink>
                         </div>
                     ))
                 ) : (

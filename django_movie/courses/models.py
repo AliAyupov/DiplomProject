@@ -72,7 +72,7 @@ class StudentHomework(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='homework')
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='homework_submissions')
     submission_date = models.DateTimeField(auto_now_add=True)
-    homework_content = models.FileField(upload_to='homework_files/')
+    homework_content = models.JSONField(blank=True, null=True)
     submission_status = models.CharField(max_length=50)
     grade = models.IntegerField(null=True, blank=True)
 
