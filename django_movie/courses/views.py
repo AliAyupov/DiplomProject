@@ -165,9 +165,29 @@ class FileUploadView(APIView):
             return Response({'error': 'No file found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentHomeworkApiView(viewsets.ModelViewSet):
-    queryset = StudentHomework.objects.all()
+    queryset = StudentHomework.objects.all()  # Добавьте этот атрибут
     serializer_class = StudentHomeworkSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+
+    def get_queryset(self):
+        queryset = StudentHomework.objects.all()
+        lesson = self.request.query_params.get('lesson')
+        student = self.request.query_params.get('student')
+
+        if lesson is not None:
+            queryset = queryset.filter(lesson_id=lesson)
+        if student is not None:
+            queryset = queryset.filter(student_id=student)
+
+        return queryset
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = StudentHomeworkSerializer(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StudentProgressApiView(viewsets.ModelViewSet):

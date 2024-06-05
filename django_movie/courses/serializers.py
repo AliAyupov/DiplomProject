@@ -35,6 +35,22 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class StudentHomeworkSerializer(serializers.ModelSerializer):
+    course_info = serializers.SerializerMethodField()
+    lesson_info = serializers.SerializerMethodField()
+    student_info = serializers.SerializerMethodField()
+
+    def get_course_info(self, obj):
+        course = obj.course
+        return CourseSerializer(course).data
+
+    def get_lesson_info(self, obj):
+        lesson = obj.lesson
+        return LessonSerializer(lesson).data
+
+    def get_student_info(self, obj):
+        student = obj.student
+        return CustomUserSerializer(student).data
+
     class Meta:
         model = StudentHomework
         fields = '__all__'

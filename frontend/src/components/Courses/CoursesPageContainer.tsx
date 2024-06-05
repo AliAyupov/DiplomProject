@@ -40,7 +40,7 @@ const CoursesPageContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsF
 
                     toogleIsFetching(false);
                     setCourses(response.data);
-                    setTotalCoursesCount(response.data.count);
+                    setTotalCoursesCount(response.data.length);
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузке курсов:', error);

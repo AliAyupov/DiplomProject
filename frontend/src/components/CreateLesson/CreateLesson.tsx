@@ -5,6 +5,7 @@ import ReactPlayer from 'react-player';
 import none from '../../img/balvan-foto.jpg';
 import Preloader from '../common/preloader/Preloader';
 import axiosInstance from '../../http/axios';
+import { ToastContainer } from 'react-toastify';
 
 enum ItemType {
     BUTTON = 'button',
@@ -578,6 +579,7 @@ const CreateLesson: React.FC<Props> = ({ fetchLessons, contentBD, isFetching, po
                 </div>
                 <div className="center">
                     <button className="btn btn-c" onClick={generateLessonCode}>Сохранить урок</button>
+                    <ToastContainer />
                 </div>
             <div>
             </div>

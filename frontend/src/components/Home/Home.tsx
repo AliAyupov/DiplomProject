@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import mount from '../../img/mount.png';
 import mony from '../../img/mony.jpg';
 import Preloader from "../common/preloader/Preloader";
@@ -23,6 +23,8 @@ interface Props {
 
 const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    console.log(totalCoursesCount)
+    const modulesRef = useRef<HTMLDivElement>(null);
 
     const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -46,7 +48,11 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
             onPageChanged(previousPage);
         }
     }
-
+    const scrollToModules = () => {
+        if (modulesRef.current) {
+            modulesRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
     let pagesCount = Math.ceil(totalCoursesCount / pageSize);
     let pages = [];
 
@@ -80,7 +86,7 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                                     placeholder="Поиск..."
                                     value={searchQuery} 
                                     onChange={handleSearchChange}  />
-                                <button type="submit" className="form-button">
+                                <button type="submit"  onClick={scrollToModules} className="form-button">
                                     Поиск
                                 </button>
                             </form>
@@ -89,7 +95,7 @@ const Home: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPa
                 </section>
                 <div className="wrapper-text">Рекомендации для Вас</div>
                 {isFetching ? <Preloader key="unique_preloader_key"/> : null}
-                <div className="grid">
+                <div className="grid" ref={modulesRef}>
                     {courses && courses.map(c => (
                         <NavLink key={c.id} to={`/course/${c.id}`}>
                             <div className="grid__item">

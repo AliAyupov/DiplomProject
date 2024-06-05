@@ -19,8 +19,7 @@ const SET_USER_INVENTORY = 'SET_USER_INVENTORY';
 const SET_PERSON = 'SET_PERSON';
 const SET_PERSON_ID = 'SET_PERSON_ID';
 const SET_CONTENT = 'SET_CONTENT';
-
-
+const SET_HOMEWORK = 'SET_HOMEWORK';
  
 
 interface Lesson {
@@ -28,6 +27,18 @@ interface Lesson {
     image: string;
     lesson_name:string;
 }
+
+interface Homework {
+    id: number;
+    course: number;
+    grade: string | null;
+    homework_content: string;
+    lesson: number;
+    student: number;
+    submission_date: string;
+    submission_status: string;
+}
+
 interface Action {
     courseName: string;
     contentBD: string;
@@ -51,6 +62,7 @@ interface Action {
     enrollments: any;
     personData: any;
     personId: any;
+    homework: Homework;
 }
 
 interface State {
@@ -76,6 +88,7 @@ interface State {
     usersData:any[];
     enrollments: any[]; 
     personData: any;
+    homework: Homework;
 }
 
 const initialState: State = {
@@ -97,11 +110,20 @@ const initialState: State = {
     lessons: [],
     userInventory: [],
     personId: [],
-    
     courseName: '', 
     description: '',
     picture: '',
     personData: null,
+    homework: {
+        id: 0,
+        course: 0,
+        grade: null,
+        homework_content: '',
+        lesson: 0,
+        student: 0,
+        submission_date: '',
+        submission_status: '',
+    },
 }
 
 const homeReducer = (state: State = initialState, action: Action): State => {
@@ -148,6 +170,8 @@ const homeReducer = (state: State = initialState, action: Action): State => {
             return {...state, personId: action.personId };
         case SET_CONTENT:
             return { ...state, contentBD: action.contentBD }; 
+        case SET_HOMEWORK:
+            return { ...state, homework: action.homework };
         default:
             return state;
     }
@@ -168,13 +192,12 @@ export const setCourseName = (courseName: string) => ({ type: SET_COURSE_NAME, c
 export const setCourseDescription = (description: string) => ({ type: SET_COURSE_DESCRIPTION, description });
 export const setImages = (picture: string) => ({ type: SET_IMAGES, picture: picture });
 export const setModule = (module: any) => ({ type: SET_MODULE, module });
-export const setEnroll = (enrollments: any[]) => ({
-    type: SET_ENROLL,
-    enrollments
-});
+export const setEnroll = (enrollments: any[]) => ({ type: SET_ENROLL, enrollments});
 export const setShopItems = (shopItems: any) => ({ type: SET_SHOP_ITEMS, shopItems });
 export const setUserInventory = (userInventory: any[]) => ({ type: SET_USER_INVENTORY, userInventory });
 export const setPerson = (head: number, shoes: number, bruke: number, tshort: number, arm: number) => ({ type: SET_PERSON, personData:{head, shoes, bruke, tshort, arm}, });
 export const setPersonId = (personId: any[]) => ({ type: SET_PERSON_ID, personId });
 export const setContent = (contentBD: string) => ({type: SET_CONTENT, contentBD});
+export const setHomework = (homework: Homework[]) => ({ type: SET_HOMEWORK, homework });
+
 export default homeReducer;

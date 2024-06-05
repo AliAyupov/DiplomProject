@@ -49,19 +49,15 @@ const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCou
                     <ul className="menu">
                         <li className="menu__item item__active">
                             <img src={profile} alt="Мой профиль" className="menu__icon" />
-                            <a href="#" className="menu__link">Мой профиль</a>
+                            <a href="#" className="menu__link">Информация о курсе</a>
                         </li>
                         <li className="menu__item">
-                            <img src={mydos} alt="Мои достижения" className="menu__icon" />
-                            <a href="#" className="menu__link">Мои достижения</a>
+                            <img src={mypers} alt="Мой профиль" className="menu__icon" />
+                            <a href="#" className="menu__link">Лучшие ученики</a>
                         </li>
                         <li className="menu__item">
-                            <img src={mypers} alt="Мой персонаж" className="menu__icon" />
-                            <a href="#" className="menu__link">Мой персонаж</a>
-                        </li>
-                        <li className="menu__item">
-                            <img src={shop} alt="Магазин" className="menu__icon" />
-                            <a href="#" className="menu__link">Магазин</a>
+                            <img src={mypers} alt="Мой профиль" className="menu__icon" />
+                            <a href="#" className="menu__link">Преподаватели</a>
                         </li>
                     </ul>
                 </div>

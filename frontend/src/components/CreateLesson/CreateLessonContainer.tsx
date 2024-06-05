@@ -5,6 +5,8 @@ import { setContent, togglePreloader} from '../../redux/home-reducer';
 import { useNavigate, useParams } from "react-router-dom";
 import { withAuthorization } from "../hoc/AuthRedirect";
 import CreateLesson from "./CreateLesson";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Props {
     contentBD: string;
@@ -51,7 +53,6 @@ const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, i
                 } else {
                     debugger
                     console.error('Ошибка при загрузке файла:', response.statusText);
-                    // Обработка ошибки, если загрузка файла не удалась
                 }
             } catch (error) {
                 debugger
@@ -84,6 +85,15 @@ const CreateLessonContainer: React.FC<Props> = ({setContent, toogleIsFetching, i
     const fetchLessons = async (codeJSON: string) => {
         try {
             const response = await axiosInstance.put(`lessons/${id}/`, { content: codeJSON });
+            toast.success('Урок успешно создан!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         } catch (error) {
             console.error('Ошибка при загрузке уроков:', error);
         }

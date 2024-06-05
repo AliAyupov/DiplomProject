@@ -11,9 +11,12 @@
       <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/LessonsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/LessonsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLesson.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLessonContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateLesson/CreateLessonContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout/HeaderContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout/HeaderContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonViewContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonViewContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

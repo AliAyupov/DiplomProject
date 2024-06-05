@@ -3430,8 +3430,7 @@ p{background: transparent;}
 
 .price {
     font-size: 20px; 
-    margin-bottom: 10px;
-    color: #525355;
+    color: #000000;
 }
 
 .buy-button {
@@ -3447,7 +3446,7 @@ p{background: transparent;}
 .buy-button:hover {
     background-color: #0661c3; 
 }
-.product-info p, .price, .buy-button {
+.product-info p, .buy-button {
     font-size: 14px;
 }
 
@@ -4249,4 +4248,169 @@ p{background: transparent;}
 .width-container{
     width: 100%;
     padding-top: 15px;
+}
+.homework-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+.homework-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-top: 25px;
+}
+
+.homework-table th,
+.homework-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.homework-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .homework-table th,
+    .homework-table td {
+        padding: 4px;
+    }
+
+    .homework-table th {
+        font-size: 14px;
+    }
+
+    .homework-table td {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .homework-table th,
+    .homework-table td {
+        padding: 2px;
+    }
+
+    .homework-table th {
+        font-size: 12px;
+    }
+
+    .homework-table td {
+        font-size: 10px;
+    }
+}
+.file_view{
+    color:#0962c2;
+    margin-top: 10px;
+}
+.homework-list {
+    list-style: none;
+    padding: 0;
+}
+
+.homework-item {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.grade-button {
+    margin-top: 10px;
+    font-size: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.grade-button:hover {
+    background-color: #0056b3;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+}
+
+.file-item {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.view-file-button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.view-file-button:hover {
+    background-color: #218838;
+}
+p.homework_table {
+    background: #e4f4f9;
+    padding: 10px;
+}
+
+p.homework_table_row {
+    background: #ffffff;
+    padding: 10px;
+}
+.file_view{
+    padding: 5px;
+    cursor:pointer;
+}
+.grade-options {
+    display: flex;
+    justify-content: space-around;
+}
+
+.grade-option {
+    display: flex;
+    align-items: center;
+}
+
+.grade-option input {
+    margin-right: 5px;
+}
+.zoom {
+    zoom: 1.4;
+}
+img.money {
+    width: 35px;
+    background: transparent;
+}
+.money-div {
+    display: flex;
+    background: white;
+    padding: 6px 2px;
+    border-radius: 15px;
+    border: 1px solid #dedede;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+.money-txt{
+    font-family: 'Cakra';
+    background: transparent;
+}
+.purchase-info {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 5px 0px;
 }

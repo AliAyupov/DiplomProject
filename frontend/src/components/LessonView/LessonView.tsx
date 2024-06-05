@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import Preloader from '../common/preloader/Preloader';
-import { textSpanContainsTextSpan } from 'typescript';
 
 enum ItemType {
     BUTTON = 'button',
@@ -11,30 +10,40 @@ enum ItemType {
     DESCRIPTION = 'description',
     HOMEWORK = 'homework',
 }
+interface Homework {
+    id: number;
+    course: number;
+    grade: string | null;
+    homework_content: string;
+    lesson: number;
+    student: number;
+    submission_date: string;
+    submission_status: string;
+}
 
 interface Props {
     contentBD: string;
     isFetching: boolean;
     getFilesByLessonAndElementId(elementId: string): Promise<File[]>;
     postFiles(files: { id: string; file: File }[]): void;
+    homeworkExists: boolean;
+    homework: Homework;
+    lessonFiles: LessonFiles[];
 }
-
+interface LessonFiles{
+    id: number;
+    file_field: string;
+}
 interface LessonElement {
     id: number;
     type: ItemType;
     data?: any;
 }
 
-const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAndElementId, postFiles }) => {
+const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAndElementId, postFiles, homeworkExists, homework, lessonFiles}) => {
     const [lessonElements, setLessonElements] = useState<LessonElement[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<{ id: string; file: File }[]>([]);
 
-    const handleUpdateElementData = (id: number, newData: any) => {
-        const newLessonElements = lessonElements.map((element) =>
-            element.id === id ? { ...element, data: newData } : element
-        );
-        setLessonElements(newLessonElements);
-    };
     useEffect(() => {
         const fetchInitialContent = async () => {
             const initialLessonElements = await generateInitialContent(contentBD);
@@ -44,12 +53,19 @@ const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAn
         fetchInitialContent();
     }, [contentBD]);
     
+    const getFileNameFromField = (file_field: string): string => {
+        const filePathArray = file_field.split('/');
+        return filePathArray[filePathArray.length - 1]; 
+    };
+    const handleView = (lessonFile: LessonFiles) => {
+        const fileUrl = `${baseUrl}/${lessonFile.file_field}`;
+        window.open(fileUrl, '_blank');
+    };
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
             const newUploadedFiles = [...uploadedFiles];
             for (let i = 0; i < files.length; i++) {
-                // Создаем уникальный идентификатор для файла
                 const fileId = `file_${Date.now()}_${i}`;
                 newUploadedFiles.push({ id: fileId, file: files[i] });
             }
@@ -143,10 +159,11 @@ const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAn
                                 <a className="file-button file-input-constructor"  onClick={() => handleDownloadFile(data)}>Скачать</a>
                             </div>
                         </div>
+                        {homeworkExists === false ? (
                         <div className='center'>
                         <div className="file-upload-container width-container">
                             <div className="file-container center">
-                                <label   className="file-button file-input-constructor">Загрузите файл
+                                <label className="file-button file-input-constructor">Загрузить домашнее задание
                                     <input className="file-input-nove form-input-p"  type="file" onChange={handleFileUpload} />
                                 </label>
                             </div>
@@ -154,23 +171,51 @@ const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAn
                                     <div key={index} className="file-info center">
                                         <p>Имя файла: {uploadedFile.file.name}</p>
                                         <div className="file-actions">
-                                            <button className="file-button file-input-constructor" onClick={() => handleViewFile({ file: [uploadedFile.file] })}>Посмотреть</button>
+                                        <button className="file-button file-input-constructor" onClick={() => handleViewFile({ file: [uploadedFile.file] })}>Посмотреть</button>
                                             <a className="file-button file-input-constructor" onClick={() => handleDownloadFile({ file: [uploadedFile.file] })}>Скачать</a>
                                         </div>
                                     </div>
                                 ))}
+                        {!homeworkExists && (
                         <div className="center">
                             <button className="btn btn-c" onClick={()=>postFiles(uploadedFiles)}>Отправить домашнее задание</button>
-                        </div>
+                        </div>)}
                     </div>
-                        </div>
+                </div>
+                ) : (
+                    <div className="homework-table-container">
+                        <div className="file-upload-container width-container">Домашнее задание загружено</div>
+                        {homeworkExists && homework && (
+                        <table className="homework-table">
+                            <thead>
+                                <tr>
+                                    <th>Отправленные файлы</th>
+                                    <th>Дата отправления</th>
+                                    <th>Оценка</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    {lessonFiles.map((lessonFile, index) => (
+                                        <div className='file_view' onClick={() => handleView(lessonFile)} key={index}>Файл: {getFileNameFromField(lessonFile.file_field)}</div>
+                                    ))}
+                                </td>
+                                <td>{homework?.submission_date}</td>
+                                <td>{homework?.grade ?? 'Не оценено'}</td>
+                            </tr>
+                            </tbody>
+                    </table>
+                    )}
                     </div>
-                    
-                );
-            default:
-                return null;
-        }
-    };
+                            )}
+                            </div>
+                                
+                            );
+                        default:
+                            return null;
+                    }
+                };
 
     const handleViewFile = async (data: any) => {
         if (data.file[0]?.id) {

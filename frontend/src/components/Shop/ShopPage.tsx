@@ -5,6 +5,7 @@ import tshort from '../../img/empty.png';
 import shoes from '../../img/empty.png';
 import bruke from '../../img/empty.png';
 import arm from '../../img/empty.png';
+import money from '../../img/money.png';
 
 interface UserInventory{
     id: number;
@@ -25,6 +26,13 @@ interface PersonData {
     tshort: number;
     arm: number;
 }
+
+interface UserData {
+    id: string;
+    balance: string;
+}
+
+
 interface TypeToImageKey {
     [key: number]: string;
 }
@@ -32,13 +40,14 @@ interface TypeToImageKey {
 interface Props {
     shopItems: ShopItems[];
     setShopItems: (shopItems: ShopItems[]) => void;
-    handlePurchase: (itemId: number) => void;
+    handlePurchase: (itemId: number, itemCost: number) => void;
     pageSize: number;
     totalCoursesCount: number;
     userInventory: number[];
     currentPage: number;
     personData: PersonData;
     onPageChanged: (pageNumber: number) => void;
+    userData: UserData;
 }
 
 const typeToImageKey: TypeToImageKey = {
@@ -48,7 +57,7 @@ const typeToImageKey: TypeToImageKey = {
     4: 'tshort', // Броня
     5: 'arm' // Оружие
 };
-const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userInventory, totalCoursesCount, currentPage, onPageChanged, personData}) => {
+const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userInventory, totalCoursesCount, currentPage, onPageChanged, personData, userData}) => {
     const [images, setImages] = useState({
         head: head,
         shoes: shoes,
@@ -114,13 +123,17 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                                 onClick={() => handleImageClick(item.type, item.picture)} /> 
                             </div>
                             <div className="purchase-info">
-                                <span className="price">{item.cost}</span>
+                                <img src={money} alt="" className='money'/><span className="price money-txt">{item.cost}</span>
                             </div>
                             <div className="purchase-info">
                                 {userInventory.includes(item.id) ? (
-                                    <div>Куплено!</div>
+                                    <div className="buy-button btn-request">Куплено</div>
                                 ) : (
-                                    <button className="buy-button" onClick={() => handlePurchase(item.id)}>Купить</button>
+                                    (parseInt(userData.balance) > item.cost) ? (
+                                    <button className="buy-button" onClick={() => handlePurchase(item.id, item.cost)}>Купить</button>
+                                    ) : (
+                                        <div>Не хватает монет</div>
+                                    )
                                 )}
                             </div>
 
@@ -138,6 +151,7 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                     </div>
             </div>
             <div className="screen__sidebar-new">
+                <div className='money'><div className="money-div">Баланс: <img src={money} alt="" className='money'/><div className='price money-txt'>{userData.balance}</div></div></div>
                 <div className='image-person'>   
                     <img src={images.shoes} alt="" className='image-shoes'/>
                     <img src={images.bruke} alt="" className='image-bruke'/>

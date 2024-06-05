@@ -4,17 +4,14 @@ import {connect} from 'react-redux';
 import Preloader from '../common/preloader/Preloader';
 import { setCurrentPage, setTotalCourses} from "../../redux/home-reducer";
 import { setShopItems, setUserInventory, setPerson } from '../../redux/home-reducer';
+import { setUserData } from '../../redux/auth-reducer';
 import ShopPage from './ShopPage';
 import { withAuthorization } from '../hoc/AuthRedirect';
 
-interface UserInventory{
-    id: number;
-    item: number;
-    student: number;
-}
 
 interface UserData {
     id: string;
+    balance: string;
 }
 
 interface ShopItems{
@@ -41,9 +38,10 @@ interface Props {
     setShopItems: (shopItems: ShopItems[]) => void;
     setUserInventory: (inventoryIds: number[]) => void;
     setPerson: (head: string, shoes: string, bruke: string, tshort: string, arm: string) => void;
+    setUserData: (email: string, id: string, login: string, picture: string, role:string, isAuthenticated: boolean, userData:any) => void;
 }
 
-const ShopPageContainer: React.FC<Props> = ({setShopItems, shopItems, userData, pageSize, setUserInventory, userInventory,setPerson, personData}) => {
+const ShopPageContainer: React.FC<Props> = ({setShopItems, shopItems, userData, pageSize, setUserInventory, setUserData, userInventory,setPerson, personData}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [totalCoursesCount, setTotalCoursesCount] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -104,15 +102,23 @@ const ShopPageContainer: React.FC<Props> = ({setShopItems, shopItems, userData, 
     const onPageChanged = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     }
-    const handlePurchase = async (itemId: number) => {
+    const handlePurchase = async (itemId: number, itemCost: number) => {
         try {
             const response = await axiosInstance.post(`/student-inventory/`, {
                 item: itemId,
                 student: userData.id
             });
             if (response.data && response.data.id) {
+                const currentBalance = userData.balance;
+                const newBalance = parseInt(currentBalance) - itemCost;
+
+                const userUpdateResponse = await axiosInstance.put(`/custom-users/${userData.id}/`, {
+                    balance: newBalance
+                });
+                setUserData(userUpdateResponse.data.email, userUpdateResponse.data.id, userUpdateResponse.data.username, userUpdateResponse.data.picture, userUpdateResponse.data.role, true, userUpdateResponse.data);
                 setUserInventory([...userInventory, itemId]);
             }
+            
         } catch (error) {
             console.error('Ошибка при добавлении в инвентарь:', error);
         }
@@ -132,6 +138,7 @@ const ShopPageContainer: React.FC<Props> = ({setShopItems, shopItems, userData, 
         handlePurchase={handlePurchase}
         userInventory={userInventory}
         personData={personData}
+        userData={userData}
         />
     );
 }
@@ -145,12 +152,13 @@ const mapStateToProps = (state: any) => {
         totalCoursesCount : state.homePage.totalCoursesCount,
         currentPage: state.homePage.currentPage,
         userInventory: state.homePage.userInventory,
-        personData: state.homePage.personData
+        personData: state.homePage.personData,
+	    setUserData: state.auth.setUserData,
     };
 }
 
 
 const ShopPageContainerContainerAuth = withAuthorization(ShopPageContainer);
 
-export default connect(mapStateToProps, {setShopItems, setCurrentPage, setTotalCourses, setUserInventory, setPerson})(ShopPageContainerContainerAuth);
+export default connect(mapStateToProps, {setShopItems, setCurrentPage, setTotalCourses, setUserInventory, setPerson, setUserData})(ShopPageContainerContainerAuth);
 

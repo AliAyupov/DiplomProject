@@ -61,18 +61,24 @@ const ProfilePage: React.FC<Props> = ({
                                 <img src={myProfileIcon} alt="Мой профиль" className="menu__icon" />
                                 <a href="#" className="menu__link">Мой профиль</a>
                             </li>
+                            {userData.role === 'student' && (
                             <li className={`menu__item ${activeTab === 'achievements' ? 'item__active' : ''}`} onClick={() => handleTabClick('achievements')}>
                                 <img src={myDosIcon} alt="Мои достижения" className="menu__icon" />
                                 <a href="#" className="menu__link">Мои достижения</a>
                             </li>
+                             )}
+                             {userData.role === 'student' && (
                             <li className={`menu__item ${activeTab === 'character' ? 'item__active' : ''}`} onClick={() => handleTabClick('character')}>
                                 <img src={myPersIcon} alt="Мой персонаж" className="menu__icon" />
                                 <a href="#" className="menu__link">Мой персонаж</a>
                             </li>
+                            )}
+                            {userData.role === 'student' && (
                             <li className={`menu__item ${activeTab === 'shop' ? 'item__active' : ''}`} onClick={() => handleTabClick('shop')}>
                                 <img src={shopIcon} alt="Магазин" className="menu__icon" />
                                 <a href="#" className="menu__link">Магазин</a>
                             </li>
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -165,7 +171,7 @@ const ProfilePage: React.FC<Props> = ({
                             <div className="progress-bar">
                                 <div className="progress"></div>
                             </div>
-                            <div className="progress-module">1/2</div>
+                            <div className="progress-module">50/300</div>
                         </div>
                         )}
                         

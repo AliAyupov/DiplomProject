@@ -4,14 +4,19 @@ import Header from './Header';
 import axiosInstance from '../../http/axios';
 import { setUserData } from '../../redux/auth-reducer';
 
+interface UserData {
+  id:number;
+  role:string;
+}
 interface Props {
   isAuthenticated: boolean;
   picture:string;
+  userData: UserData;
   setUserData: (email: string, id: string, login: string, picture: string, role:string, isAuthenticated: boolean, userData:any) => void;
 }
 
 
-const HeaderContainer: React.FC<Props> = ({ isAuthenticated, setUserData, picture }) => {
+const HeaderContainer: React.FC<Props> = ({ isAuthenticated, setUserData, picture, userData }) => {
     useEffect(() => {
       const fetchUserData = async () => {
         try {
@@ -40,11 +45,12 @@ const HeaderContainer: React.FC<Props> = ({ isAuthenticated, setUserData, pictur
       fetchUserData();
     }, [setUserData, isAuthenticated]);
 
-  return <Header isAuthenticated={isAuthenticated} picture={picture}/>;
+  return <Header isAuthenticated={isAuthenticated} picture={picture} userData={userData}/>;
 };
 
 const mapStateToProps = (state: any) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  userData: state.auth.userData,
   picture: state.auth.picture,
 });
 

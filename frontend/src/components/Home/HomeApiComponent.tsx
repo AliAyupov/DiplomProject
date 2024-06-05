@@ -34,10 +34,9 @@ const HomeApiComponent: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetch
         } else {
             axiosInstance.get(`courses/search/?query=${searchQuery}`)
                 .then(response => {
-
                     toogleIsFetching(false);
                     setCourses(response.data);
-                    setTotalCoursesCount(response.data.count);
+                    setTotalCoursesCount(response.data.length);
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузке курсов:', error);

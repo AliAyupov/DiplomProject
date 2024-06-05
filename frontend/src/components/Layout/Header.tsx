@@ -5,13 +5,18 @@ import ava from '../../img/ava.png'
 
 import { NavLink} from 'react-router-dom';
 
+interface UserData {
+    role:string;
+}
+
 interface Props {
     isAuthenticated: boolean;
     picture: string;
+    userData:UserData;
 }
 
   
-const Header: React.FC<Props> = ({ isAuthenticated, picture}) => {
+const Header: React.FC<Props> = ({ isAuthenticated, picture, userData}) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {
@@ -32,7 +37,9 @@ const Header: React.FC<Props> = ({ isAuthenticated, picture}) => {
                 <NavLink to="/" className="link-menu header-menu__font">Главная</NavLink>
                 <NavLink to="/courses" className="link-menu header-menu__font">Курсы</NavLink>
                 <NavLink to="/courses/my" className="link-menu header-menu__font">Мои курсы</NavLink>
-                <NavLink to="/profile" className="link-menu header-menu__font">Возможности</NavLink>
+                {isAuthenticated && userData.role !== 'student' &&(
+                    <NavLink to="/homework" className="link-menu header-menu__font">Проверка работ</NavLink>
+                )}
             </div>
             
             <div className="header_button">
@@ -58,7 +65,9 @@ const Header: React.FC<Props> = ({ isAuthenticated, picture}) => {
                 <NavLink to="/" className="link-menu header-menu__font link-menu__active" onClick={closeMobileMenu}>Главная</NavLink>
                 <NavLink to="/courses" className="link-menu header-menu__font" onClick={closeMobileMenu}>Курсы</NavLink>
                 <NavLink to="/courses/my" className="link-menu header-menu__font" onClick={closeMobileMenu}>Мои курсы</NavLink>
-                <a href="#" className="link-menu header-menu__font" onClick={closeMobileMenu}>Возможности</a>
+                {isAuthenticated && userData.role !== 'student' && (
+                    <NavLink to="/homework" className="link-menu header-menu__font">Проверка работ</NavLink>
+                )}
                 {isAuthenticated ? (
                 <><NavLink to="/logout" className="item-button__exit btn__height btn__height_exit"
                 onClick={closeMobileMenu}>Выйти</NavLink></>
