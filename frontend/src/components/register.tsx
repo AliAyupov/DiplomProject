@@ -118,7 +118,7 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
             })
             .then((res) => {
                 setUserId(res.data.id);
-
+                
                 axiosInstance
                     .post('persons/', {
                         user: res.data.id,
@@ -151,19 +151,22 @@ const SignUp: React.FC<Props> = ({ userData, setUserData }) => {
                         username: formData.username,
                         password: formData.password,
                     })
-                    .then((res) => {
-                        localStorage.setItem('access_token', res.data.access);
-                        localStorage.setItem('refresh_token', res.data.refresh);
-                        axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
-                        setUserData(
-                            formData.username,
-                            res.data.userId,
-                            res.data.login,
-                            res.data.picture,
-                            res.data.role,
-                            true,
-                            null
-                        );
+                    .then(async (res) => {
+                      localStorage.setItem('access_token', res.data.access);
+                      localStorage.setItem('refresh_token', res.data.refresh);
+                      axiosInstance.defaults.headers['Authorization'] =
+                      'Bearer ' + localStorage.getItem('access_token');
+                      if (localStorage.getItem('access_token')) {
+                                const responseUser = await axiosInstance.get('auth/users/me/');
+                                const userData = responseUser.data;
+                                const { email, id, username} = userData;
+                                const userId = userData.id;
+                                const responseUserProfile = await axiosInstance.get(`custom-users/${userId}/`);
+                                const userProfileData: UserData = responseUserProfile.data;
+                                setUserData(email, id, username, userProfileData.picture, userProfileData.role, true, userProfileData);
+                              } else {
+                                setUserData('', '','', '','', false, null);
+                              }
                     })
                     .catch((error) => {
                         console.error('Ошибка при входе:', error);

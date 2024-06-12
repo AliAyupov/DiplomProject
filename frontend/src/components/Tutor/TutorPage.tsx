@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import TutorCreateDialog from '../Layout/NewTeacherDialog';
+import sad from '../../img/sad.png';
 
 interface Tutor {
     id: number;
@@ -66,7 +67,7 @@ const TutorPage: React.FC<Props> = ({ tutor, handleDelete, setTutor, handleAddTu
                         ))}
                     </div>
                 ) : (
-                    <div>Учителей нет</div>
+                    <div className='center'> <div className='dd'>Учителей нет.</div> <img src={sad} className='sad'/> </div>
                 )}
             </div>
         </main>

@@ -6,6 +6,7 @@ import shoes from '../../img/empty.png';
 import bruke from '../../img/empty.png';
 import arm from '../../img/empty.png';
 import money from '../../img/money.png';
+import { ToastContainer } from 'react-toastify';
 
 interface UserInventory{
     id: number;
@@ -129,14 +130,14 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                                 {userInventory.includes(item.id) ? (
                                     <div className="buy-button btn-request">Куплено</div>
                                 ) : (
-                                    (parseInt(userData.balance) > item.cost) ? (
+                                    (parseInt(userData.balance) >= item.cost) ? (
                                     <button className="buy-button" onClick={() => handlePurchase(item.id, item.cost)}>Купить</button>
                                     ) : (
                                         <div>Не хватает монет</div>
                                     )
                                 )}
                             </div>
-
+                            <ToastContainer />
                         </div>
                     </div>
                     ))}
@@ -157,8 +158,8 @@ const ShopPage: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                     <img src={images.bruke} alt="" className='image-bruke'/>
                     <img src={images.tshort} alt="" className='image-tshort'/> 
                     <img src={person} alt="" className="image-person"/>
-                    <img src={images.head} alt="" className='image-head'/>
-                    <img src={images.arm} alt="" className='image-arm'/>
+                    <img src={images.head} alt="" className='image-head-s'/>
+                    <img src={images.arm} alt="" className='image-arm-s'/>
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import ModuleCreationDialog from '../Layout/Dialog';
 import myProfileIcon from '../../img/myprofile.svg';
 import myDosIcon from '../../img/mydos.svg';
 import myPersIcon from '../../img/mypers.svg';
-import shopIcon from '../../img/shop.svg';
+import sad from '../../img/sad.png';
 import StudentEnrollContainer from '../Enroll/StudentEnrollContainer';
 import ModuleEditDialog from '../Layout/DialogEdit';
 import LessonEditDialog from '../Layout/LessonEditDialog';
@@ -339,12 +339,12 @@ const CoursePageEdit: React.FC<Props> = ({
                                         onClose={handleCloseDialogCreate}
                                         activeModuleId={moduleIdCreate}
                                         onSave={handleCreateLesson} />
-                                )}
+                                    )}
                             </div>
                         </div>
                             ))
                         ) : (
-                            <p>Модулей еще нет</p>
+                            <div className='center'> <div className='dd'>Модулей пока что нет.</div> <img src={sad} className='sad'/> </div>
                         )}
                     </div>
                     <hr />

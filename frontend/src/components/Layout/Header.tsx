@@ -17,6 +17,7 @@ interface Props {
 
   
 const Header: React.FC<Props> = ({ isAuthenticated, picture, userData}) => {
+    
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {

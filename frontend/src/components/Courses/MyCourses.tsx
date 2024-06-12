@@ -2,6 +2,7 @@ import React from 'react';
 import Preloader from '../common/preloader/Preloader';
 import { NavLink } from 'react-router-dom';
 import none from '../../img/balvan-foto.jpg';
+import sad from '../../img/sad.png';
 
 interface Course {
     id: number;
@@ -36,9 +37,9 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
         <div className="wrapper">
             <div className="wrapper-text"></div>
             <div className="wrapper__title wrapper__title_my">
-                {userData.role === 'producer'? <abbr title="Здесь представлены курсы, созданные вами">МОИ КУРСЫ</abbr> : 
-                userData.role === 'tutor'? <abbr title='Здесь представлены курсы, в которых вы тьютор'>МОИ КУРСЫ</abbr> : 
-                <abbr className="Здесь представленны курсы, в которых вы участник">МОИ КУРСЫ</abbr>}
+                {userData.role === 'producer'? <abbr className="wrapper__title" title="Здесь представлены курсы, созданные вами">МОИ КУРСЫ</abbr> : 
+                userData.role === 'tutor'? <abbr className="wrapper__title" title='Здесь представлены курсы, в которых вы тьютор'>МОИ КУРСЫ</abbr> : 
+                <abbr className="wrapper__title" title="Здесь представленны курсы, в которых вы участник">МОИ КУРСЫ</abbr>}
                 
                 {userData.role === 'producer' ? 
                 <NavLink to='/course/create'>
@@ -47,9 +48,10 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
             </div>
             
             <div className="wrapper-text"></div>
+            {!isFetching && (!Array.isArray(courses) || courses.length === 0) ? ( <div className='center'> <div className='dd'>Курсов пока что нет.</div> <img src={sad} className='sad'/> </div> ) : null}
             {isFetching ? <Preloader key="unique_preloader_key"/> : null}
             <div className="grid">
-                {Array.isArray(courses)  && courses.length > 0 ? (courses.map(c => (
+                {Array.isArray(courses)  && courses.length > 0 && courses.map(c => (
                     <NavLink key={c.id} to={userData.role === 'producer' || userData.role === 'tutor' ? `/course/edit/${c.id}` : `/course/${c.id}`}>
                         <div className="grid__item">
                             <div className="card">
@@ -64,10 +66,7 @@ const MyCourses: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, curr
                             </div>
                         </div>
                     </NavLink>
-                ))
-                ) : (
-                    <div>Курсов пока нет</div>
-                )}
+                ))}
             </div>   
         </div>
     </main>

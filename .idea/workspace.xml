@@ -10,13 +10,22 @@
       <change beforePath="$PROJECT_DIR$/django_movie/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/courses/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/django_movie/django_movie/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_movie/django_movie/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/CoursePageEdit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Course/LeaderboardPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Course/LeaderboardPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/CoursesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/CoursesPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/CoursesPageContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/CoursesPageContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Courses/MyCourses.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Courses/MyCourses.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Enroll/StudentEnroll.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Enroll/StudentEnroll.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/HomeWork/HomeWork.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/HomeWork/HomeWork.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/HomeWork/HomeWorkContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/HomeWork/HomeWorkContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Inventory/MyPerson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Inventory/MyPerson.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout/HeaderContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout/HeaderContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonViewContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/LessonView/LessonViewContainer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Profile/ProfilePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/home-reducer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Shop/ShopContainerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Shop/ShopContainerPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Shop/ShopPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Shop/ShopPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Tutor/TutorPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Tutor/TutorPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/register.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

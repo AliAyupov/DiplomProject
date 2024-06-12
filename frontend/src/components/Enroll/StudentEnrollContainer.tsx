@@ -17,6 +17,7 @@ interface Enrollment {
 interface User {
     id: number;
     email: string;
+    username: string;
 }
 
 interface Props {

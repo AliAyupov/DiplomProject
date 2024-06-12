@@ -123,8 +123,20 @@ input[type="file"][name="picture"] {
     }
     .image-head {
         position: absolute;
-        width: 134px;
-        transform: translate(-153%,77%);
+        width: 136px;
+        transform: translate(55%, -403%);
+        background-color: transparent;
+    }
+    .image-head-s {
+        position: absolute;
+        width: 136px;
+        transform: translate(-152%, 70%);
+        background-color: transparent;
+    }
+    .image-arm-s {
+        position: absolute;
+        width: 108px;
+        transform: translate(-94%, 147%);
         background-color: transparent;
     }
     .image-tshort {
@@ -172,7 +184,7 @@ input[type="file"][name="picture"] {
     .image-arm {
         position: absolute;
         width: 108px;
-        transform: translate(-92%,154%);
+        transform: translate(175%, -289%);
         background-color: transparent;
     }
     .item-button__exit {
@@ -767,7 +779,7 @@ input[type="file"][name="picture"] {
     .image-head {
         position: absolute;
         width: 124px;
-        transform: translate(-145%,62%);
+        transform: translate(49%, -386%);
         background-color: transparent;
     }
     .image-tshort {
@@ -1082,7 +1094,6 @@ input[type="file"][name="picture"] {
 
     .progress {
         height: 100%;
-        width: 50%; 
         background-color: #007bff; 
         border-radius: 5px;
     }
@@ -1205,7 +1216,8 @@ input[type="file"][name="picture"] {
         width: 100%;
         height: 250px;
         border-radius: 20px;
-        object-fit: cover;
+        object-fit: contain;
+        border-radius: 20px;
     }
     .item-block__active{
         color: #121417;
@@ -4413,4 +4425,27 @@ img.money {
     align-items: center;
     flex-wrap: wrap;
     padding: 5px 0px;
+}
+img.lock {
+    width: 14px;
+    margin-left: 5px;
+    background: transparent;
+}
+.dd {
+    display: block;
+    font-family: 'Cakra';
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 140px;
+}
+img.sad {
+    width: 100px;
+    background: transparent;
+}
+
+.persic{
+    background: linear-gradient(22deg, #d3d4d8, transparent);
+    border-radius: 25px;
+    border: 1px solid #f1f1f1;
+   
 }

@@ -101,7 +101,7 @@ const CoursePage: React.FC<Props> = ({ course, modules, modulesCount, lessonsCou
                         </div>
                     </section>
 
-                        <div className="wrapper-text"ref={modulesRef}>
+                        <div className="wrapper-text" ref={modulesRef}>
                             Модули
                         </div>
                         {modules && modules.length > 0 ? (

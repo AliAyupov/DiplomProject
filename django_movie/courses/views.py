@@ -19,11 +19,11 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, Bl
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import CustomUser, Course, Module, Lesson, StudentHomework, StudentProgress, ShopItem, StudentInventory, \
-    Enrollment, Person, FileModel
+    Enrollment, Person, FileModel, StudentAchievement
 from .permissions import IsTutor, IsStudent, IsProducer, IsProducerOrTutor
 from .serializers import CustomUserSerializer, CourseSerializer, ModuleSerializer, LessonSerializer, \
     StudentHomeworkSerializer, StudentProgressSerializer, ShopItemSerializer, StudentInventorySerializer, \
-    EnrollmentSerializer, ModuleTheSerializer, PersonSerializer, FileModelSerializer
+    EnrollmentSerializer, ModuleTheSerializer, PersonSerializer, FileModelSerializer, StudentAchievementSerializer
 
 
 class AddTutorToCourseView(APIView):
@@ -173,11 +173,14 @@ class StudentHomeworkApiView(viewsets.ModelViewSet):
         queryset = StudentHomework.objects.all()
         lesson = self.request.query_params.get('lesson')
         student = self.request.query_params.get('student')
-
+        course_ids = self.request.query_params.get('course_id')
         if lesson is not None:
             queryset = queryset.filter(lesson_id=lesson)
         if student is not None:
             queryset = queryset.filter(student_id=student)
+        if course_ids is not None:
+            course_ids_list = course_ids.split(',')
+            queryset = queryset.filter(course_id__in=course_ids_list)
 
         return queryset
 
@@ -498,6 +501,25 @@ class AllHomeworkOnTheCourseApiView(viewsets.ViewSet):
         serializer = StudentHomeworkSerializer(student_homework, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class StudentAchievementViewSet(viewsets.ModelViewSet):
+    queryset = StudentAchievement.objects.all()
+    serializer_class = StudentAchievementSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def list(self, request):
+        student_id = request.query_params.get('student_id')
+        if student_id:
+            queryset = self.get_queryset().filter(student_id=student_id)
+        else:
+            queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class BlacklistRefreshView(APIView):
         permission_classes = [AllowAny]

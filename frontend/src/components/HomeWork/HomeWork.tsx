@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Preloader from '../common/preloader/Preloader';
 import GradeDialog from '../Layout/Grade';
+import sad from  '../../img/sad.png';
 import { ToastContainer } from 'react-toastify';
 
 interface UserData {
@@ -146,16 +147,19 @@ const HomeworkComponent: React.FC<Props> = ({ contentBD, isFetching, homeworkExi
                     </li>
                 ))
                  ) : (
-                <div>
-                    <div className='margin'></div>
-                    <p>Домашних заданий не найдено.</p>
+                <div className='center'> 
+                    <div className='dd'>Домашних заданий нет.</div>
+                    <img src={sad} className='sad'/>
                 </div>
                 )}
             </ul>
             
         </div>
     ) : (
-        <p>Домашних заданий не найдено.</p>
+       <div className='center'> 
+            <div className='dd'>Домашних заданий нет.</div>
+            <img src={sad} className='sad'/>
+        </div>
     )}
     {isDialogOpen && (
                 <GradeDialog

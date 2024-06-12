@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import myProfileIcon from '../../img/myprofile.svg';
 import myDosIcon from '../../img/mydos.svg';
 import myPersIcon from '../../img/mypers.svg';
 import shopIcon from '../../img/shop.svg';
-import courseImage from '../../img/course.png';
+import courseImage from '../../img/rr.jpg';
 import ava from '../../img/ava.png';
 import ShopContainerPage from '../Shop/ShopContainerPage';
 import MyPersonPageContainer from '../Inventory/MyPersonPageContainer';
+import axiosInstance from '../../http/axios';
+import sad from '../../img/sad.png';
 
 interface UserData {
     id: string;
@@ -46,7 +48,25 @@ const ProfilePage: React.FC<Props> = ({
     errors,
     editedUserData
 }) => {
-    const [activeTab, setActiveTab] = useState('profile');
+    const [activeTab, setActiveTab] = useState('profile'); 
+    const [achievements, setAchievements] = useState([]);
+
+    useEffect(() => {
+        if (activeTab === 'achievements') {
+            fetchAchievements();
+        }
+    }, [activeTab]);
+    const maxExperience = 300;
+    const progressPercentage = (parseInt(userData.experience, 10) / maxExperience) * 100;
+    
+    const fetchAchievements = async () => {
+        try {
+            const response = await axiosInstance.get(`/achievements/?student_id=${userData.id}`);
+            setAchievements(response.data);
+        } catch (error) {
+            console.error('Ошибка при получении достижений:', error);
+        }
+    };
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
     };
@@ -148,7 +168,13 @@ const ProfilePage: React.FC<Props> = ({
                                     <div>
                                         <h2 className="details-text">{userData.first_name}</h2>
                                         <p className="details-mail">{userData.email}</p>
-                                        <p className="details-mail">{userData.role}</p>
+                                                {userData.role === 'student' ? (
+                                                    <p className="details-mail">Студент</p>
+                                            ) : userData.role === 'tutor' ? (
+                                                <p className="details-mail">Учитель</p>
+                                            ) :(
+                                                <p className="details-mail">Продюсер</p>
+                                            )}
                                     </div>
                                     <button className="item-button__reg btn__height btn__height_edit" onClick={handleEditButtonClick}>Редактировать</button>
                                 </div>
@@ -167,11 +193,11 @@ const ProfilePage: React.FC<Props> = ({
                                     </div>
                                 </div>
                             <div className="margin"></div>
-                            <div className="progress-text">50%</div>
+                            <div className="progress-text">{progressPercentage}%</div>
                             <div className="progress-bar">
-                                <div className="progress"></div>
+                                <div className="progress" style={{ width: `${progressPercentage}%` }}></div>
                             </div>
-                            <div className="progress-module">50/300</div>
+                            <div className="progress-module">{userData.experience}/300</div>
                         </div>
                         )}
                         
@@ -184,17 +210,16 @@ const ProfilePage: React.FC<Props> = ({
                     <div className="wrapper-text">
                         Ваши достижения
                     </div>
-                    <div className="grid">
-                        <div className="grid__item">
-                            <img src={courseImage} className="item-img" alt="" />
-                        </div>
-                        <div className="grid__item">
-                            <img src={courseImage} className="item-img" alt="" />
-                        </div>
-                        <div className="grid__item">
-                            <img src={courseImage} className="item-img" alt="" />
-                        </div>
-                    </div>    
+                    {achievements.length === 0 ? (<div className='center'> <div className='dd'>Достижений пока что нет.</div> <img src={sad} className='sad'/> </div>):(
+                        <div className="grid">
+                        {achievements.map(achievement => (
+                                
+                                    <img src={courseImage} className="item-img" alt="" />
+
+                            ))}
+                        </div> 
+                        )}
+                          
                     </div></>
                     )} 
                     {activeTab === 'character' && (

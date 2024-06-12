@@ -41,12 +41,15 @@ interface LessonElement {
 }
 
 const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAndElementId, postFiles, homeworkExists, homework, lessonFiles}) => {
+    
     const [lessonElements, setLessonElements] = useState<LessonElement[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<{ id: string; file: File }[]>([]);
 
     useEffect(() => {
+       
         const fetchInitialContent = async () => {
             const initialLessonElements = await generateInitialContent(contentBD);
+            
             setLessonElements(initialLessonElements);
         };
 
@@ -75,6 +78,7 @@ const LessonView: React.FC<Props> = ({ contentBD, isFetching, getFilesByLessonAn
 
     const generateInitialContent = async (jsonData: string): Promise<LessonElement[]> => {
         try {
+    
             const parsedData = JSON.parse(jsonData.replace(/'/g, '"'));
 
             const promises = parsedData.map(async (element: any, index: number) => {

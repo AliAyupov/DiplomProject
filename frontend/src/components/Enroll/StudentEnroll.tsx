@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import sad from '../../img/sad.png';
 
 interface Enrollment {
     id: number;
@@ -9,6 +10,7 @@ interface Enrollment {
 interface User {
     id: number;
     email: string;
+    username: string;
 }
 
 interface Props {
@@ -41,6 +43,7 @@ const CourseRequests: React.FC<Props> = ({ enrollments, addStudentProgress, setE
                             <div className="course">
                                 <div className="course-details">
                                     <div>
+                                    <p className="modules-progress">{item.user.username}</p>
                                         <p className="modules-progress">{item.user.email}</p>
                                     </div>
                                     <div>
@@ -52,7 +55,7 @@ const CourseRequests: React.FC<Props> = ({ enrollments, addStudentProgress, setE
                         </div>
                     ))
                 ) : (
-                    <p>Запросов нет</p>
+                    <div className='center'> <div className='dd'>Запросов на вступление нет.</div> <img src={sad} className='sad'/> </div>
                 )}
                 </div>
             </main></>

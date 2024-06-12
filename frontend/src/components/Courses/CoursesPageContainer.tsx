@@ -11,12 +11,13 @@ interface Course {
 }
 
 interface Props {
+    isAuthenticated: boolean;
     pageSize: number;
     isFetching: boolean;
     toogleIsFetching: (isFetching: boolean) => void;
 }
 
-const CoursesPageContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetching }) => {
+const CoursesPageContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsFetching, isAuthenticated}) => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [totalCoursesCount, setTotalCoursesCount] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -68,6 +69,7 @@ const CoursesPageContainer: React.FC<Props> = ({ pageSize, isFetching, toogleIsF
                 onPageChanged={onPageChanged} 
                 isFetching={isFetching}
                 onSearch={handleSearch}
+                isAuthenticated={isAuthenticated}
             />
         </>
     );
@@ -78,7 +80,8 @@ let mapStateToProps = (state: any) => {
         pageSize : state.homePage.pageSize,
         totalCoursesCount : state.homePage.totalCoursesCount,
         currentPage: state.homePage.currentPage,
-        isFetching: state.homePage.isFetching
+        isFetching: state.homePage.isFetching,
+        isAuthenticated: state.auth.isAuthenticated
     }
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import portretImage from '../../img/portret.png';
 import ava from '../../img/ava.png';
+import sad from '../../img/sad.png';
 
 interface Student {
     id: number;
@@ -45,8 +46,7 @@ const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData, handleDelete
                     <div className="leaderboard__row">
                         <div className="leaderboard__cell leaderboard__cell--header"></div>
                         <div className="leaderboard__cell leaderboard__cell--header"></div>
-                        <div className="leaderboard__cell leaderboard__cell--header">Опыт</div>
-                        <div className="leaderboard__cell leaderboard__cell--header">Время</div>
+                        <div className="leaderboard__cell leaderboard__cell--header"></div>
                         <div className="leaderboard__cell leaderboard__cell--header">Результат</div>
                     </div>
                     )}
@@ -62,7 +62,6 @@ const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData, handleDelete
                             </div>
                             <div className="leaderboard__cell leaderboard__cell--name">{user.student.username}</div>
                             <div className="leaderboard__cell">{user.completed_lessons} xp</div>
-                            <div className="leaderboard__cell">{user.completion_time} min</div>
                             <div className="leaderboard__cell">
                                 <div className="progress-bar">
                                     <div className="progress"></div>
@@ -71,7 +70,7 @@ const LeaderboardPage: React.FC<Props> = ({ setProgress, usersData, handleDelete
                             </div>
                             
                         </div>
-                    )) : <div>Учеников нет</div>}
+                    )) : <div className='center'> <div className='dd'>Учеников на курсе пока что нет.</div> <img src={sad} className='sad'/> </div>}
                 </div>
                 
             </div>

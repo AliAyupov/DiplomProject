@@ -60,7 +60,7 @@ const HomeworkContainer: React.FC<Props> = ({ setContent, toogleIsFetching, isFe
     useEffect(() => {
             let endpoint = '';
             let courseIds = [];
-
+            
             if (userData.role === 'producer') {
                 endpoint = 'user-courses/';
             } else if (userData.role === 'tutor') {
@@ -82,25 +82,34 @@ const HomeworkContainer: React.FC<Props> = ({ setContent, toogleIsFetching, isFe
         }, [userData]);
 
     const checkHomeworkExistence = async (courseIds:any) => {
-        try {
-            const response = await axiosInstance.get('/student-homeworks/', {
-                params: {
-                    course_id: courseIds.join(',') 
+        
+            try {
+                if(courseIds.length  >  0)  {
+                    const response = await axiosInstance.get('/student-homeworks/', {
+                        params: {
+                            course_id: courseIds.join(',') 
+                        }
+                    });
+                    if (response.status === 200 && response.data.count > 0) {
+                        setHomeworkExists(true);
+                        const homework = response.data.results;
+                        fetchLessonFiles(homework);
+                        setHomework(homework);
+                        toogleIsFetching(false);
+                    } else {
+                        setHomeworkExists(false);
+                        toogleIsFetching(false);
+                    }
                 }
-            });
-            if (response.status === 200 && response.data.count > 0) {
-                setHomeworkExists(true);
-                const homework = response.data.results;
-                fetchLessonFiles(homework);
-                setHomework(homework);
-                toogleIsFetching(false);
-            } else {
+                else{
+                    setHomeworkExists(false);
+                    toogleIsFetching(false);
+                }
+            } catch (error) {
+                console.error('Ошибка при проверке домашнего задания:', error);
                 setHomeworkExists(false);
             }
-        } catch (error) {
-            console.error('Ошибка при проверке домашнего задания:', error);
-            setHomeworkExists(false);
-        }
+    
     };
 
     const onSaveGrade = async (homeworkId: number, grade: number) => {

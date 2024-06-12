@@ -7,7 +7,7 @@ import { setShopItems, setUserInventory, setPerson } from '../../redux/home-redu
 import { setUserData } from '../../redux/auth-reducer';
 import ShopPage from './ShopPage';
 import { withAuthorization } from '../hoc/AuthRedirect';
-
+import { ToastContainer, toast } from 'react-toastify';
 
 interface UserData {
     id: string;
@@ -45,7 +45,7 @@ const ShopPageContainer: React.FC<Props> = ({setShopItems, shopItems, userData, 
     const [isLoading, setIsLoading] = useState(true);
     const [totalCoursesCount, setTotalCoursesCount] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-
+   
     useEffect(() => {
         const fetchInventory = async () => {
             try {
@@ -117,10 +117,37 @@ const ShopPageContainer: React.FC<Props> = ({setShopItems, shopItems, userData, 
                 });
                 setUserData(userUpdateResponse.data.email, userUpdateResponse.data.id, userUpdateResponse.data.username, userUpdateResponse.data.picture, userUpdateResponse.data.role, true, userUpdateResponse.data);
                 setUserInventory([...userInventory, itemId]);
+                
+                arch();
             }
             
         } catch (error) {
             console.error('Ошибка при добавлении в инвентарь:', error);
+        }
+    };
+
+    const arch = async () => {
+        if (userInventory.length === 0) {
+            try {
+                const achievementResponse = await axiosInstance.post('/achievements/', {
+                    achievements_name: 'Первая покупка',
+                    achievements_description: 'Поздравляю! Вы совершили первую покупку.',
+                    student_id: userData.id,
+                    achievements_date: new Date().toISOString().split('T')[0], 
+                    picture: null
+                });
+                toast.success('Поздравляю! Получено достижение', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            } catch (error) {
+                console.error('Ошибка при добавлении достижения:', error);
+            }
         }
     };
 

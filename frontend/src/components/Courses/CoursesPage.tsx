@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import course from '../../img/course.png';
+import lock from  '../../img/look.png';
 import Preloader from '../common/preloader/Preloader';
 import { NavLink } from 'react-router-dom';
 import none from '../../img/balvan-foto.jpg';
@@ -18,9 +19,10 @@ interface Props {
     onPageChanged: (pageNumber: number) => void;
     isFetching: boolean;
     onSearch: (query: string) => void;
+    isAuthenticated: boolean;
 }
 
-const CoursesPage: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch}) => {
+const CoursesPage: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, currentPage, onPageChanged, isFetching, onSearch, isAuthenticated}) => {
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -78,18 +80,25 @@ const CoursesPage: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, cu
                     <div className='grid__item'>
                         <div className={`item-block__element ${activeTab === 'all' ? 'item-block__active' : ''}`} onClick={() => handleTabChange('all')}>
                             Все
+                            
                         </div> 
                         <hr className="hr__width" />
                     </div>
                     <div className='grid__item'>
                         <div className={`item-block__element ${activeTab === 'inProgress' ? 'item-block__active' : ''}`} onClick={() => handleTabChange('inProgress')}>
                             В процессе
+                            {!isAuthenticated && (
+                            <img src={lock} alt="lock" className='lock' />
+                            )}
                         </div>
                         <hr className="hr__width" />
                     </div>
                     <div className='grid__item'>
                         <div className={`item-block__element ${activeTab === 'completed' ? 'item-block__active' : ''}`} onClick={() => handleTabChange('completed')}>
                             Завершенные
+                            {!isAuthenticated && (
+                            <img src={lock} alt="lock" className='lock' />
+                            )}
                         </div>
                         <hr className="hr__width" />
                     </div>
@@ -136,7 +145,7 @@ const CoursesPage: React.FC<Props> = ({ courses, pageSize, totalCoursesCount, cu
                                     <div className="course-details">
                                         <div>
                                             <h2 className="course-title">Название курса</h2>
-                                            <p className="modules-progress">Пройдено 3 модуля</p>
+                                            <p className="modules-progress">Пройдено 0 модулей</p>
                                         </div>
                                         <button className="btn btn-c">Перейти</button>
                                     </div>

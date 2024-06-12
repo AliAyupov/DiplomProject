@@ -5,6 +5,8 @@ import tshort from '../../img/empty.png';
 import shoes from '../../img/empty.png';
 import bruke from '../../img/empty.png';
 import arm from '../../img/empty.png';
+import sad from '../../img/sad.png';
+
 
 interface UserInventory{
     id: number;
@@ -141,7 +143,7 @@ const MyPerson: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                         <span className="pagination__link" onClick={onNextPageClicked}>&raquo;</span>
                 </div>
                 ) : (
-                    <div>Инвентарь пустой</div>
+                    <div className='center'> <div className='dd'>Инвентарь пока что пустой.</div> <img src={sad} className='sad'/> </div>
                 )}
 
             </div>
@@ -150,7 +152,7 @@ const MyPerson: React.FC<Props> = ({shopItems, handlePurchase,  pageSize, userIn
                     <img src={images.shoes} alt="" className='image-shoes'/>
                     <img src={images.bruke} alt="" className='image-bruke'/>
                     <img src={images.tshort} alt="" className='image-tshort'/> 
-                    <img src={person} alt="" className="image-person"/>
+                    <img src={person} alt="" className="image-person persic"/>
                     <img src={images.head} alt="" className='image-head'/>
                     <img src={images.arm} alt="" className='image-arm'/>
                 </div>
